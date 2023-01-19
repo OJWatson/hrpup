@@ -1,0 +1,17 @@
+Package: hrpup
+Title: HRP23 update to risk mapping
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "OJ",
+             family = "Watson",
+             role = c("aut", "cre"),
+             email = "oj.watson@hotmail.co.uk",
+             comment = c(ORCID = "0000-0003-2374-0741")))
+Description: Update to hrp2/3 risk mapping. Package for reproducible analysis.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests:
+    testthat

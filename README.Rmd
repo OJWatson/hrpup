@@ -1,0 +1,37 @@
+---
+output:
+  rmarkdown::github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+<!-- badges: start -->
+[![R build status](https://github.com/OJWatson/hrpup/workflows/R-CMD-check/badge.svg)](https://github.com/OJWatson/hrpup/actions)
+[![CodeFactor](https://www.codefactor.io/repository/github/OJWatson/hrpup/badge)](https://www.codefactor.io/repository/github/OJWatson/hrpup)
+[![codecov.io](https://codecov.io/github/OJWatson/hrpup/coverage.svg?branch=main)](https://codecov.io/github/OJWatson/hrpup?branch=main)
+[![R-CMD-check](https://github.com/afyac/mast/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/afyac/mast/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+
+## Installation
+
+To install `hrpup`:
+
+```r
+remotes::install_github("OJWatson/hrpup", upgrade = FALSE)
+```
+
+### Licenses
+
+Code: [MIT](http://opensource.org/licenses/MIT) year: `r format(Sys.Date(), "%Y")`, copyright holder: OJ Watson
+
+Data: [CC-0](http://creativecommons.org/publicdomain/zero/1.0/) attribution requested in reuse
+

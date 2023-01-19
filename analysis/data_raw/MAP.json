@@ -1,0 +1,2702 @@
+[
+    {
+        "countryIso3": "AFG",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.36,
+                "priv": 0.27
+            },
+            "rateTesting": {
+                "pub": 0.04,
+                "priv": 0.01
+            },
+            "rateRdt": 0.56
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.79,
+                "priv": 0.79
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.2,
+                "priv": 0.22
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.14,
+                "priv": 0.14
+            },
+            "rateAmAreAct": {
+                "pub": 0.33,
+                "priv": 0.35
+            }
+        }
+    },
+    {
+        "countryIso3": "AGO",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.45,
+                "priv": 0.13
+            },
+            "rateTesting": {
+                "pub": 0.79,
+                "priv": 0.37
+            },
+            "rateRdt": 0.57
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.83,
+                "priv": 0.83
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.07,
+                "priv": 0.16
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.12,
+                "priv": 0.12
+            },
+            "rateAmAreAct": {
+                "pub": 0.92,
+                "priv": 0.91
+            }
+        }
+    },
+    {
+        "countryIso3": "BDI",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.48,
+                "priv": 0.07
+            },
+            "rateTesting": {
+                "pub": 0.9,
+                "priv": 0.6
+            },
+            "rateRdt": 0.86
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.9,
+                "priv": 0.9
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.1,
+                "priv": 0.24
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.26,
+                "priv": 0.26
+            },
+            "rateAmAreAct": {
+                "pub": 0.96,
+                "priv": 0.95
+            }
+        }
+    },
+    {
+        "countryIso3": "BEN",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.3,
+                "priv": 0.2
+            },
+            "rateTesting": {
+                "pub": 0.58,
+                "priv": 0.19
+            },
+            "rateRdt": 0.9
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.82,
+                "priv": 0.82
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.07,
+                "priv": 0.16
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.1,
+                "priv": 0.1
+            },
+            "rateAmAreAct": {
+                "pub": 0.76,
+                "priv": 0.57
+            }
+        }
+    },
+    {
+        "countryIso3": "BFA",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.46,
+                "priv": 0.07
+            },
+            "rateTesting": {
+                "pub": 0.7,
+                "priv": 0.27
+            },
+            "rateRdt": 0.99
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.93,
+                "priv": 0.93
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.15,
+                "priv": 0.36
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.43,
+                "priv": 0.43
+            },
+            "rateAmAreAct": {
+                "pub": 0.79,
+                "priv": 0.79
+            }
+        }
+    },
+    {
+        "countryIso3": "BGD",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.12,
+                "priv": 0.42
+            },
+            "rateTesting": {
+                "pub": 0.1,
+                "priv": 0.01
+            },
+            "rateRdt": 0.51
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.77,
+                "priv": 0.77
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.04
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.02,
+                "priv": 0.02
+            },
+            "rateAmAreAct": {
+                "pub": 0.76,
+                "priv": 0.61
+            }
+        }
+    },
+    {
+        "countryIso3": "BRA",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.5,
+                "priv": 0.18
+            },
+            "rateTesting": {
+                "pub": 0.29,
+                "priv": 0.06
+            },
+            "rateRdt": 0.07
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.75,
+                "priv": 0.75
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.05
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.02,
+                "priv": 0.02
+            },
+            "rateAmAreAct": {
+                "pub": 0.69,
+                "priv": 0.52
+            }
+        }
+    },
+    {
+        "countryIso3": "BTN",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.49,
+                "priv": 0.27
+            },
+            "rateTesting": {
+                "pub": 0.11,
+                "priv": 0.01
+            },
+            "rateRdt": 0.95
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.95,
+                "priv": 0.95
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0,
+                "priv": 0
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.14,
+                "priv": 0.14
+            },
+            "rateAmAreAct": {
+                "pub": 0.82,
+                "priv": 0.66
+            }
+        }
+    },
+    {
+        "countryIso3": "BWA",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.61,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.47,
+                "priv": 0.13
+            },
+            "rateRdt": 0.98
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.8,
+                "priv": 0.8
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.03,
+                "priv": 0.05
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.04,
+                "priv": 0.04
+            },
+            "rateAmAreAct": {
+                "pub": 0.8,
+                "priv": 0.66
+            }
+        }
+    },
+    {
+        "countryIso3": "CAF",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.33,
+                "priv": 0.04
+            },
+            "rateTesting": {
+                "pub": 0.29,
+                "priv": 0.06
+            },
+            "rateRdt": 0.91
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.82,
+                "priv": 0.82
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.09,
+                "priv": 0.21
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.2,
+                "priv": 0.2
+            },
+            "rateAmAreAct": {
+                "pub": 0.85,
+                "priv": 0.78
+            }
+        }
+    },
+    {
+        "countryIso3": "CIV",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.36,
+                "priv": 0.19
+            },
+            "rateTesting": {
+                "pub": 0.62,
+                "priv": 0.21
+            },
+            "rateRdt": 0.78
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.73,
+                "priv": 0.73
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.05,
+                "priv": 0.1
+            },
+            "rateUntestedGotAm": {
+                "pub": 0,
+                "priv": 0
+            },
+            "rateAmAreAct": {
+                "pub": 0.84,
+                "priv": 0.8
+            }
+        }
+    },
+    {
+        "countryIso3": "CMR",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.25,
+                "priv": 0.3
+            },
+            "rateTesting": {
+                "pub": 0.64,
+                "priv": 0.22
+            },
+            "rateRdt": 0.81
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.88,
+                "priv": 0.88
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.1,
+                "priv": 0.24
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.26,
+                "priv": 0.26
+            },
+            "rateAmAreAct": {
+                "pub": 0.75,
+                "priv": 0.67
+            }
+        }
+    },
+    {
+        "countryIso3": "COD",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.42,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.65,
+                "priv": 0.23
+            },
+            "rateRdt": 0.96
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.87,
+                "priv": 0.87
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.1,
+                "priv": 0.24
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.24,
+                "priv": 0.24
+            },
+            "rateAmAreAct": {
+                "pub": 0.65,
+                "priv": 0.45
+            }
+        }
+    },
+    {
+        "countryIso3": "COG",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.45,
+                "priv": 0.2
+            },
+            "rateTesting": {
+                "pub": 0.69,
+                "priv": 0.27
+            },
+            "rateRdt": 0.4
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.83,
+                "priv": 0.83
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.08,
+                "priv": 0.2
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.18,
+                "priv": 0.18
+            },
+            "rateAmAreAct": {
+                "pub": 0.84,
+                "priv": 0.67
+            }
+        }
+    },
+    {
+        "countryIso3": "COL",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.53,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.43,
+                "priv": 0.11
+            },
+            "rateRdt": 0.09
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.75,
+                "priv": 0.75
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.02,
+                "priv": 0.04
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.03,
+                "priv": 0.03
+            },
+            "rateAmAreAct": {
+                "pub": 0.31,
+                "priv": 0.38
+            }
+        }
+    },
+    {
+        "countryIso3": "COM",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.37,
+                "priv": 0.14
+            },
+            "rateTesting": {
+                "pub": 0.24,
+                "priv": 0.05
+            },
+            "rateRdt": 0.35
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.91,
+                "priv": 0.91
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.12,
+                "priv": 0.23
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.39,
+                "priv": 0.39
+            },
+            "rateAmAreAct": {
+                "pub": 0.44,
+                "priv": 0.4
+            }
+        }
+    },
+    {
+        "countryIso3": "CPV",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.52,
+                "priv": 0.25
+            },
+            "rateTesting": {
+                "pub": 0.13,
+                "priv": 0.02
+            },
+            "rateRdt": 0.93
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.95,
+                "priv": 0.95
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0,
+                "priv": 0.01
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.37,
+                "priv": 0.37
+            },
+            "rateAmAreAct": {
+                "pub": 0.75,
+                "priv": 0.63
+            }
+        }
+    },
+    {
+        "countryIso3": "DJI",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.48,
+                "priv": 0.27
+            },
+            "rateTesting": {
+                "pub": 0.83,
+                "priv": 0.44
+            },
+            "rateRdt": 0.88
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.81,
+                "priv": 0.81
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.09
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.04,
+                "priv": 0.04
+            },
+            "rateAmAreAct": {
+                "pub": 0.93,
+                "priv": 0.86
+            }
+        }
+    },
+    {
+        "countryIso3": "DOM",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.47,
+                "priv": 0.26
+            },
+            "rateTesting": {
+                "pub": 0.15,
+                "priv": 0.02
+            },
+            "rateRdt": 0.36
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.86,
+                "priv": 0.86
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.11,
+                "priv": 0.13
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.11,
+                "priv": 0.11
+            },
+            "rateAmAreAct": {
+                "pub": 0.38,
+                "priv": 0.17
+            }
+        }
+    },
+    {
+        "countryIso3": "ECU",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.4,
+                "priv": 0.29
+            },
+            "rateTesting": {
+                "pub": 0.27,
+                "priv": 0.05
+            },
+            "rateRdt": 0.01
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.82,
+                "priv": 0.82
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.06
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.05,
+                "priv": 0.05
+            },
+            "rateAmAreAct": {
+                "pub": 0.81,
+                "priv": 0.69
+            }
+        }
+    },
+    {
+        "countryIso3": "ERI",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.57,
+                "priv": 0.16
+            },
+            "rateTesting": {
+                "pub": 0.22,
+                "priv": 0.04
+            },
+            "rateRdt": 0.77
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.98,
+                "priv": 0.98
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.14,
+                "priv": 0.27
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.73,
+                "priv": 0.73
+            },
+            "rateAmAreAct": {
+                "pub": 0.89,
+                "priv": 0.79
+            }
+        }
+    },
+    {
+        "countryIso3": "ETH",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.38,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.45,
+                "priv": 0.12
+            },
+            "rateRdt": 0
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.77,
+                "priv": 0.77
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.1
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.09,
+                "priv": 0.09
+            },
+            "rateAmAreAct": {
+                "pub": 0.77,
+                "priv": 0.71
+            }
+        }
+    },
+    {
+        "countryIso3": "GAB",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.48,
+                "priv": 0.14
+            },
+            "rateTesting": {
+                "pub": 0.55,
+                "priv": 0.17
+            },
+            "rateRdt": 0.34
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.77,
+                "priv": 0.77
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.1
+            },
+            "rateUntestedGotAm": {
+                "pub": 0,
+                "priv": 0
+            },
+            "rateAmAreAct": {
+                "pub": 0.73,
+                "priv": 0.58
+            }
+        }
+    },
+    {
+        "countryIso3": "GHA",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.42,
+                "priv": 0.29
+            },
+            "rateTesting": {
+                "pub": 0.75,
+                "priv": 0.33
+            },
+            "rateRdt": 0.82
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.97,
+                "priv": 0.97
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.15,
+                "priv": 0.36
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.54,
+                "priv": 0.54
+            },
+            "rateAmAreAct": {
+                "pub": 0.9,
+                "priv": 0.87
+            }
+        }
+    },
+    {
+        "countryIso3": "GIN",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.34,
+                "priv": 0.18
+            },
+            "rateTesting": {
+                "pub": 0.45,
+                "priv": 0.12
+            },
+            "rateRdt": 0.96
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.79,
+                "priv": 0.79
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.06,
+                "priv": 0.14
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.06,
+                "priv": 0.06
+            },
+            "rateAmAreAct": {
+                "pub": 0.44,
+                "priv": 0.37
+            }
+        }
+    },
+    {
+        "countryIso3": "GMB",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.45,
+                "priv": 0.15
+            },
+            "rateTesting": {
+                "pub": 0.41,
+                "priv": 0.1
+            },
+            "rateRdt": 0.79
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.74,
+                "priv": 0.74
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.03,
+                "priv": 0.08
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.04,
+                "priv": 0.04
+            },
+            "rateAmAreAct": {
+                "pub": 0.95,
+                "priv": 0.9
+            }
+        }
+    },
+    {
+        "countryIso3": "GNB",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.28,
+                "priv": 0.33
+            },
+            "rateTesting": {
+                "pub": 0.31,
+                "priv": 0.07
+            },
+            "rateRdt": 0.7
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.85,
+                "priv": 0.85
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.08,
+                "priv": 0.16
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.21,
+                "priv": 0.21
+            },
+            "rateAmAreAct": {
+                "pub": 0.91,
+                "priv": 0.83
+            }
+        }
+    },
+    {
+        "countryIso3": "GNQ",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.41,
+                "priv": 0.3
+            },
+            "rateTesting": {
+                "pub": 0.75,
+                "priv": 0.33
+            },
+            "rateRdt": 0.61
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.98,
+                "priv": 0.98
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.27,
+                "priv": 0.46
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.49,
+                "priv": 0.49
+            },
+            "rateAmAreAct": {
+                "pub": 0.93,
+                "priv": 0.84
+            }
+        }
+    },
+    {
+        "countryIso3": "GUY",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.57,
+                "priv": 0.15
+            },
+            "rateTesting": {
+                "pub": 0.16,
+                "priv": 0.03
+            },
+            "rateRdt": 0.34
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.77,
+                "priv": 0.77
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.1
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.09,
+                "priv": 0.09
+            },
+            "rateAmAreAct": {
+                "pub": 0.61,
+                "priv": 0.4
+            }
+        }
+    },
+    {
+        "countryIso3": "HND",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.48,
+                "priv": 0.14
+            },
+            "rateTesting": {
+                "pub": 0.15,
+                "priv": 0.02
+            },
+            "rateRdt": 0.23
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.8,
+                "priv": 0.8
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.09,
+                "priv": 0.09
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.05,
+                "priv": 0.05
+            },
+            "rateAmAreAct": {
+                "pub": 0.82,
+                "priv": 0.7
+            }
+        }
+    },
+    {
+        "countryIso3": "HTI",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.26,
+                "priv": 0.13
+            },
+            "rateTesting": {
+                "pub": 0.07,
+                "priv": 0.01
+            },
+            "rateRdt": 0.98
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.74,
+                "priv": 0.74
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.02,
+                "priv": 0.04
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.02,
+                "priv": 0.02
+            },
+            "rateAmAreAct": {
+                "pub": 0.88,
+                "priv": 0.77
+            }
+        }
+    },
+    {
+        "countryIso3": "IDN",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.43,
+                "priv": 0.42
+            },
+            "rateTesting": {
+                "pub": 0.08,
+                "priv": 0.01
+            },
+            "rateRdt": 0.26
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.79,
+                "priv": 0.79
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.06,
+                "priv": 0.09
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.09,
+                "priv": 0.09
+            },
+            "rateAmAreAct": {
+                "pub": 0.69,
+                "priv": 0.59
+            }
+        }
+    },
+    {
+        "countryIso3": "IND",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.28,
+                "priv": 0.47
+            },
+            "rateTesting": {
+                "pub": 0.1,
+                "priv": 0.01
+            },
+            "rateRdt": 0.19
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.85,
+                "priv": 0.85
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.16,
+                "priv": 0.2
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.21,
+                "priv": 0.21
+            },
+            "rateAmAreAct": {
+                "pub": 0.8,
+                "priv": 0.46
+            }
+        }
+    },
+    {
+        "countryIso3": "KEN",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.51,
+                "priv": 0.16
+            },
+            "rateTesting": {
+                "pub": 0.66,
+                "priv": 0.24
+            },
+            "rateRdt": 0.58
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.94,
+                "priv": 0.94
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.11,
+                "priv": 0.23
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.37,
+                "priv": 0.37
+            },
+            "rateAmAreAct": {
+                "pub": 0.94,
+                "priv": 0.9
+            }
+        }
+    },
+    {
+        "countryIso3": "KHM",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.38,
+                "priv": 0.45
+            },
+            "rateTesting": {
+                "pub": 0.12,
+                "priv": 0.02
+            },
+            "rateRdt": 0.96
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.74,
+                "priv": 0.74
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.02,
+                "priv": 0.03
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.02,
+                "priv": 0.02
+            },
+            "rateAmAreAct": {
+                "pub": 0.85,
+                "priv": 0.78
+            }
+        }
+    },
+    {
+        "countryIso3": "LAO",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.44,
+                "priv": 0.41
+            },
+            "rateTesting": {
+                "pub": 0.07,
+                "priv": 0.01
+            },
+            "rateRdt": 0.79
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.76,
+                "priv": 0.76
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.07,
+                "priv": 0.09
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.06,
+                "priv": 0.06
+            },
+            "rateAmAreAct": {
+                "pub": 0.82,
+                "priv": 0.71
+            }
+        }
+    },
+    {
+        "countryIso3": "LBR",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.4,
+                "priv": 0.26
+            },
+            "rateTesting": {
+                "pub": 0.77,
+                "priv": 0.35
+            },
+            "rateRdt": 0.55
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.97,
+                "priv": 0.97
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.17,
+                "priv": 0.41
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.52,
+                "priv": 0.52
+            },
+            "rateAmAreAct": {
+                "pub": 0.95,
+                "priv": 0.91
+            }
+        }
+    },
+    {
+        "countryIso3": "MDG",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.38,
+                "priv": 0.12
+            },
+            "rateTesting": {
+                "pub": 0.47,
+                "priv": 0.12
+            },
+            "rateRdt": 0.99
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.8,
+                "priv": 0.8
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.06,
+                "priv": 0.14
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.14,
+                "priv": 0.14
+            },
+            "rateAmAreAct": {
+                "pub": 0.7,
+                "priv": 0.55
+            }
+        }
+    },
+    {
+        "countryIso3": "MLI",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.31,
+                "priv": 0.16
+            },
+            "rateTesting": {
+                "pub": 0.5,
+                "priv": 0.14
+            },
+            "rateRdt": 0.82
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.84,
+                "priv": 0.84
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.09,
+                "priv": 0.21
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.25,
+                "priv": 0.25
+            },
+            "rateAmAreAct": {
+                "pub": 0.88,
+                "priv": 0.86
+            }
+        }
+    },
+    {
+        "countryIso3": "MMR",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.27,
+                "priv": 0.42
+            },
+            "rateTesting": {
+                "pub": 0.08,
+                "priv": 0.01
+            },
+            "rateRdt": 0.99
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.76,
+                "priv": 0.76
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.02,
+                "priv": 0.05
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.06,
+                "priv": 0.06
+            },
+            "rateAmAreAct": {
+                "pub": 0.78,
+                "priv": 0.6
+            }
+        }
+    },
+    {
+        "countryIso3": "MOZ",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.57,
+                "priv": 0.03
+            },
+            "rateTesting": {
+                "pub": 0.8,
+                "priv": 0.4
+            },
+            "rateRdt": 0.95
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.84,
+                "priv": 0.84
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.1,
+                "priv": 0.23
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.24,
+                "priv": 0.24
+            },
+            "rateAmAreAct": {
+                "pub": 0.97,
+                "priv": 0.92
+            }
+        }
+    },
+    {
+        "countryIso3": "MRT",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.28,
+                "priv": 0.29
+            },
+            "rateTesting": {
+                "pub": 0.54,
+                "priv": 0.16
+            },
+            "rateRdt": 0.55
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.8,
+                "priv": 0.8
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.06,
+                "priv": 0.13
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.1,
+                "priv": 0.1
+            },
+            "rateAmAreAct": {
+                "pub": 0.93,
+                "priv": 0.87
+            }
+        }
+    },
+    {
+        "countryIso3": "MWI",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.4,
+                "priv": 0.13
+            },
+            "rateTesting": {
+                "pub": 0.86,
+                "priv": 0.49
+            },
+            "rateRdt": 0.99
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.92,
+                "priv": 0.92
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.11,
+                "priv": 0.27
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.34,
+                "priv": 0.34
+            },
+            "rateAmAreAct": {
+                "pub": 0.98,
+                "priv": 0.86
+            }
+        }
+    },
+    {
+        "countryIso3": "MYS",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.37,
+                "priv": 0.53
+            },
+            "rateTesting": {
+                "pub": 0.18,
+                "priv": 0.03
+            },
+            "rateRdt": 0
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.99,
+                "priv": 0.99
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0,
+                "priv": 0
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.01,
+                "priv": 0.01
+            },
+            "rateAmAreAct": {
+                "pub": 0.76,
+                "priv": 0.62
+            }
+        }
+    },
+    {
+        "countryIso3": "NAM",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.59,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.69,
+                "priv": 0.26
+            },
+            "rateRdt": 1
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.77,
+                "priv": 0.77
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.03,
+                "priv": 0.06
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.02,
+                "priv": 0.02
+            },
+            "rateAmAreAct": {
+                "pub": 0.75,
+                "priv": 0.64
+            }
+        }
+    },
+    {
+        "countryIso3": "NER",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.29,
+                "priv": 0.16
+            },
+            "rateTesting": {
+                "pub": 0.55,
+                "priv": 0.16
+            },
+            "rateRdt": 0.85
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.8,
+                "priv": 0.8
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.07,
+                "priv": 0.15
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.1,
+                "priv": 0.1
+            },
+            "rateAmAreAct": {
+                "pub": 0.92,
+                "priv": 0.84
+            }
+        }
+    },
+    {
+        "countryIso3": "NGA",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.24,
+                "priv": 0.45
+            },
+            "rateTesting": {
+                "pub": 0.41,
+                "priv": 0.1
+            },
+            "rateRdt": 0.92
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.92,
+                "priv": 0.92
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.13,
+                "priv": 0.32
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.39,
+                "priv": 0.39
+            },
+            "rateAmAreAct": {
+                "pub": 0.72,
+                "priv": 0.66
+            }
+        }
+    },
+    {
+        "countryIso3": "NIC",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.55,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.19,
+                "priv": 0.03
+            },
+            "rateRdt": 0.04
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.89,
+                "priv": 0.89
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.09,
+                "priv": 0.1
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.07,
+                "priv": 0.07
+            },
+            "rateAmAreAct": {
+                "pub": 0.77,
+                "priv": 0.67
+            }
+        }
+    },
+    {
+        "countryIso3": "NPL",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.26,
+                "priv": 0.42
+            },
+            "rateTesting": {
+                "pub": 0.07,
+                "priv": 0.01
+            },
+            "rateRdt": 0.61
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.99,
+                "priv": 0.99
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0,
+                "priv": 0
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.03,
+                "priv": 0.03
+            },
+            "rateAmAreAct": {
+                "pub": 0.72,
+                "priv": 0.58
+            }
+        }
+    },
+    {
+        "countryIso3": "PAK",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.24,
+                "priv": 0.5
+            },
+            "rateTesting": {
+                "pub": 0.07,
+                "priv": 0.01
+            },
+            "rateRdt": 0.47
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.77,
+                "priv": 0.77
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.05,
+                "priv": 0.07
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.06,
+                "priv": 0.06
+            },
+            "rateAmAreAct": {
+                "pub": 0.69,
+                "priv": 0.47
+            }
+        }
+    },
+    {
+        "countryIso3": "PER",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.55,
+                "priv": 0.17
+            },
+            "rateTesting": {
+                "pub": 0.38,
+                "priv": 0.09
+            },
+            "rateRdt": 0.52
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.75,
+                "priv": 0.75
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.05,
+                "priv": 0.05
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.03,
+                "priv": 0.03
+            },
+            "rateAmAreAct": {
+                "pub": 0.86,
+                "priv": 0.81
+            }
+        }
+    },
+    {
+        "countryIso3": "PHL",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.33,
+                "priv": 0.23
+            },
+            "rateTesting": {
+                "pub": 0.1,
+                "priv": 0.01
+            },
+            "rateRdt": 0.74
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.74,
+                "priv": 0.74
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.01,
+                "priv": 0.02
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.01,
+                "priv": 0.01
+            },
+            "rateAmAreAct": {
+                "pub": 0.88,
+                "priv": 0.79
+            }
+        }
+    },
+    {
+        "countryIso3": "PNG",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.67,
+                "priv": 0.09
+            },
+            "rateTesting": {
+                "pub": 0.13,
+                "priv": 0.02
+            },
+            "rateRdt": 0.97
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.73,
+                "priv": 0.73
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.03,
+                "priv": 0.07
+            },
+            "rateUntestedGotAm": {
+                "pub": 0,
+                "priv": 0
+            },
+            "rateAmAreAct": {
+                "pub": 0.91,
+                "priv": 0.82
+            }
+        }
+    },
+    {
+        "countryIso3": "RWA",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.41,
+                "priv": 0.08
+            },
+            "rateTesting": {
+                "pub": 0.78,
+                "priv": 0.36
+            },
+            "rateRdt": 0.59
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.82,
+                "priv": 0.82
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.07,
+                "priv": 0.15
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.19,
+                "priv": 0.19
+            },
+            "rateAmAreAct": {
+                "pub": 0.98,
+                "priv": 0.94
+            }
+        }
+    },
+    {
+        "countryIso3": "SAU",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.53,
+                "priv": 0.28
+            },
+            "rateTesting": {
+                "pub": 0.16,
+                "priv": 0.03
+            },
+            "rateRdt": 0.73
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.99,
+                "priv": 0.99
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0,
+                "priv": 0
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.12,
+                "priv": 0.12
+            },
+            "rateAmAreAct": {
+                "pub": 0.79,
+                "priv": 0.65
+            }
+        }
+    },
+    {
+        "countryIso3": "SDN",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.46,
+                "priv": 0.25
+            },
+            "rateTesting": {
+                "pub": 0.36,
+                "priv": 0.08
+            },
+            "rateRdt": 0.15
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.99,
+                "priv": 0.99
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.14,
+                "priv": 0.29
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.73,
+                "priv": 0.73
+            },
+            "rateAmAreAct": {
+                "pub": 0.77,
+                "priv": 0.56
+            }
+        }
+    },
+    {
+        "countryIso3": "SEN",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.35,
+                "priv": 0.16
+            },
+            "rateTesting": {
+                "pub": 0.44,
+                "priv": 0.11
+            },
+            "rateRdt": 0.99
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.75,
+                "priv": 0.75
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.09
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.05,
+                "priv": 0.05
+            },
+            "rateAmAreAct": {
+                "pub": 0.85,
+                "priv": 0.91
+            }
+        }
+    },
+    {
+        "countryIso3": "SLB",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.58,
+                "priv": 0.07
+            },
+            "rateTesting": {
+                "pub": 0.14,
+                "priv": 0.02
+            },
+            "rateRdt": 0.77
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.74,
+                "priv": 0.74
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.02,
+                "priv": 0.06
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.01,
+                "priv": 0.01
+            },
+            "rateAmAreAct": {
+                "pub": 0.82,
+                "priv": 0.71
+            }
+        }
+    },
+    {
+        "countryIso3": "SLE",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.41,
+                "priv": 0.19
+            },
+            "rateTesting": {
+                "pub": 0.81,
+                "priv": 0.41
+            },
+            "rateRdt": 0.99
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.97,
+                "priv": 0.97
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.16,
+                "priv": 0.39
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.67,
+                "priv": 0.67
+            },
+            "rateAmAreAct": {
+                "pub": 0.99,
+                "priv": 0.97
+            }
+        }
+    },
+    {
+        "countryIso3": "SOM",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.09,
+                "priv": 0.06
+            },
+            "rateTesting": {
+                "pub": 0.29,
+                "priv": 0.06
+            },
+            "rateRdt": 0.84
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.78,
+                "priv": 0.78
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.05,
+                "priv": 0.11
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.06,
+                "priv": 0.06
+            },
+            "rateAmAreAct": {
+                "pub": 0.94,
+                "priv": 0.89
+            }
+        }
+    },
+    {
+        "countryIso3": "SSD",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.3,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.54,
+                "priv": 0.16
+            },
+            "rateRdt": 0.99
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.87,
+                "priv": 0.87
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.06,
+                "priv": 0.13
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.06,
+                "priv": 0.06
+            },
+            "rateAmAreAct": {
+                "pub": 0.76,
+                "priv": 0.61
+            }
+        }
+    },
+    {
+        "countryIso3": "STP",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.52,
+                "priv": 0.16
+            },
+            "rateTesting": {
+                "pub": 0.18,
+                "priv": 0.04
+            },
+            "rateRdt": 0.97
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.79,
+                "priv": 0.79
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.05,
+                "priv": 0.1
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.12,
+                "priv": 0.12
+            },
+            "rateAmAreAct": {
+                "pub": 0.65,
+                "priv": 0.43
+            }
+        }
+    },
+    {
+        "countryIso3": "SUR",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.52,
+                "priv": 0.13
+            },
+            "rateTesting": {
+                "pub": 0.12,
+                "priv": 0.02
+            },
+            "rateRdt": 0.5
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.8,
+                "priv": 0.8
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.01,
+                "priv": 0.03
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.05,
+                "priv": 0.05
+            },
+            "rateAmAreAct": {
+                "pub": 0.78,
+                "priv": 0.64
+            }
+        }
+    },
+    {
+        "countryIso3": "SWZ",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.47,
+                "priv": 0.15
+            },
+            "rateTesting": {
+                "pub": 0.35,
+                "priv": 0.08
+            },
+            "rateRdt": 0.67
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.75,
+                "priv": 0.75
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.02,
+                "priv": 0.04
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.03,
+                "priv": 0.03
+            },
+            "rateAmAreAct": {
+                "pub": 0.72,
+                "priv": 0.6
+            }
+        }
+    },
+    {
+        "countryIso3": "TCD",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.2,
+                "priv": 0.24
+            },
+            "rateTesting": {
+                "pub": 0.46,
+                "priv": 0.12
+            },
+            "rateRdt": 0.83
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.85,
+                "priv": 0.85
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.08,
+                "priv": 0.17
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.17,
+                "priv": 0.17
+            },
+            "rateAmAreAct": {
+                "pub": 0.68,
+                "priv": 0.38
+            }
+        }
+    },
+    {
+        "countryIso3": "TGO",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.24,
+                "priv": 0.24
+            },
+            "rateTesting": {
+                "pub": 0.78,
+                "priv": 0.36
+            },
+            "rateRdt": 0.88
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.85,
+                "priv": 0.85
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.1,
+                "priv": 0.24
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.26,
+                "priv": 0.26
+            },
+            "rateAmAreAct": {
+                "pub": 0.9,
+                "priv": 0.91
+            }
+        }
+    },
+    {
+        "countryIso3": "TZA",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.55,
+                "priv": 0.2
+            },
+            "rateTesting": {
+                "pub": 0.7,
+                "priv": 0.27
+            },
+            "rateRdt": 0.97
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.99,
+                "priv": 0.99
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.14,
+                "priv": 0.31
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.57,
+                "priv": 0.57
+            },
+            "rateAmAreAct": {
+                "pub": 0.93,
+                "priv": 0.92
+            }
+        }
+    },
+    {
+        "countryIso3": "UGA",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.43,
+                "priv": 0.38
+            },
+            "rateTesting": {
+                "pub": 0.84,
+                "priv": 0.45
+            },
+            "rateRdt": 0.87
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.99,
+                "priv": 0.99
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.15,
+                "priv": 0.36
+            },
+            "rateUntestedGotAm": {
+                "pub": 1,
+                "priv": 1
+            },
+            "rateAmAreAct": {
+                "pub": 0.96,
+                "priv": 0.94
+            }
+        }
+    },
+    {
+        "countryIso3": "VEN",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.52,
+                "priv": 0.16
+            },
+            "rateTesting": {
+                "pub": 0.3,
+                "priv": 0.06
+            },
+            "rateRdt": 0.11
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.75,
+                "priv": 0.75
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.02,
+                "priv": 0.05
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.03,
+                "priv": 0.03
+            },
+            "rateAmAreAct": {
+                "pub": 0.69,
+                "priv": 0.57
+            }
+        }
+    },
+    {
+        "countryIso3": "VNM",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.35,
+                "priv": 0.35
+            },
+            "rateTesting": {
+                "pub": 0.13,
+                "priv": 0.02
+            },
+            "rateRdt": 0.27
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.78,
+                "priv": 0.78
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.01,
+                "priv": 0.02
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.01,
+                "priv": 0.01
+            },
+            "rateAmAreAct": {
+                "pub": 0.69,
+                "priv": 0.56
+            }
+        }
+    },
+    {
+        "countryIso3": "VUT",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.6,
+                "priv": 0.09
+            },
+            "rateTesting": {
+                "pub": 0.04,
+                "priv": 0
+            },
+            "rateRdt": 0.85
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.81,
+                "priv": 0.81
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.04,
+                "priv": 0.04
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.02,
+                "priv": 0.02
+            },
+            "rateAmAreAct": {
+                "pub": 0.77,
+                "priv": 0.65
+            }
+        }
+    },
+    {
+        "countryIso3": "YEM",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.38,
+                "priv": 0.26
+            },
+            "rateTesting": {
+                "pub": 0.15,
+                "priv": 0.02
+            },
+            "rateRdt": 0.38
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.75,
+                "priv": 0.75
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.02,
+                "priv": 0.06
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.03,
+                "priv": 0.03
+            },
+            "rateAmAreAct": {
+                "pub": 0.72,
+                "priv": 0.36
+            }
+        }
+    },
+    {
+        "countryIso3": "ZAF",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.45,
+                "priv": 0.21
+            },
+            "rateTesting": {
+                "pub": 0.45,
+                "priv": 0.12
+            },
+            "rateRdt": 0.57
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.81,
+                "priv": 0.81
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.01,
+                "priv": 0.02
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.01,
+                "priv": 0.01
+            },
+            "rateAmAreAct": {
+                "pub": 0.71,
+                "priv": 0.56
+            }
+        }
+    },
+    {
+        "countryIso3": "ZMB",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.63,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.86,
+                "priv": 0.5
+            },
+            "rateRdt": 0.97
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.98,
+                "priv": 0.98
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.15,
+                "priv": 0.35
+            },
+            "rateUntestedGotAm": {
+                "pub": 0.87,
+                "priv": 0.87
+            },
+            "rateAmAreAct": {
+                "pub": 0.99,
+                "priv": 0.98
+            }
+        }
+    },
+    {
+        "countryIso3": "ZWE",
+        "targetYear": 2030,
+        "communitySettings": {
+            "pfPrScenario": "Stagnant"
+        },
+        "clinicSettings": {
+            "rateCareseeking": {
+                "pub": 0.4,
+                "priv": 0.11
+            },
+            "rateTesting": {
+                "pub": 0.46,
+                "priv": 0.12
+            },
+            "rateRdt": 1
+        },
+        "complianceSettings": {
+            "rateTestedPosGotAm": {
+                "pub": 0.73,
+                "priv": 0.73
+            },
+            "rateTestedNegGotAm": {
+                "pub": 0.03,
+                "priv": 0.07
+            },
+            "rateUntestedGotAm": {
+                "pub": 0,
+                "priv": 0
+            },
+            "rateAmAreAct": {
+                "pub": 0.86,
+                "priv": 0.79
+            }
+        }
+    }
+]
