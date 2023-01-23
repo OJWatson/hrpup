@@ -24,11 +24,12 @@ didehpc::didehpc_config_global(temp=didehpc::path_mapping("tmp",
 # Creating a Context
 context_name <- "scripts/context"
 
+#packages <- list(loaded = "OJWatson/hrp2malaRia")
+packages <- c("OJWatson/hrp2malaRia")
 ctx <- context::context_save(
   path = context_name,
   package_sources = conan::conan_sources(
-    packages = c("OJWatson/hrp2malaRia", "rrq"),
-    repos = "https://mrc-ide.github.io/drat/"
+    packages = packages
   )
 )
 
@@ -38,7 +39,7 @@ config$resource$parallel <- "FALSE"
 config$resource$type <- "Cores"
 
 # Configure the Queue
-obj <- didehpc::queue_didehpc(ctx, config = config)
+obj <- didehpc::queue_didehpc(ctx, config = config, provision = "verylazy")
 
 ## safe submission ======
 try_fail_catch <- function(expr, attempts = 3){
@@ -58,35 +59,138 @@ try_fail_catch <- function(expr, attempts = 3){
 ## ------------------------------------
 
 pl <- readRDS("analysis/data_derived/param_start.rds")
+workers <- obj$submit_workers(200)
+nmf_ranges <- unique(pl$nmf.multiplier)
 
-# Submission Lists -----
-paramList <- list()
-for(i in seq_len(nrow(pl))){
-  paramList[[i]] <- list(EIR=pl$EIR[i]/365,
-                         ft=pl$ft[i],
-                         strains.0=20,
-                         N=100000,
-                         time.step=1,
-                         years=30,
-                         storage=30,
-                         max.age=100,
-                         d.CM=67.7)
+for(nmf in nmf_ranges){
+
+  # Submission Lists -----
+  paramList <- list()
+  plnmf <- pl %>% filter(nmf.multiplier == nmf)
+  for(i in seq_len(nrow(pl))){
+
+    paramList[[i]] <- list(EIR=plnmf$EIR[i]/365,
+                           ft=plnmf$ft[i],
+                           nmf.multiplier=plnmf$nmf[i],
+                           include.nmf = TRUE,
+                           strains.0=20,
+                           N=100000,
+                           time.step=1,
+                           years=40,
+                           storage=30,
+                           max.age=100,
+                           d.CM=67.7)
+  }
+  grp_list <- list()
+  # submit grids
+  for(i in 1:5) {
+
+    try_fail_catch(
+      grp_list[[i]] <- obj$lapply(
+        X = paramList, timeout=0,
+        FUN = function(x){
+          library(hrp2malaRia)
+          return(do.call(hrp2malaRia::hrp2_Simulation, x))
+        },
+        name = paste0("long_grid_setup_nmf_", nmf,"_",i), overwrite = TRUE)
+    )
+
+  }
+
 }
 
-# submit grids
-for(i in 1:5) {
+## ------------------------------------
+## 3. Continuation
+## ------------------------------------
 
-  try_fail_catch(
-    grp <- obj$lapply(
-      X = paramList, timeout=0,
-                       FUN = function(x){
-                         return(hrp2_Simulation(EIR=x$EIR,strains.0 = x$strains.0, N = x$N,
-                                                time.step = x$time.step, years = x$years,
-                                                storage = x$storage, max.age = x$max.age,
-                                                d.CM = x$d.CM, ft = x$ft,
-                         ))
-                       },
-                       name = paste0("grid_setup_", i))
-  )
+pl2 <- readRDS("analysis/data_derived/param_grid.rds")
+paramList_list_final <- list()
+for(nmf in seq_along(nmf_ranges)) {
+
+  # which nmf is this
+  nmf_i <- nmf
+  nmf <- nmf_ranges[nmf]
+  grp_start_list <- lapply(paste0("long_grid_setup_nmf_", nmf,"_",1:5), function(x){obj$task_bundle_get(x)})
+
+  plnmf <- pl2 %>% filter(nmf.multiplier == nmf)
+  paramList_list <- list()
+
+  # Admin continuations  -----
+  for(j in seq_along(grp_start_list)){
+
+    paramList_list[[j]] <- list()
+    previous_pars <- as.data.frame(do.call(rbind, lapply(grp_start_list[[j]]$X, as.data.frame)))
+
+    for(i in seq_len(nrow(plnmf))){
+
+      # fill our param list with the required params
+      paramList_list[[j]][[i]] <- list(EIR=plnmf$EIR[i]/365,
+                                       ft=plnmf$ft[i],
+                                       microscopy.use=plnmf$microscopy.use[i],
+                                       rdt.nonadherence=plnmf$rdt.nonadherence[i],
+                                       fitness=plnmf$fitness[i],
+                                       rdt.det=plnmf$rdt.det[i],
+                                       nmf.multiplier=plnmf$nmf.multiplier[i],
+                                       N=100000,
+                                       time.step=1,
+                                       years=40,
+                                       storage=30,
+                                       max.age=100,
+                                       d.CM=67.7)
+
+      # And the id of the previous run this relates to
+      run_i <- which(previous_pars$EIR == plnmf$EIR[i]/365 &
+                       previous_pars$ft == plnmf$ft[i] &
+                       previous_pars$nmf.multiplier == plnmf$nmf.multiplier)
+      paramList_list[[j]][[i]]$ID <- grp_start_list[[j]]$ids[run_i]
+      paramList_list[[j]][[i]]$root <- context_name
+
+      # And the adjustments to the storage and length of run time
+      paramList_list[[j]][[i]]$just_storage_results <- TRUE
+      paramList_list[[j]][[i]]$years <- 20
+      paramList_list[[j]][[i]]$desired.freq <- 0.06
+      paramList_list[[j]][[i]]$include.nmf <- TRUE
+
+    }
+
+  }
+
+  paramList_list_final[[nmf_i]] <- paramList_list
 
 }
+
+saveRDS(paramList_list_final, "analysis/data_derived/final_param_grid.rds")
+
+# -------------------------------------------
+# Now submit our new runs to the cluster
+# -------------------------------------------
+
+paramList_list_final <- readRDS("analysis/data_derived/final_param_grid.rds")
+
+# for now just do the list related to nmf = 1
+for(nmf in seq_along(nmf_ranges)[2]){
+
+  nmf_i <- nmf
+  nmf <- nmf_ranges[nmf_i]
+
+  paramList_list <- paramList_list_final[[nmf_i]]
+  grp_list_final <- list()
+  for(i in seq_along(paramList_list)[1:5]){
+
+    try_fail_catch(
+      grp_list_final[[i]] <- obj$lapply(
+        X = paramList_list[[i]], timeout=0,
+        FUN = function(x){
+          library(hrp2malaRia)
+          return(do.call(hrp2malaRia::hrp2_Simulation, x))
+        },
+        name = paste0("long_grid_continuation_nmf_",nmf,"_", i), overwrite = TRUE)
+    )
+
+  }
+
+}
+
+
+
+

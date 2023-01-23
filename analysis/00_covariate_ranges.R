@@ -37,7 +37,7 @@ df$non_adherence <- df$ft_priv/(df$ft_priv + df$ft_publ) * df$negtesttreat_priv 
 eir_range <- magenta:::age_brackets(num_age_brackets = 10, max_age = 130)[-1]
 ft_range <- seq(0.01, 0.9, length.out = 9)
 micro_range <- seq(0, max(df$micro), length.out = 4)
-nonadherence_range <- seq(0, max(df$non_adherence), length.out = 4)
+nonadherence_range <- seq(0, max(df$non_adherence), length.out = 3)
 fitness <- c(1, 0.95, 0.90)
 hrp3 <- c(0, 0.25, 0.5)
 nmf <- c(0.75, 1, 1.25)
@@ -45,9 +45,10 @@ nmf <- c(0.75, 1, 1.25)
 # starter param grid
 param.start <- expand.grid(
   EIR = eir_range,
-  ft = ft_range
-) %>%
-  mutate(id = seq_len(n()))
+  ft = ft_range,
+  nmf.multiplier = nmf,
+  include.nmf = TRUE
+)
 saveRDS(param.start, "analysis/data_derived/param_start.rds")
 
 # continuation param grid
@@ -58,9 +59,10 @@ param.grid <- expand.grid(
   rdt.nonadherence = nonadherence_range,
   fitness = fitness,
   rdt.det = hrp3,
-  nmf = nmf
+  nmf.multiplier = nmf,
+  include.nmf = TRUE
 )
-param.grid <- left_join(param.grid, param.start, by = c("EIR", "ft"))
+param.grid <- left_join(param.grid, param.start, by = c("EIR", "ft", "nmf.multiplier"))
 
 dir.create("analysis/data_derived/")
 saveRDS(param.grid, "analysis/data_derived/param_grid.rds")
