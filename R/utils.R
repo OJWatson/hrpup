@@ -10,7 +10,6 @@
 #' @param width Width of plot in inches. Default = 6
 #' @param height Height of plot in inches. Default = 6
 #' @param plot_dir Plotting directory. Defaults to "analysis/plots"
-#'
 #' @importFrom grDevices dev.off pdf
 save_figs <- function(name,
                       fig,
