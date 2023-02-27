@@ -1,4 +1,4 @@
 library(testthat)
-library(samrat)
+library(hrpup)
 
-test_check("samrat")
+test_check("hrpup")
