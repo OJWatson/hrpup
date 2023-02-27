@@ -1,3 +1,5 @@
+library(tidyverse)
+
 hrpdat <- readxl::read_xlsx("analysis/data_raw/HRP2_map_13.1.23.xlsx") %>%
   rename(WHO_HRP2_HRP3_DELETIONS_PERCENT = WHO_HPR2_HRP3_DELETIONS_PERCENT,
          WHO_HRP2_HRP3_DELETIONS_TESTED_N = WHO_HPR2_HRP3_DELETIONS_TESTED_N,
@@ -39,13 +41,37 @@ final <- final %>% filter(WHO_HRP2_HRP3_DELETIONS_PERCENT <= WHO_HRP2_DELETION_P
 x1 <- final$WHO_HRP2_HRP3_DELETIONS_POS_N
 size <- final$WHO_HRP2_DELETION_POS_N
 
-mtmp <- function(prob,theta) {
-  -sum(emdbook::dbetabinom(final$WHO_HRP2_HRP3_DELETIONS_POS_N, prob, final$WHO_HRP2_DELETION_POS_N,theta, log=TRUE))
+# the model should be fit per continent as different evolution processes in S America for sure
+final$continent <- as.factor(countrycode::countrycode(final$ISO_ctry,"iso2c", "continent"))
+
+mtmp <- function(prob, theta, continent) {
+  if(continent == 0) {
+    -sum(emdbook::dbetabinom(
+      final$WHO_HRP2_HRP3_DELETIONS_POS_N,
+      prob,
+      final$WHO_HRP2_DELETION_POS_N,
+      theta,
+      log=TRUE
+    ))
+  } else {
+  -sum(emdbook::dbetabinom(
+    final$WHO_HRP2_HRP3_DELETIONS_POS_N[as.integer(final$continent) %in% continent],
+    prob,
+    final$WHO_HRP2_DELETION_POS_N[as.integer(final$continent) %in% continent],
+    theta,
+    log=TRUE
+    ))
+  }
 }
 
 # summary gives 66% probability
-m0 <- bbmle::mle2(mtmp, start=list(prob=0.6,theta=9))
-summary(m0)
+bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 1))
+bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 2))
+bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 3))
+bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 4))
+bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 5))
+m0 <- bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 0))
+
 
 # plot what that looks like
 final$coocc <- final$WHO_HRP2_HRP3_DELETIONS_PERCENT / final$WHO_HRP2_DELETION_PERCENT
