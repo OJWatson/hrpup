@@ -201,7 +201,8 @@ for(nmf in seq_along(nmf_ranges)){
 # start by grabbing the central data and extracting one replicate at a time
 grps <- lapply(paste0("true_grid_continuation_nmf_", 1,"_",1:5), obj$task_bundle_get)
 
-for(i in seq_along(grps)[-1]) {
+# save output
+for(i in seq_along(grps)) {
 
   st <- grps[[i]]$status()
   ids <- which(st == "COMPLETE")
@@ -222,6 +223,8 @@ for(i in seq_along(grps)[-1]) {
 
   }
 
+  # these files are 1Gb so are not on Github but the output of the processing of this from
+  # 02_sim_processing are
   saveRDS(res_i, file.path(cp_path("analysis/data_derived/sims"), paste0(grps[[i]]$name, ".rds")))
 
 }
