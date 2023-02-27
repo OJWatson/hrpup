@@ -40,7 +40,7 @@ micro_range <- seq(0, max(df$micro), length.out = 4)
 nonadherence_range <- seq(0, max(df$non_adherence), length.out = 3)
 fitness <- c(1, 0.95, 0.90)
 hrp3 <- c(0, 0.25, 0.5)
-nmf <- c(0.75, 1, 1.25)
+nmf <- c(0.5, 1, 2)
 
 # starter param grid
 param.start <- expand.grid(
@@ -66,8 +66,4 @@ param.grid <- left_join(param.grid, param.start, by = c("EIR", "ft", "nmf.multip
 
 dir.create("analysis/data_derived/")
 saveRDS(param.grid, "analysis/data_derived/param_grid.rds")
-
-
-
-
 

@@ -19,7 +19,7 @@ didehpc::didehpc_config_global(temp=didehpc::path_mapping("tmp",
                                                           "//fi--didenas5/malaria",
                                                           "L:"),
                                credentials=credentials,
-                               cluster = "fi--didemrchnb")
+                               cluster = "fi--didemrchnb") #"fi--dideclusthn"
 
 # Creating a Context
 context_name <- "scripts/context"
@@ -41,7 +41,7 @@ config$resource$type <- "Cores"
 # Configure the Queue
 obj <- didehpc::queue_didehpc(ctx, config = config, provision = "verylazy")
 
-## safe submission ======
+## safe submission
 try_fail_catch <- function(expr, attempts = 3){
   r <- NULL
   attempt <- 1
@@ -59,15 +59,14 @@ try_fail_catch <- function(expr, attempts = 3){
 ## ------------------------------------
 
 pl <- readRDS("analysis/data_derived/param_start.rds")
-workers <- obj$submit_workers(200)
 nmf_ranges <- unique(pl$nmf.multiplier)
 
-for(nmf in nmf_ranges){
+for(nmf in nmf_ranges[3]){
 
   # Submission Lists -----
   paramList <- list()
   plnmf <- pl %>% filter(nmf.multiplier == nmf)
-  for(i in seq_len(nrow(pl))){
+  for(i in seq_len(nrow(plnmf))){
 
     paramList[[i]] <- list(EIR=plnmf$EIR[i]/365,
                            ft=plnmf$ft[i],
@@ -92,7 +91,7 @@ for(nmf in nmf_ranges){
           library(hrp2malaRia)
           return(do.call(hrp2malaRia::hrp2_Simulation, x))
         },
-        name = paste0("long_grid_setup_nmf_", nmf,"_",i), overwrite = TRUE)
+        name = paste0("true_grid_setup_nmf_", nmf,"_",i), overwrite = TRUE)
     )
 
   }
@@ -110,7 +109,7 @@ for(nmf in seq_along(nmf_ranges)) {
   # which nmf is this
   nmf_i <- nmf
   nmf <- nmf_ranges[nmf]
-  grp_start_list <- lapply(paste0("long_grid_setup_nmf_", nmf,"_",1:5), function(x){obj$task_bundle_get(x)})
+  grp_start_list <- lapply(paste0("true_grid_setup_nmf_", nmf,"_",1:5), function(x){obj$task_bundle_get(x)})
 
   plnmf <- pl2 %>% filter(nmf.multiplier == nmf)
   paramList_list <- list()
@@ -141,7 +140,7 @@ for(nmf in seq_along(nmf_ranges)) {
       # And the id of the previous run this relates to
       run_i <- which(previous_pars$EIR == plnmf$EIR[i]/365 &
                        previous_pars$ft == plnmf$ft[i] &
-                       previous_pars$nmf.multiplier == plnmf$nmf.multiplier)
+                       previous_pars$nmf.multiplier == plnmf$nmf.multiplier[i])
       paramList_list[[j]][[i]]$ID <- grp_start_list[[j]]$ids[run_i]
       paramList_list[[j]][[i]]$root <- context_name
 
@@ -167,8 +166,8 @@ saveRDS(paramList_list_final, "analysis/data_derived/final_param_grid.rds")
 
 paramList_list_final <- readRDS("analysis/data_derived/final_param_grid.rds")
 
-# for now just do the list related to nmf = 1
-for(nmf in seq_along(nmf_ranges)[2]){
+# and submit the continuation to the cluster
+for(nmf in seq_along(nmf_ranges)){
 
   nmf_i <- nmf
   nmf <- nmf_ranges[nmf_i]
@@ -184,7 +183,7 @@ for(nmf in seq_along(nmf_ranges)[2]){
           library(hrp2malaRia)
           return(do.call(hrp2malaRia::hrp2_Simulation, x))
         },
-        name = paste0("long_grid_continuation_nmf_",nmf,"_", i), overwrite = TRUE)
+        name = paste0("true_grid_continuation_nmf_",nmf,"_", i), overwrite = TRUE)
     )
 
   }
@@ -194,3 +193,35 @@ for(nmf in seq_along(nmf_ranges)[2]){
 
 
 
+
+## -------------------------------------------
+## 4. Collecting Results
+## -------------------------------------------
+
+# start by grabbing the central data and extracting one replicate at a time
+grps <- lapply(paste0("true_grid_continuation_nmf_", 1,"_",1:5), obj$task_bundle_get)
+
+for(i in seq_along(grps)[-1]) {
+
+  st <- grps[[i]]$status()
+  ids <- which(st == "COMPLETE")
+
+  res_i <- list()
+  res_i$pl <- vector("list", length(ids))
+  res_i$res <- vector("list", length(ids))
+
+  pb <- progress::progress_bar$new(
+    format = "  downloading [:bar] :percent eta: :eta",
+    total = length(ids), clear = FALSE, width= 60)
+
+  for(j in seq_along(ids)) {
+
+    pb$tick()
+    res_i$pl[[j]] <- grps[[i]]$X[[j]]
+    res_i$res[[j]] <- grps[[i]]$db$get_value(grps[[i]]$db$get_hash(names(ids)[j], "task_results"), FALSE)
+
+  }
+
+  saveRDS(res_i, file.path(cp_path("analysis/data_derived/sims"), paste0(grps[[i]]$name, ".rds")))
+
+}
