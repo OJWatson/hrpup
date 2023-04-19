@@ -17,3 +17,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 analysis
+^_pkgdown\.yml$
+^pkgdown$

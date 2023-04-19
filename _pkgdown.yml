@@ -1,0 +1,13 @@
+template:
+  params:
+    bootswatch: flatly
+
+navbar:
+  type: default
+  left:
+    - href: index.html
+      icon: fa-home
+  right:
+    - icon: fa-github
+      href: https://github.com/afyac/mast
+

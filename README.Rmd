@@ -14,24 +14,70 @@ knitr::opts_chunk$set(
 ```
 
 <!-- badges: start -->
+[![minimal R version](https://img.shields.io/badge/R%3E%3D-`r as.character(getRversion())`-brightgreen.svg)](https://cran.r-project.org/)
+[![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/) 
 [![R build status](https://github.com/OJWatson/hrpup/workflows/R-CMD-check/badge.svg)](https://github.com/OJWatson/hrpup/actions)
 [![CodeFactor](https://www.codefactor.io/repository/github/OJWatson/hrpup/badge)](https://www.codefactor.io/repository/github/OJWatson/hrpup)
-[![codecov.io](https://codecov.io/github/OJWatson/hrpup/coverage.svg?branch=main)](https://codecov.io/github/OJWatson/hrpup?branch=main)
-[![R-CMD-check](https://github.com/afyac/mast/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/afyac/mast/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
+## Research compendium for hrp2 risk mapping
 
-## Installation
+This is a working R compendium (think R package but for reproducible analysis). A good overview on research compendiums, see the [R for Reproducible Research](https://annakrystalli.me/rrresearch/index.html) course.
 
-To install `hrpup`:
+### Installation
 
-```r
-remotes::install_github("OJWatson/hrpup", upgrade = FALSE)
 ```
+git clone https://github.com/OJWatson/hrpup.git
+cd hrpup
+open hrpup.Rproj
+```
+
+Next, if `renv` has been used in this repository (look out for `renv.lock`) then use `renv::restore` to set up package dependencies. Otherwise `devtools::install_dev_deps()` will install all required packages, as specified in the Imports in DESCRIPTION. 
+
+### Overview
+
+The structure within analysis is as follows:
+
+```
+R/                            # Packaged R functions 
+
+analysis/
+    |
+    ├── 01_xxxxx /            # analysis scripts used for generating figures
+    |
+    ├── plots/                # location of figures produced by the analysis scripts
+    |
+    ├── tables/               # location of tables produced by the analysis scripts
+    |
+    ├── data_derived/         # data generated during the analysis
+    |
+    ├── data_raw/             # data obtained from elsewhere and treated read-only
+
+```
+
+### Compendium DOI: 
+ 
+https://doi.org/X/X
+
+The files at the URL above will generate the results as found in the publication.
+
+### The R package 
+
+This repository is organized as an R package. There are only a few R functions exported in this package - the majority of the R code is in the analysis directory. The R package structure is here to help manage dependencies, to take advantage of continuous integration, and so we can keep file and data management simple. For any R packages that are used frequently in this repository, they are documented in `R/` and are used in the analysis folder using `devtools::load_all()`. 
+
+To download the package source as you see it on GitHub, for offline browsing, use this line at the shell prompt (assuming you have Git installed on your computer):
+
+```{r eval=FALSE}
+git clone https://github.com/OJWatson/hrpup.git
+```
+
+Once the download is complete, open the `hrpup.Rproj` in RStudio to begin working with the package and compendium files. We will endeavour to keep all package dependencies required listed in the DESCRIPTION. 
+
+<!-- To add this once all the analysis is done -->
+In addition, once analysis is completed, we will use `renv` to track package dependencies for reproducibility. Please use `renv::restore` to restore the state of the project and see https://rstudio.github.io/renv/articles/renv.html for more information.
 
 ### Licenses
 
 Code: [MIT](http://opensource.org/licenses/MIT) year: `r format(Sys.Date(), "%Y")`, copyright holder: OJ Watson
 
 Data: [CC-0](http://creativecommons.org/publicdomain/zero/1.0/) attribution requested in reuse
-

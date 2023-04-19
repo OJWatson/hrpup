@@ -192,14 +192,7 @@ compl[[i]] <- left_join(scenario_maps$map, scenario_maps$map_data[[i]]) %>% sf::
 compl_df <- do.call(rbind, compl)
 saveRDS(compl_df, "analysis/data_derived/complete_times.rds")
 
-# compl_summary <- compl_df %>% group_by(iso, name_0, name_1) %>%
-#   filter(Micro.2.10_scen == "central") %>%
-#   filter(fitness_scen == "central") %>%
-#   mutate(t = replace(t, t<0, Inf)) %>%
-#   summarise(t_med = median(t, na.rm = TRUE),
-#             t_low = quantile(t, 0.025, na.rm = TRUE),
-#             t_high = quantile(t, 0.975, na.rm = TRUE))
-
+# Times censored at 40 years
 central_df <- compl_df %>% group_by(iso, name_0, name_1) %>%
   filter(if_all(ends_with("scen"), ~ . == "central")) %>%
   filter(!(iso %in% c("ATF", "UMI"))) %>%
@@ -210,6 +203,9 @@ central_df <- compl_df %>% group_by(iso, name_0, name_1) %>%
          t_uci = round(replace(tmin, tmin<0, Inf),2),
          t_lci = round(replace(tmax, tmax<0, Inf),2),
          scenario = "Central") %>%
+  mutate(t_med = replace(t_med, t_med>40, "40+"),
+         t_uci = replace(t_uci, t_uci>40, "40+"),
+         t_lci = replace(t_lci, t_lci>40, "40+")) %>%
   rename(admin_0 = name_0) %>%
   rename(admin_1 = name_1) %>%
   arrange(continent, iso,  admin_1) %>%
@@ -225,6 +221,9 @@ worst_df <- compl_df %>% group_by(iso, name_0, name_1) %>%
          t_uci = round(replace(tmin, tmin<0, Inf),2),
          t_lci = round(replace(tmax, tmax<0, Inf),2),
          scenario = "Pessimistic") %>%
+  mutate(t_med = replace(t_med, t_med>40, "40+"),
+         t_uci = replace(t_uci, t_uci>40, "40+"),
+         t_lci = replace(t_lci, t_lci>40, "40+")) %>%
   rename(admin_0 = name_0) %>%
   rename(admin_1 = name_1) %>%
   arrange(continent, iso,  admin_1) %>%
@@ -240,6 +239,9 @@ best_df <- compl_df %>% group_by(iso, name_0, name_1) %>%
          t_uci = round(replace(tmin, tmin<0, Inf),2),
          t_lci = round(replace(tmax, tmax<0, Inf),2),
          scenario = "Optimistic") %>%
+  mutate(t_med = replace(t_med, t_med>40, "40+"),
+         t_uci = replace(t_uci, t_uci>40, "40+"),
+         t_lci = replace(t_lci, t_lci>40, "40+")) %>%
   rename(admin_0 = name_0) %>%
   rename(admin_1 = name_1) %>%
   arrange(continent, iso,  admin_1) %>%
