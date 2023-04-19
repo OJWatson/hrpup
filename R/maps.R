@@ -1,6 +1,7 @@
-#' R6 Class for hrp2 results maps
+#' @title R6 Class for hrp2 results maps
 #'
-#' A results map
+#' @description A results map
+#'
 #' @importFrom ggplot2 ggplot aes
 #' @importFrom ggnewscale new_scale_fill
 #' @importFrom ggpattern geom_sf_pattern
@@ -33,7 +34,12 @@ R6_hrp2_map <- R6::R6Class(
     },
 
     #' @description
-    #' Plot maps for specific scenario
+    #' Plot hrp2 risk maps
+    #'
+    #' Plot a map for a given scenario and at a given regional scale.
+    #'
+    #' All scenario parameters must be one of "central", "worst", "best"
+    #'
     #' @param region One of "global", "africa", "asia", "latam"
     #' @param Micro.2.10 Microscopy prevalence scenario
     #' @param ft Treatment seeking rate scenario
@@ -42,8 +48,7 @@ R6_hrp2_map <- R6::R6Class(
     #' @param fitness Relative fitness of hrp2 deleted parasite scenario
     #' @param rdt.det Chance of hrp2 deleted parasite yielding pos test scenario
     #' @param print Boolean for whether to print the plot as well as return it
-    #' @details All scenario parameters must be one of "central", "worst", "best"
-    #' @returns ggplot map object silently
+    #' @return ggplot map object silently
     plot = function(region = "africa",
                     Micro.2.10 = "central",
                     ft = "central",

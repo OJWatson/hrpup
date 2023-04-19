@@ -37,7 +37,7 @@ R6_hrp2_mod <- R6::R6Class(
     #' @param rdt.nonadherence Probability of treating negative indiviudal
     #' @param fitness Relative fitness of hrp2 deleted parasite
     #' @param rdt.det Chance of hrp2 deleted parasite yielding positive test
-    #' @returns Data.frame of selection coefficients and times from 1% to 5%
+    #' @return Data.frame of selection coefficients and times from 1% to 5%
     predict = function(Micro.2.10, ft, microscopy.use, rdt.nonadherence, fitness, rdt.det) {
 
       # get args and turn into matrix

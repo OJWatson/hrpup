@@ -3,18 +3,8 @@
 \name{R6_hrp2_map}
 \alias{R6_hrp2_map}
 \title{R6 Class for hrp2 results maps}
-\value{
-ggplot map object silently
-}
 \description{
-R6 Class for hrp2 results maps
-
-R6 Class for hrp2 results maps
-}
-\details{
 A results map
-
-All scenario parameters must be one of "central", "worst", "best"
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -53,7 +43,11 @@ A new \code{hrp2_map} object.
 \if{html}{\out{<a id="method-hrp2_map-plot"></a>}}
 \if{latex}{\out{\hypertarget{method-hrp2_map-plot}{}}}
 \subsection{Method \code{plot()}}{
-Plot maps for specific scenario
+Plot hrp2 risk maps
+
+Plot a map for a given scenario and at a given regional scale.
+
+All scenario parameters must be one of "central", "worst", "best"
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$plot(
   region = "africa",
@@ -87,6 +81,9 @@ Plot maps for specific scenario
 \item{\code{print}}{Boolean for whether to print the plot as well as return it}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+ggplot map object silently
 }
 }
 }

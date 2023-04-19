@@ -3,9 +3,6 @@
 \name{R6_hrp2_mod}
 \alias{R6_hrp2_mod}
 \title{R6 Class for hrp2 selection model}
-\value{
-Data.frame of selection coefficients and times from 1\% to 5\%
-}
 \description{
 R6 Class for hrp2 selection model
 
@@ -101,6 +98,9 @@ Predict median and 95\% selection coefficients and threshold times
 \item{\code{rdt.det}}{Chance of hrp2 deleted parasite yielding positive test}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Data.frame of selection coefficients and times from 1\% to 5\%
 }
 }
 \if{html}{\out{<hr>}}
