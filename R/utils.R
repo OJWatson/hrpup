@@ -25,9 +25,9 @@ save_figs <- function(name,
                      base_height = height,
                      base_width = width)
 
-  pdf(file = fig_path(paste0(name,".pdf")), width = width, height = height)
-  print(fig)
-  dev.off()
+  #pdf(file = fig_path(paste0(name,".pdf")), width = width, height = height)
+  #print(fig)
+  #dev.off()
 
 }
 
