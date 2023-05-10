@@ -69,7 +69,6 @@ bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 1))
 bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 2))
 bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 3))
 bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 4))
-bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 5))
 m0 <- bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 0))
 
 

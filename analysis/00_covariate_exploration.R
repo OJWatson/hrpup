@@ -41,8 +41,11 @@ my_colors <- c("red", "blue", "green","orange", "yellow")
 my_palette <- colorRampPalette(my_colors)
 
 # quick plot of chance positive case is treated
-world <- giscoR::gisco_get_countries(year = "2020")
+world <- giscoR::gisco_get_countries(year = "2020", region = "Africa")
 world <- left_join(world %>% mutate(iso3c = ISO3_CODE), df)
+
+
+
 world %>%
   ggplot() +
   #geom_sf(aes(fill = cut(ft, seq(0,1,0.2))), color = NA, show.legend = TRUE) +

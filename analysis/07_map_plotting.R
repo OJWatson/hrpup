@@ -1,5 +1,5 @@
 # ---------------------------------------------------- #
-# 0. Get the world map and our data
+# 0. Get the world map and our data  ----
 # ---------------------------------------------------- #
 
 library(tidyverse)
@@ -12,7 +12,7 @@ world_map_0 <- malariaAtlas::getShp(ISO = available_admin$iso, admin_level = c("
 scenario_maps <- readRDS("analysis/data_derived/scenario_maps_full_monotonic.rds")
 
 # ---------------------------------------------------- #
-# 1. Plotting central time maps
+# 1. Plotting central time maps  ----
 # ---------------------------------------------------- #
 
 # plotting t maps -------------------------------#
@@ -100,7 +100,7 @@ gg_map2 <- create_map_t(world, world_map_0, TRUE)
 save_figs("central_world_map", gg_map2, width = 30, height = 8)
 
 # ---------------------------------------------------- #
-# 3. Plotting central risk maps
+# 2. Plotting central risk maps ----
 # ---------------------------------------------------- #
 
 # ------- Plotting Risk Maps----------------------- #
@@ -174,7 +174,7 @@ gg_map4 <- create_map_risk(scenario_maps, scenario, isos, TRUE)
 save_figs("central_world_risk", gg_map4, width = 30, height = 8)
 
 # ---------------------------------------------------- #
-# 4. Creating Data Outputs
+# 3. Creating Data Outputs  ----
 # ---------------------------------------------------- #
 
 compl <- list()
@@ -251,6 +251,30 @@ write.csv(central_df, "analysis/tables/central_times.csv", row.names = FALSE)
 write.csv(worst_df, "analysis/tables/pessimistic_times.csv", row.names = FALSE)
 write.csv(best_df, "analysis/tables/optimistic_times.csv", row.names = FALSE)
 
+# ---------------------------------------------------- #
+# 4. Creating Key High Risk Countries
+# ---------------------------------------------------- #
+
+world <- left_join(scenario_maps$map, scenario_maps$map_data[[365]]) %>%
+  filter(!is.na(t)) %>%
+  filter(iso %in% isos) %>%
+  mutate(t = replace(t, t < 0, Inf)) %>%
+  mutate(t_bin = cut(t, breaks = c(0,6,12,20, Inf)))
+
+hrtable <- world %>% sf::st_drop_geometry() %>% group_by(name_0) %>%
+  summarise(r = sum(t_bin == "(0,6]")/n()) %>%
+  filter(r >= 0.5) %>%
+  arrange(desc(r)) %>%
+  mutate(r = scales::percent_format()(r)) %>%
+  setNames(c("Country", "% Admin 1 High Risk"))
+
+write.csv(hrtable, file = "analysis/tables/high_innate_risk_countries.csv")
+
+# -----------------------------------#
+# ---------------------------------------------------- #
+# 4. Creating Time Ranges  ----
+# ---------------------------------------------------- #
+
 central_time_spans <- central_df %>%
   filter(continent == "Africa") %>%
   na.omit() %>%
@@ -294,53 +318,3 @@ all_time_spans <- central_df %>%
   clinical cases to increase from 1% to 5%") +
   ylab("Arican Admin 1 Regions")
 save_figs("all_time_spans", all_time_spans, 5, 5)
-
-# ---------------------------------------------------- #
-# 5. Creating Key High Risk Countries
-# ---------------------------------------------------- #
-
-world <- left_join(scenario_maps$map, scenario_maps$map_data[[365]]) %>%
-  filter(!is.na(t)) %>%
-  filter(iso %in% isos) %>%
-  mutate(t = replace(t, t < 0, Inf)) %>%
-  mutate(t_bin = cut(t, breaks = c(0,6,12,20, Inf)))
-
-hrtable <- world %>% sf::st_drop_geometry() %>% group_by(name_0) %>%
-  summarise(r = sum(t_bin == "(0,6]")/n()) %>%
-  filter(r >= 0.5) %>%
-  arrange(desc(r)) %>%
-  mutate(r = scales::percent_format()(r)) %>%
-  setNames(c("Country", "% Admin 1 High Risk"))
-
-write.csv(hrtable, file = "analysis/tables/high_risk_countries.csv")
-
-# -----------------------------------#
-
-
-# identify raw results
-testna <- readRDS("~/GoogleDrive/AcademicWork/Imperial/compendia/hrpup/analysis/data_derived/model_s.rds")
-to_match <- (compl_df %>% filter(name_1 == "Luanda"))[365,]
-
-return_sim_matches <- function(to_match, testna){
-
-closest <- function(x, test){
-  unique(test[[x]])[which.min(abs(unique(test[[x]]) - to_match[[x]]))]
-}
-
-find <- c("ft","microscopy.use","rdt.nonadherence","fitness","rdt.det")
-found <- lapply(find, closest, test = testna) %>% setNames(find)
-
-subset <- testna %>% filter(
-  ft == found$ft,
-  microscopy.use == found$microscopy.use,
-  rdt.nonadherence == found$rdt.nonadherence,
-  fitness == found$fitness,
-  rdt.det == found$rdt.det,
-  )
-
-diff <- abs(subset$Micro.2.10 - to_match$Micro.2.10)
-full_found <- subset[order(diff)[1:5],]
-full_found
-}
-
-matched <- return_sim_matches(to_match, testna)

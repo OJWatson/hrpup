@@ -36,7 +36,7 @@ rownames(regModels)[c(start, nextMods)]
 # let's go with a brnn for our final ensemble. First let's check it also works well
 
 # --------------------------------------------------------
-# 1. Check that brnn also performs well
+# 1. Perform brnn model fitting
 # --------------------------------------------------------
 
 library(tidyverse)
@@ -49,8 +49,6 @@ test <- testna %>% na.omit()
 train_indices <- sample(nrow(test), nrow(test) * 0.75)
 train <- test[train_indices, ]
 test <- test[-train_indices, ]
-
-# Perform brnn model fitting
 
 # 1 is observed through pdp to enforce monotonic outputs that are needed with respect to microscopy prevalence
 fit_brnn <- brnn::brnn(y = train$s, x = as.matrix(train %>% select(-s)), neurons = 1, verbose = FALSE)
@@ -69,7 +67,7 @@ plots <- lapply(names(test %>% select(-s)), function(x){
     ggplot2::autoplot()
 })
 brnn_pdp <- cowplot::plot_grid(plotlist = plots)
-brnn_pdp
+
 
 # Add this to our model selection object
 hrp2_mod <- readRDS(file.path(here::here("analysis/data_derived/ensemble_selection_model.rds")))
@@ -79,13 +77,16 @@ hrp2_mod$add_model_weight(rmse, "brnn")
 # Save our model out again
 saveRDS(hrp2_mod, file.path(here::here("analysis/data_derived/ensemble_selection_model.rds")))
 
-# Final partial dependence comparison
+# --------------------------------------------------------
+# 2. Partial dependence plot
+# --------------------------------------------------------
 
 mods <- hrp2_mod$get_models()
 vars <- names(test %>% select(-s))
 names(vars) <- c("Microscopy 2-10", "Effective Treatment Seeking", "Microscopy Use",
                  "RDT Nonadherence\n", "Comparative Fitness of \npfhrp2 deleted parasites",
                  "P(RDT+ve if only infected with \npfhp2 deleted parasites)")
+
 pdp_dat <- lapply(seq_along(vars), function(x){
   dat <- do.call(rbind, lapply(seq_along(mods), function(i){
   partial(mods[[i]], pred.var = as.character(vars[x]), train = train %>% select(-s), grid.resolution = 20, type = "regression") %>%
@@ -107,30 +108,4 @@ pdp_dat <- lapply(seq_along(vars), function(x){
 ggpdp <- cowplot::plot_grid(plotlist = pdp_dat)
 save_figs("partial_dependence", ggpdp, 14, 8)
 
-# Final variable importance
 
-mods <- hrp2_mod$get_models()
-vars <- mods$xbgoost$feature_names
-names(vars) <- c("Microscopy 2-10", "Effective Treatment Seeking", "Microscopy Use",
-                 "RDT Nonadherence\n", "Comparative Fitness of \npfhrp2 deleted parasites",
-                 "P(RDT+ve if only infected with \npfhp2 deleted parasites)")
-pdp_dat <- lapply(seq_along(vars), function(x){
-  dat <- do.call(rbind, lapply(seq_along(mods), function(i){
-    partial(mods[[i]], pred.var = as.character(vars[x]), train = train %>% select(-s), grid.resolution = 20, type = "regression") %>%
-      rename(s = yhat) %>%
-      mutate(model = names(mods)[i]) %>%
-      setNames(c("x", "s", "model"))
-  }))
-  dat %>% ggplot(aes(x,s,color = model)) +
-    geom_line() +
-    xlab(names(vars)[x]) +
-    ylab("Selection Coeffiecient") +
-    ggpubr::theme_pubclean(base_size = 14) +
-    theme(axis.line = element_line()) +
-    scale_color_viridis_d(name = "Model", end = 0.8) +
-    theme(legend.key = element_rect(fill = "white"))
-
-})
-
-ggpdp <- cowplot::plot_grid(plotlist = pdp_dat)
-save_figs("partial_dependence", ggpdp, 14, 8)

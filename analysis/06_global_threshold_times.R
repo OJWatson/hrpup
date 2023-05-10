@@ -9,7 +9,7 @@ covars <-  readRDS("analysis/data_derived/global_covariate_ranges.rds")
 selection_model <- readRDS("analysis/data_derived/ensemble_selection_model.rds")
 
 # MAP world map to
-world_map <- malariaAtlas::getShp(ISO = na.omit(unique(prev$ISO3)), admin_level = c("admin1")) %>% sf::st_as_sf()
+world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
 
 # make scenarios for the map
 scenarios <- expand.grid(

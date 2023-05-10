@@ -1,4 +1,4 @@
-
+library(tidyverse)
 # ---------------------------------------------------- #
 # 1. Get the MAP 2020 Prevalence values globally
 # ---------------------------------------------------- #
@@ -12,7 +12,7 @@ prev <- read.csv(tf) %>% filter(year == 2019)
 # "https://data.malariaatlas.org/global-data/json-stat/2022/v1/malaria/admin1/Pf_PR-rate_2010-2020_2-10-years_uci.json"
 # "https://data.malariaatlas.org/global-data/json-stat/2022/v1/malaria/admin1/Pf_PR-rate_2010-2020_2-10-years_mean.json"
 
-prev$continent <-countrycode::countrycode(prev$ISO3, "iso3c", "continent")
+prev$continent <- countrycode::countrycode(prev$ISO3, "iso3c", "continent")
 prev$id_1 <- prev$ADM1_Code
 prev_vars <- prev %>% select(ISO3, id_1, mean, lower, upper) %>%
   rename(iso3c = ISO3,

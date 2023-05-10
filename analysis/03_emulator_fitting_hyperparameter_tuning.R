@@ -38,7 +38,7 @@ evaluate_model <- function(params, train, test) {
 
   # Train xgboost model with cross-validation
   xgb_cv <- xgb.cv(params = params, data = as.matrix(train[, c("Micro.2.10","ft", "microscopy.use", "rdt.nonadherence", "fitness", "rdt.det")]),
-                   label = train$s, nfold = 10, verbose = 0, na.rm = TRUE,
+                   label = train$s, nfold = 20, verbose = 0, na.rm = TRUE,
                    nrounds = 200)
 
   # Extract best iteration

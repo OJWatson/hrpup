@@ -22,9 +22,9 @@ R6_hrp2_map <- R6::R6Class(
     #' @param map_0 Admin 0 map sf object
     #' @return A new `hrp2_map` object.
     initialize = function(map,
-                          map_data,
-                          scenarios,
-                          map_0) {
+                          map_data = NULL,
+                          scenarios = NULL,
+                          map_0 = NULL) {
 
       private$map <- map
       private$map_data <- map_data
@@ -48,6 +48,7 @@ R6_hrp2_map <- R6::R6Class(
     #' @param fitness Relative fitness of hrp2 deleted parasite scenario
     #' @param rdt.det Chance of hrp2 deleted parasite yielding pos test scenario
     #' @param print Boolean for whether to print the plot as well as return it
+    #' @param risk What type of risk score to plot, either "innate" (default) or "composite"
     #' @return ggplot map object silently
     plot = function(region = "africa",
                     Micro.2.10 = "central",
@@ -56,7 +57,8 @@ R6_hrp2_map <- R6::R6Class(
                     rdt.nonadherence = "central",
                     fitness = "central",
                     rdt.det = "central",
-                    print = FALSE) {
+                    print = FALSE,
+                    risk = "innate") {
 
       # checks on inputs
       stopifnot(region %in% c("global", "africa", "asia", "latam"))
@@ -66,6 +68,7 @@ R6_hrp2_map <- R6::R6Class(
       stopifnot(rdt.nonadherence %in% c("central", "worst", "best"))
       stopifnot(fitness %in% c("central", "worst", "best"))
       stopifnot(rdt.det %in% c("central", "worst", "best"))
+      stopifnot(risk %in% c("innate", "composite"))
 
       # find the scenario
       scenario <- which(
@@ -78,8 +81,13 @@ R6_hrp2_map <- R6::R6Class(
       )
 
       # create map data for each region
+      if(risk == "innate") {
+        var <- "hrp2_risk"
+      } else if (risk == "composite") {
+        var <- "hrp2_composite_risk"
+      }
       mapped <- merge(private$map, private$map_data[[scenario]])
-      mapped <- mapped[!is.na(mapped$hrp2_risk), ]
+      mapped <- mapped[!is.na(mapped[[var]]), ]
 
       # get the admin 0 boundaries
       mapped_0 <- private$map_0
@@ -95,11 +103,11 @@ R6_hrp2_map <- R6::R6Class(
       # generate map
       gg_map_risk <- mapped %>%
         ggplot2::ggplot() +
-        ggplot2::geom_sf(ggplot2::aes(fill = hrp2_risk), color = "grey", show.legend = TRUE, lwd = 0.1) +
+        ggplot2::geom_sf(ggplot2::aes_string(fill = var), color = "grey", show.legend = TRUE, lwd = 0.1) +
         ggplot2::scale_fill_manual(name = "HRP2 Concern", values = rev(c("blue", "cyan", "yellow", "red")),
-                          labels = rev(c("Marginal", "Slight", "Moderate", "High")),
-                          na.value = "white"
-                          )
+                                   labels = rev(c("Marginal", "Slight", "Moderate", "High")),
+                                   na.value = "white"
+        )
 
       # add prevalence mapping
       if(any((gg_map_risk$data$Micro.2.10 < 0.0005))) {
@@ -120,7 +128,7 @@ R6_hrp2_map <- R6::R6Class(
       # add the admin 0 mappings in and some simplifying themes
       gg_map_risk <- gg_map_risk +
         ggplot2::geom_sf(fill = NA, color = "black", show.legend = FALSE,
-                data = mapped_0, lwd = 0.2) +
+                         data = mapped_0, lwd = 0.2) +
         ggplot2::coord_sf() +
         ggplot2::theme_void() +
         ggplot2::theme(plot.caption = ggplot2::element_text(face = "italic"),
@@ -130,7 +138,11 @@ R6_hrp2_map <- R6::R6Class(
       print(gg_map_risk)
       invisible(gg_map_risk)
 
-    }
+    },
+
+    # SETTERS
+    set_map_data = function(map_data) {private$map_data <- map_data},
+    set_scenarios = function(scenarios) {private$scenarios <- scenarios}
 
   ),
 

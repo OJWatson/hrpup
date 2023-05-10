@@ -113,6 +113,9 @@ data <- data %>%
 data$prob <- vapply(data$x/data$n, min, 0.999, FUN.VALUE = numeric(1))
 data$prob <- vapply(data$prob, max, 0.001, FUN.VALUE = numeric(1))
 
+# put things in lists for the prior/posterior functions
+misc <- list("hrp2_mod" = hrp2_model)
+data_list <- list("data" = data)
 
 # -----------------------------------------------------#
 
@@ -173,27 +176,39 @@ params <-
   ) %>%
   mutate(posterior = ll + lp)
 
+# Does this seem correct. Quick Ll plot
 ll_plot <- params %>%
   ggplot(aes(x = fitness, y = rdtdet, fill = -posterior)) + geom_tile() +
 scale_fill_gradientn(name = "Negative Log \nLikelihood",
-                     colors = c("blue", "green", "yellow", "red"),
+                     colors = RColorBrewer::brewer.pal(9,"YlOrBr")[c(3, 5,7,9)],
                      values = c(0,0.2,0.4,0.6,1),
                      trans = "log", # Log transformation
                      breaks = c(20, 35, 60, 120),
                      labels = c(20, 35, 60, 120),
-                     limits = c(17.5, 125)) +
-  theme_minimal() +
-  xlab("Relative Fitness") +
-  ylab("Probability of hrp2 deleted parasite \nwith intact hrp3 and yielding +ve RDT")
-ll_plot
+                     limits = c(17.5, 150)) +
+  ggpubr::theme_pubclean() +
+  xlab("Comparative Fitness of Deleted Parasites") +
+  ylab("Probability of hrp2 deleted parasite \nwith intact hrp3 and yielding +ve RDT") +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0))
 
+# Now draw from our posterior to get a data set range
 draws <- sample(seq_len(nrow(params)), 1000, TRUE, exp(params$posterior))
-params[draws,] %>%
-  ggplot(aes(x = fitness, y = rdtdet)) +
-  geom_density2d_filled(contour_var = "ndensity")
-
-
 saveRDS(params[draws,], "analysis/data_derived/mcmc_model_fitting.rds")
+
+# Create a plot of the posterior
+ll_plot_alt <- params[draws,] %>%
+  ggplot(aes(x = fitness, y = rdtdet)) +
+  geom_density2d_filled(contour_var = "ndensity", bins = 8) +
+  ggpubr::theme_pubclean(base_family = "Helvetica") +
+  xlab("Comparative Fitness of Deleted Parasites") +
+  ylab("Probability of hrp2 deleted parasite \nwith intact hrp3 and yielding +ve RDT") +
+  scale_y_continuous(expand = c(0,0), labels = scales::percent_format()) +
+  scale_x_continuous(expand = c(0,0), labels = scales::percent_format()) +
+  scale_fill_manual(name = "Posterior Density \nScaled to 1",
+                       values = RColorBrewer::brewer.pal(9,"YlOrBr")[2:9])  +
+  theme(legend.position = "right")
+save_figs(name = "fitness_hrp3_ll", fig = ll_plot_alt, width = 8, height = 5)
 
 # get the posterior draws from the exhaustive search
 pfd <- readRDS("analysis/data_derived/mcmc_model_fitting.rds")

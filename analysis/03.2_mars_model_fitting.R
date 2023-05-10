@@ -72,7 +72,7 @@ evaluate_mars_model <- function(params, train, test) {
   return(best_fit)
 }
 
-# Perform multivariate interpolation using akima's interp function
+# Perform multivariate interpolation using
 best_params <- readRDS("analysis/data_raw/mars_hyperparms.rds")
 best_fit <- evaluate_mars_model(best_params, train, test)
 
