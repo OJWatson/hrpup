@@ -51,3 +51,22 @@ cp_path <- function(path) {
 }
 
 
+#' Write stargazer model output to file
+#'
+#' @param x Stargazer model output as text
+#' @param path Path for stargazer to be written to
+#' @param cls Number of columns in final stargazer table. Default = NULL,
+#'   which works it out based on maximum split size
+write_stargazer <- function(x, path, cls = NULL) {
+
+  splitup <- vapply(x, strsplit, "\\s{2,}", FUN.VALUE = vector("list", 1))
+
+  if(is.null(cls)) {
+    cls <- max(lengths(splitup))
+  }
+  tbl <- do.call(rbind, splitup[lengths(splitup) == cls])
+  rownames(tbl) <- NULL
+  colnames(tbl) <- tbl[1,]
+  write.csv(tbl[-1,], path, row.names = FALSE)
+
+}

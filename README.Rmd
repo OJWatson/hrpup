@@ -49,9 +49,11 @@ analysis/
     |
     ├── tables/               # location of tables produced by the analysis scripts
     |
-    ├── data_derived/         # data generated during the analysis
+    ├── data_raw/             # data obtained from elsewhere and treated read-only    
     |
-    ├── data_raw/             # data obtained from elsewhere and treated read-only
+    ├── data_derived/         # intermediate data generated during the analysis
+    |
+    ├── data_out/             # data outputs produced for external partners
 
 ```
 

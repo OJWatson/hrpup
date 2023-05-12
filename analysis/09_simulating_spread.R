@@ -309,9 +309,9 @@ best_df <- compl_df %>% group_by(iso, name_0, name_1) %>%
   arrange(continent, iso,  admin_1) %>%
   select(continent, iso, admin_0, admin_1, t_lci, t_med, t_uci, scenario)
 
-write.csv(central_df, "analysis/tables/central_times_composite.csv", row.names = FALSE)
-write.csv(worst_df, "analysis/tables/pessimistic_times_composite.csv", row.names = FALSE)
-write.csv(best_df, "analysis/tables/optimistic_times_composite.csv", row.names = FALSE)
+write.csv(central_df, "analysis/data_out/central_times_composite.csv", row.names = FALSE)
+write.csv(worst_df, "analysis/data_out/pessimistic_times_composite.csv", row.names = FALSE)
+write.csv(best_df, "analysis/data_out/optimistic_times_composite.csv", row.names = FALSE)
 
 # ---------------------------------------------------- #
 # 6. Creating Key High Risk Countries ------------------
@@ -324,10 +324,10 @@ world <- left_join(scenario_maps$map, out_all[[365]]) %>%
   mutate(t = replace(t, s<0, Inf)) %>%
   filter(!is.na(t)) %>%
   filter(iso %in% isos) %>%
-  mutate(t_bin = cut(t, breaks = c(0,6,12,20, Inf), include.lowest = TRUE))
+  mutate(t_bin = cut(t, breaks = c(0,6,12,20, Inf), include.lowest = TRUE, right = FALSE))
 
 hrtable <- world %>% sf::st_drop_geometry() %>% group_by(name_0) %>%
-  summarise(r = sum(t_bin == "[0,6]")/n()) %>%
+  summarise(r = sum(t_bin == "[0,6)")/n()) %>%
   filter(r >= 0.5) %>%
   arrange(desc(r)) %>%
   mutate(r = scales::percent_format()(r)) %>%

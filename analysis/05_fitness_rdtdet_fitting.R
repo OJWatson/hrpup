@@ -150,8 +150,9 @@ r_logprior <- function(params, misc) {
   rdtdet <- as.numeric(params["rdtdet"])
 
   # calculate log-prior
-  ret <- dnorm(fitness, mean = 0.95, sd = 0.02, log = TRUE) +
-    dunif(rdtdet, min = 0.1, max = 0.4, log = TRUE)
+  ret <- dunif(fitness, min = 0.8, max = 0.99, log = TRUE) +
+    #dnorm(fitness, mean = 0.95, sd = 0.02, log = TRUE) +
+    dunif(rdtdet, min = 0, max = 0.4, log = TRUE)
 
   # return
   return(ret)
@@ -159,8 +160,11 @@ r_logprior <- function(params, misc) {
 
 
 # scan suitable range
-params <- expand.grid(rdtdet = seq(0.175,0.33,0.0025),
-                      fitness = seq(0.93,0.97,0.0005))
+params <- expand.grid(rdtdet = seq(0,0.4,0.001),
+                      fitness = seq(0.80,0.99,0.001))
+
+params <- expand.grid(rdtdet = seq(0, 0.4, 0.0025),
+                      fitness = seq(0.85,0.97,0.0005))
 
 params <-
   params %>%
@@ -191,6 +195,7 @@ scale_fill_gradientn(name = "Negative Log \nLikelihood",
   ylab("Probability of hrp2 deleted parasite \nwith intact hrp3 and yielding +ve RDT") +
   scale_y_continuous(expand = c(0,0)) +
   scale_x_continuous(expand = c(0,0))
+ll_plot
 
 # Now draw from our posterior to get a data set range
 draws <- sample(seq_len(nrow(params)), 1000, TRUE, exp(params$posterior))

@@ -5,18 +5,6 @@
 testna <- readRDS(file.path(here::here(), "analysis/data_derived/model_s.rds"))
 testna <- testna %>% select(c("Micro.2.10","ft", "microscopy.use", "rdt.nonadherence", "fitness", "rdt.det", "s"))
 
-# check what the mae is across stochastic reps as this will want to
-# be something we aim to produce in our uncertainty from the final model
-testna %>% group_by(Micro.2.10, ft, rdt.nonadherence, microscopy.use, fitness, int) %>%
-  summarise(m = median(s, na.rm = TRUE), e = mean(s-m), mae = mean(abs((s-m))), n = n()) %>%
-  ggplot(aes(Micro.2.10, e)) +
-  geom_point() +
-  scale_x_log10()
-
-testna %>% group_by(Micro.2.10,int2) %>%
-  summarise(m = median(s, na.rm = TRUE), mse = mean((s-m)^2), n = n()) %>%
-  pull(mse) %>% quantile(p = 0.975, na.rm = TRUE)
-
 # --------------------------------------------------------
 # 1. Train model to predict selection coefficients
 # --------------------------------------------------------
@@ -76,7 +64,7 @@ xgb.plot.importance(importance_matrix)
 
 # Check prediction vs median values across reps
 testsum <- test %>%
-group_by(EIR, ft, rdt.nonadherence, microscopy.use, fitness, rdt.det, int) %>%
+group_by(ft, rdt.nonadherence, microscopy.use, fitness, rdt.det, int) %>%
   summarise(s = median(s, na.rm = TRUE), Micro.2.10 = mean(Micro.2.10), n = n()) %>%
   select(ft, microscopy.use, rdt.nonadherence, fitness, rdt.det, Micro.2.10, int, n, s)
 
@@ -85,13 +73,6 @@ group_by(EIR, ft, rdt.nonadherence, microscopy.use, fitness, rdt.det, int) %>%
 pred <- predict(xgb_model, as.matrix(testsum[, c("Micro.2.10", "ft", "microscopy.use", "rdt.nonadherence", "fitness", "rdt.det")]))
 plot(pred, testsum$s)
 
-
-plots <- lapply(names(test %>% select(-s)), function(x){
-  pdp::partial(xgb_model, train = train %>% select(-s), pred.var = x, grid.resolution = 20) %>%
-    ggplot2::autoplot()
-})
-
-xgb_pdp <- cowplot::plot_grid(plotlist = plots)
 
 # --------------------------------------------------------
 # 2. Train model to predict standard devation of model

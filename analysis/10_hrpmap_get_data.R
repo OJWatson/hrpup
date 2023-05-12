@@ -19,4 +19,4 @@ for(i in seq_along(hrp2_map$.__enclos_env__$private$map_data)){
 }
 
 full_df <- do.call(rbind, full_dat)
-write.csv(full_df, "analysis/tables/full_results.csv")
+write.csv(full_df, "analysis/data_out/full_results.csv")
