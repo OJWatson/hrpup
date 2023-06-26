@@ -3,7 +3,7 @@
 <!-- badges: start -->
 
 [![minimal R
-version](https://img.shields.io/badge/R%3E%3D-4.2.3-brightgreen.svg)](https://cran.r-project.org/)
+version](https://img.shields.io/badge/R%3E%3D-4.3.0-brightgreen.svg)](https://cran.r-project.org/)
 [![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/)
 [![R build
 status](https://github.com/OJWatson/hrpup/workflows/R-CMD-check/badge.svg)](https://github.com/OJWatson/hrpup/actions)
@@ -42,9 +42,21 @@ The structure within analysis is as follows:
         |
         ├── tables/               # location of tables produced by the analysis scripts
         |
-        ├── data_derived/         # data generated during the analysis
+        ├── data_raw/             # data obtained from elsewhere and treated read-only    
         |
-        ├── data_raw/             # data obtained from elsewhere and treated read-only
+        ├── data_derived/         # intermediate data generated during the analysis
+        |
+        ├── data_out/             # data outputs produced for external partners
+
+Any analysis scripts with “X\_” in the name are used to format raw data
+shared with us for this project that could not be included in the
+repository and only summaries of the data as needed for the modelling
+could be included. These scripts are still included to show how the raw
+data was processed and the summaries saved in `data_raw` for use later
+on. In this way, we ensure transparency and reproducibility.
+
+Analysis scripts are to be run in the numbered order they are included.
+If there are shared numbers, then any order of those scripts works.
 
 ### Compendium DOI:
 
