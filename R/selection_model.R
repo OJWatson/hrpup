@@ -11,8 +11,10 @@ R6_hrp2_mod <- R6::R6Class(
     # INITIALISATION
     #' @description
     #' Create a new hrp2 selection model using emulators.
-    #' @param models Model for prediction seletion coefficient
-    #' @param err_models Model for predicting sd error for predictions
+    #' @param models Model for predicting selection coefficient
+    #' @param err_models Model for predicting error of selection predictions
+    #' @param model_weights Model for predicting selection coefficient weights
+    #' @param err_model_weights Model for predicting selection error weights
     #' @param data Data used originally for model training
     #' @return A new `hrp2_mod` object.
     initialize = function(models = list(),
@@ -47,6 +49,9 @@ R6_hrp2_mod <- R6::R6Class(
       # predict s
       ret$s <- self$predict_s(dat)
       err <- self$predict_err(dat)
+      # We estimated error using only 5 stochastic realisations. If we had used
+      # 100 realisations, bsaed on a simple model of normally distributed variance
+      # it would be 5 times smaller. Consequently, divide by 5.
       ret$smin <- ret$s - 1.96*(err/5)
       ret$smax <- ret$s + 1.96*(err/5)
 
@@ -61,16 +66,24 @@ R6_hrp2_mod <- R6::R6Class(
     },
 
     # Predict Ensemble s
+    #' Predict selection coefficient for data frame of covariates
+    #' @param dat Data frame of covariates
     predict_s = function(dat) {
       private$predict_internal(dat, private$models, private$model_weights)
     },
 
     # Predict Ensemble Error
+    #' Predict error in selection coefficient estimates for covariate data frame
+    #' @param dat Data frame of covariates
     predict_err = function(dat) {
       private$predict_internal(dat, private$err_models, private$err_model_weights)
     },
 
-    # Predict t for f1 and f2 given s
+    # Predict t
+    #' Predict t between f1 and f2 and covariate data frame
+    #' @param dat Data frame of covariates
+    #' @param f1 Frequency at time point 1
+    #' @param f2 Frequency at time point 2
     predict_t = function(dat, f1, f2) {
 
       # catch for directionality
@@ -97,7 +110,11 @@ R6_hrp2_mod <- R6::R6Class(
       return(ret_t)
     },
 
-    # Predict f2 for f1 and t given s
+    # Predict f2
+    #' Predict f2 given f1 and t and covariate data frame
+    #' @param dat Data frame of covariates
+    #' @param f1 Frequency at time point 1
+    #' @param t Duration of selection
     predict_f2 = function(dat, f1, t) {
 
       # create results name in data frame
@@ -119,35 +136,76 @@ R6_hrp2_mod <- R6::R6Class(
     },
 
 
-    # Add models and weights
+    #' Add models
+    #' @param model Selection prediction model
+    #' @param model_name Name of model
     add_model = function(model, model_name) {
       private$models[[model_name]] <- model
     },
 
+    #' Add model weights
+    #' @param weight Selection prediction model weight (RMSE)
+    #' @param model_name Name of model
     add_model_weight = function(weight, model_name) {
       private$model_weights[[model_name]] <- weight
     },
 
+    #' Add error model
+    #' @param err_model Selection error prediction model
+    #' @param model_name Name of model
     add_err_model = function(err_model, model_name) {
       private$err_models[[model_name]] <- err_model
     },
 
+    #' Add error model weights
+    #' @param weight Selection error prediction model weight (RMSE)
+    #' @param model_name Name of model
     add_err_model_weight = function(weight, model_name) {
       private$err_model_weights[[model_name]] <- weight
     },
 
     # GETTERS
+
+    #' Get all selection prediction models
+    #' @return List of models
     get_models = function() private$models,
+
+    #' Get all selection error prediction models
+    #' @return List of error models
     get_error_models = function() private$err_models,
+
+    #' Get all selection prediction model weights
+    #' @return List of mode weights
     get_model_weights = function() private$model_weights,
+
+    #' Get all selection error prediction model weights
+    #' @return List of error model weights
     get_error_model_weights = function() private$err_model_weights,
+
+    #' Get data the models were trained on
+    #' @return Training data
     get_data = function() private$data,
 
     # SETTERS
+
+    #' Set all selection prediction models
+    #' @param models selection model list
     set_models = function(models) { private$models <- models },
+
+    #' Set all selection error prediction models
+    #' @param err_models selection error model list
     set_error_models = function(err_models) { private$err_models <- err_models },
+
+    #' Set all selection prediction model weights
+    #' @param model_weights selection model weights (RMSE) list
     set_model_weights = function(model_weights) { private$model_weights <- model_weights },
+
+    #' Set all selection prediction model weights
+    #' @param err_model_weights selection error model weights (RMSE) list
     set_error_model_weights = function(err_model_weights) { private$err_model_weights <- err_model_weights },
+
+    #' Set data the models were trained on
+    #' @param data Training data for models
     set_data = function(data) { private$data <- data }
 
   ),
@@ -161,14 +219,30 @@ R6_hrp2_mod <- R6::R6Class(
 
     # Predict Generic
     predict_internal = function(dat, models, weights) {
+
+      # get our models and their weights
       model_names <- names(models)
       model_weights <- 1 / as.numeric(weights[model_names])
       normalised_weights <- model_weights / sum(model_weights)
-      dat <- dat[,c("Micro.2.10","ft", "microscopy.use", "rdt.nonadherence", "fitness", "rdt.det")]
-      dat <- as.matrix(dat)
-      predictions <- vapply(lapply(models, predict, dat), as.numeric, FUN.VALUE = numeric(nrow(dat)))
-      ensemb <- apply(predictions, MARGIN = 1, weighted.mean, normalised_weights)
-      return(ensemb)
+
+      # set up ur data removing NA rows
+      dat <- as.data.frame(dat[,c("Micro.2.10","ft", "microscopy.use", "rdt.nonadherence", "fitness", "rdt.det")])
+      dat_na <- na.omit(dat)
+
+      # make ensemble prediction
+      predictions <- vapply(lapply(models, predict, dat_na), as.numeric, FUN.VALUE = numeric(nrow(dat_na)))
+
+      # Catch for when you are only requesting on one row of data
+      if(!is.matrix(predictions)) {
+        ensemb <- weighted.mean(predictions, normalised_weights)
+      } else {
+        ensemb <- apply(predictions, MARGIN = 1, weighted.mean, normalised_weights)
+      }
+
+      # return values with NAs in for missing data
+      ret <- rep(NA, nrow(dat))
+      ret[as.integer(which(apply(dat, 1, function(x){all(!is.na(x))})))] <- ensemb
+      return(ret)
     }
   )
 )

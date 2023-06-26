@@ -20,6 +20,11 @@ Imports:
     ggplot2,
     here,
     magrittr,
-    R6
+    R6,
+    purrr,
+    spdep,
+    hrp2malaRia
+Remotes:
+    OJWatson/hrp2malaRia
 Suggests:
     testthat

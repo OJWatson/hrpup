@@ -9,7 +9,9 @@ save_figs(
   fig,
   width = 6,
   height = 6,
-  plot_dir = file.path(here::here(), "analysis/plots")
+  plot_dir = file.path(here::here(), "analysis/plots"),
+  pdf_plot = TRUE,
+  font_family = "Helvetica"
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ save_figs(
 \item{height}{Height of plot in inches. Default = 6}
 
 \item{plot_dir}{Plotting directory. Defaults to "analysis/plots"}
+
+\item{pdf_plot}{Logical for plotting pdf too. Default = TRUE}
+
+\item{font_family}{If specified, sets all font family. Default = NULL}
 }
 \description{
 Save Figures

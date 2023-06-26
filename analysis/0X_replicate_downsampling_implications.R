@@ -1,11 +1,7 @@
-mu <- 0.5
-sd <- 0.2
-
 # find the difference between the error when estimating sd
-# when using 5 vs 100 replicates
+# when using 5 vs 100 replicates assuming error is described by a normal distribution
 
 # generate 1000 samples of mae with reps 5, 100
-
 # and span across a range of true mu and sd values
 param_grid <- expand.grid(mu = seq(0,1,0.05), sd = seq(0,0.3,0.01))
 

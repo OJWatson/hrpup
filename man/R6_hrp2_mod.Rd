@@ -54,9 +54,13 @@ Create a new hrp2 selection model using emulators.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{models}}{Model for prediction seletion coefficient}
+\item{\code{models}}{Model for predicting selection coefficient}
 
-\item{\code{err_models}}{Model for predicting sd error for predictions}
+\item{\code{err_models}}{Model for predicting error of selection predictions}
+
+\item{\code{model_weights}}{Model for predicting selection coefficient weights}
+
+\item{\code{err_model_weights}}{Model for predicting selection error weights}
 
 \item{\code{data}}{Data used originally for model training}
 }
@@ -101,6 +105,7 @@ Predict median and 95\% selection coefficients and threshold times
 }
 \subsection{Returns}{
 Data.frame of selection coefficients and times from 1\% to 5\%
+Predict selection coefficient for data frame of covariates
 }
 }
 \if{html}{\out{<hr>}}
@@ -111,6 +116,14 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$predict_s(dat)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dat}}{Data frame of covariates
+Predict error in selection coefficient estimates for covariate data frame}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-predict_err"></a>}}
@@ -120,6 +133,14 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$predict_err(dat)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dat}}{Data frame of covariates
+Predict t between f1 and f2 and covariate data frame}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-predict_t"></a>}}
@@ -129,6 +150,18 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$predict_t(dat, f1, f2)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dat}}{Data frame of covariates}
+
+\item{\code{f1}}{Frequency at time point 1}
+
+\item{\code{f2}}{Frequency at time point 2
+Predict f2 given f1 and t and covariate data frame}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-predict_f2"></a>}}
@@ -138,6 +171,18 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$predict_f2(dat, f1, t)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dat}}{Data frame of covariates}
+
+\item{\code{f1}}{Frequency at time point 1}
+
+\item{\code{t}}{Duration of selection
+Add models}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-add_model"></a>}}
@@ -147,6 +192,16 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$add_model(model, model_name)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{model}}{Selection prediction model}
+
+\item{\code{model_name}}{Name of model
+Add model weights}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-add_model_weight"></a>}}
@@ -156,6 +211,16 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$add_model_weight(weight, model_name)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{weight}}{Selection prediction model weight (RMSE)}
+
+\item{\code{model_name}}{Name of model
+Add error model}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-add_err_model"></a>}}
@@ -165,6 +230,16 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$add_err_model(err_model, model_name)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{err_model}}{Selection error prediction model}
+
+\item{\code{model_name}}{Name of model
+Add error model weights}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-add_err_model_weight"></a>}}
@@ -174,6 +249,16 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$add_err_model_weight(weight, model_name)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{weight}}{Selection error prediction model weight (RMSE)}
+
+\item{\code{model_name}}{Name of model
+Get all selection prediction models}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-get_models"></a>}}
@@ -183,6 +268,10 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$get_models()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+List of models
+Get all selection error prediction models
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-get_error_models"></a>}}
@@ -192,6 +281,10 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$get_error_models()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+List of error models
+Get all selection prediction model weights
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-get_model_weights"></a>}}
@@ -201,6 +294,10 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$get_model_weights()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+List of mode weights
+Get all selection error prediction model weights
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-get_error_model_weights"></a>}}
@@ -210,6 +307,10 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$get_error_model_weights()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+List of error model weights
+Get data the models were trained on
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-get_data"></a>}}
@@ -219,6 +320,10 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$get_data()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+Training data
+Set all selection prediction models
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-set_models"></a>}}
@@ -228,6 +333,14 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$set_models(models)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{models}}{selection model list
+Set all selection error prediction models}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-set_error_models"></a>}}
@@ -237,6 +350,14 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$set_error_models(err_models)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{err_models}}{selection error model list
+Set all selection prediction model weights}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-set_model_weights"></a>}}
@@ -246,6 +367,14 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$set_model_weights(model_weights)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{model_weights}}{selection model weights (RMSE) list
+Set all selection prediction model weights}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-set_error_model_weights"></a>}}
@@ -255,6 +384,14 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$set_error_model_weights(err_model_weights)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{err_model_weights}}{selection error model weights (RMSE) list
+Set data the models were trained on}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-hrp2_mod-set_data"></a>}}
@@ -264,5 +401,12 @@ Data.frame of selection coefficients and times from 1\% to 5\%
 \if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$set_data(data)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{data}}{Training data for models}
+}
+\if{html}{\out{</div>}}
+}
 }
 }

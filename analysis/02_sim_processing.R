@@ -58,7 +58,7 @@ res <- lapply(seq_along(dat$res), function(ii){
   t <- tail(t, -12)
 
   # at least 2 years still remaining of data for calculating selection
-  if(length(x) > 23) {
+  if(length(x) > 23 & length(unique(x)) > 23) {
     # selection coefficient / year
     s <- lm(log(x / (1-x)) ~ t)$coefficients[2] * (365)
   } else {

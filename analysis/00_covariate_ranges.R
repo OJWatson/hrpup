@@ -1,5 +1,5 @@
 # get country data
-dat <- jsonify::from_json("analysis/data_raw/MAP.json")
+dat <- jsonify::from_json("analysis/data_raw/MAP_comm_default.json")
 
 names(dat)
 
@@ -26,7 +26,7 @@ df$ft <- (df$ft_priv * df$test_priv * df$postesttreat_priv) +
   (df$ft_publ * (df$test_publ) * df$postesttreat_publ) +
     (df$ft_publ * (1-df$test_publ) * df$untesttreat_publ)
 
-# use of microscopy assuming not used in private
+# use of microscopy assuming not used very much in non public settings
 df$micro <- ((1 - df$rdt_prop)*df$ft_publ)/(df$ft_priv + df$ft_publ)
 
 # test non adherence
@@ -34,7 +34,21 @@ df$non_adherence <- df$ft_priv/(df$ft_priv + df$ft_publ) * df$negtesttreat_priv 
   (1- (df$ft_priv/(df$ft_priv + df$ft_publ))) * df$negtesttreat_publ
 
 # suitable ranges to then be used for simulations
-eir_range <- magenta:::age_brackets(num_age_brackets = 10, max_age = 130)[-1]
+geom_series <- function(max=100,
+                        num_brackets=20,
+                        geometric_brackets=TRUE){
+
+  if(geometric_brackets){
+    ## Create the geometric age brackets
+    ratio <- (max/0.1)^(1/num_brackets)
+    age_vector <- 0.1 * ratio ** (1:num_brackets)
+    age_vector[1] <- 0
+  } else {
+    age_vector <- seq(0,max,num_brackets)
+  }
+  return(age_vector)
+}
+eir_range <- geom_series(num_brackets = 10, max = 130)[-1]
 ft_range <- seq(0.01, 0.9, length.out = 9)
 micro_range <- seq(0, max(df$micro), length.out = 4)
 nonadherence_range <- seq(0, max(df$non_adherence), length.out = 3)

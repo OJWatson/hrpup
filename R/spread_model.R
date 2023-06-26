@@ -16,6 +16,8 @@ R6_hrp2_spread <- R6::R6Class(
     #' @description
     #' Create a new hrp2 spread model object
     #' @param map Map sf object
+    #' @param hrp2_mod hrp2_mod selection model
+    #' @param adj_mat Adjacency matrix for `map`. Default = NULL and will calculate internally
     initialize = function(map, hrp2_mod, adj_mat = NULL) {
 
       private$map <- map

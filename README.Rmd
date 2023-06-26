@@ -57,6 +57,15 @@ analysis/
 
 ```
 
+Any analysis scripts with "X_" in the name are used to format raw data shared with 
+us for this project that could not be included in the repository and only summaries
+of the data as needed for the modelling could be included. These scripts are still
+included to show how the raw data was processed and the summaries saved in `data_raw`
+for use later on. In this way, we ensure transparency and reproducibility. 
+
+Analysis scripts are to be run in the numbered order they are included. If there are
+shared numbers, then any order of those scripts works. 
+
 ### Compendium DOI: 
  
 https://doi.org/X/X

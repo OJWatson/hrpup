@@ -11,6 +11,8 @@ A results map
 \itemize{
 \item \href{#method-hrp2_map-new}{\code{R6_hrp2_map$new()}}
 \item \href{#method-hrp2_map-plot}{\code{R6_hrp2_map$plot()}}
+\item \href{#method-hrp2_map-set_map_data}{\code{R6_hrp2_map$set_map_data()}}
+\item \href{#method-hrp2_map-set_scenarios}{\code{R6_hrp2_map$set_scenarios()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -19,7 +21,7 @@ A results map
 \subsection{Method \code{new()}}{
 Create a new hrp2 map result
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$new(map, map_data, scenarios, map_0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$new(map, map_data = NULL, scenarios = NULL, map_0 = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -57,7 +59,8 @@ All scenario parameters must be one of "central", "worst", "best"
   rdt.nonadherence = "central",
   fitness = "central",
   rdt.det = "central",
-  print = FALSE
+  print = FALSE,
+  risk = "innate"
 )}\if{html}{\out{</div>}}
 }
 
@@ -79,11 +82,47 @@ All scenario parameters must be one of "central", "worst", "best"
 \item{\code{rdt.det}}{Chance of hrp2 deleted parasite yielding pos test scenario}
 
 \item{\code{print}}{Boolean for whether to print the plot as well as return it}
+
+\item{\code{risk}}{What type of risk score to plot, either "innate" (default) or "prospective"}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 ggplot map object silently
+Set map data
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-hrp2_map-set_map_data"></a>}}
+\if{latex}{\out{\hypertarget{method-hrp2_map-set_map_data}{}}}
+\subsection{Method \code{set_map_data()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$set_map_data(map_data)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{map_data}}{Map data of selection coefficients for each scenario
+Set map data}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-hrp2_map-set_scenarios"></a>}}
+\if{latex}{\out{\hypertarget{method-hrp2_map-set_scenarios}{}}}
+\subsection{Method \code{set_scenarios()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$set_scenarios(scenarios)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{scenarios}}{Scenario data frame that matches map_data}
+}
+\if{html}{\out{</div>}}
 }
 }
 }

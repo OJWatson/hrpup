@@ -19,9 +19,9 @@ These time are only provided for African regions because this is a) where the ma
 
 Similarly to before, where times are predicted to take longer than 40 years, these have been censored (">40"):
 
-1. `central_times_composite.csv`
-1. `optimistic_times_composite.csv`
-1. `pessimistic_times_composite.csv`
+1. `central_times_prospective.csv`
+1. `optimistic_times_prospective.csv`
+1. `pessimistic_times_prospective.csv`
 
 In all the outputs above, the **central** times provide the estimated times based on the central parameter estimate for each of the parameters that we explored and that are known to impact the speed of selection for *pfhrp2/3* deletions (malaria prevalence, treatment related parameters, fitness costs and HRP3 cross-reactivity factors). The **optimistic** times assume the 2.5% or 97.5% percentile value for each parameter (depending on the direction of its effect on selection) such that the selection of *pfhrp2/3* deletions will increase at its slowest. Conversely, the **pessimistic** times  assume the 2.5% or 97.5% percentile value for each parameter (depending on the direction of its effect on selection) such that the selection of *pfhrp2/3* deletions will increase at its fastest.
 

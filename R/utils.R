@@ -19,10 +19,10 @@ save_figs <- function(name,
                       height = 6,
                       plot_dir = file.path(here::here(), "analysis/plots"),
                       pdf_plot = TRUE,
-                      font_family = NULL) {
+                      font_family = "Helvetica") {
 
   if(!is.null(font_family)) {
-    fig <- fig + theme(text = element_text(family = font_family))
+    fig <- fig + ggplot2::theme(text = ggplot2::element_text(family = font_family))
   }
 
   dir.create(plot_dir, showWarnings = FALSE)
@@ -57,9 +57,10 @@ cp_path <- function(path) {
 #' @param path Path for stargazer to be written to
 #' @param cls Number of columns in final stargazer table. Default = NULL,
 #'   which works it out based on maximum split size
-write_stargazer <- function(x, path, cls = NULL) {
+#' @param spl regex string for splitting columns.
+write_stargazer <- function(x, path, cls = NULL, spl = "\\s{2,}") {
 
-  splitup <- vapply(x, strsplit, "\\s{2,}", FUN.VALUE = vector("list", 1))
+  splitup <- vapply(x, strsplit, spl, FUN.VALUE = vector("list", 1))
 
   if(is.null(cls)) {
     cls <- max(lengths(splitup))
@@ -67,6 +68,6 @@ write_stargazer <- function(x, path, cls = NULL) {
   tbl <- do.call(rbind, splitup[lengths(splitup) == cls])
   rownames(tbl) <- NULL
   colnames(tbl) <- tbl[1,]
-  write.csv(tbl[-1,], path, row.names = FALSE)
+  utils::write.csv(tbl[-1,], path, row.names = FALSE)
 
 }

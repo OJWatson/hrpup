@@ -4,7 +4,7 @@
 
 1. `R6_map.rds` - R6 map object for plotting risk maps. See `?hrpup:::R6_hrp2_map` for details
 
-This object can be used to produce risk maps for specific scenarios for specific global regions and for either the innate or composite (Africa only) risk score:
+This object can be used to produce risk maps for specific scenarios for specific global regions and for either the innate or prospective (Africa only) risk score:
 
 ```
 hrp2_map$plot(

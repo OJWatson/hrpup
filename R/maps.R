@@ -48,7 +48,7 @@ R6_hrp2_map <- R6::R6Class(
     #' @param fitness Relative fitness of hrp2 deleted parasite scenario
     #' @param rdt.det Chance of hrp2 deleted parasite yielding pos test scenario
     #' @param print Boolean for whether to print the plot as well as return it
-    #' @param risk What type of risk score to plot, either "innate" (default) or "composite"
+    #' @param risk What type of risk score to plot, either "innate" (default) or "prospective"
     #' @return ggplot map object silently
     plot = function(region = "africa",
                     Micro.2.10 = "central",
@@ -68,7 +68,7 @@ R6_hrp2_map <- R6::R6Class(
       stopifnot(rdt.nonadherence %in% c("central", "worst", "best"))
       stopifnot(fitness %in% c("central", "worst", "best"))
       stopifnot(rdt.det %in% c("central", "worst", "best"))
-      stopifnot(risk %in% c("innate", "composite"))
+      stopifnot(risk %in% c("innate", "prospective"))
 
       # find the scenario
       scenario <- which(
@@ -83,8 +83,8 @@ R6_hrp2_map <- R6::R6Class(
       # create map data for each region
       if(risk == "innate") {
         var <- "hrp2_risk"
-      } else if (risk == "composite") {
-        var <- "hrp2_composite_risk"
+      } else if (risk == "prospective") {
+        var <- "hrp2_prospective_risk"
       }
       mapped <- merge(private$map, private$map_data[[scenario]])
       mapped <- mapped[!is.na(mapped[[var]]), ]
@@ -141,7 +141,12 @@ R6_hrp2_map <- R6::R6Class(
     },
 
     # SETTERS
+    #' Set map data
+    #' @param map_data Map data of selection coefficients for each scenario
     set_map_data = function(map_data) {private$map_data <- map_data},
+
+    #' Set map data
+    #' @param scenarios Scenario data frame that matches map_data
     set_scenarios = function(scenarios) {private$scenarios <- scenarios}
 
   ),
