@@ -60,7 +60,7 @@ If there are shared numbers, then any order of those scripts works.
 
 ### Compendium DOI:
 
-<[https://doi.org/X/X](https://zenodo.org/record/7774954)>
+<https://zenodo.org/record/7774954>
 
 The files at the URL above will generate the results as found in the
 publication.
