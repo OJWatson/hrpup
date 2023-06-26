@@ -110,7 +110,7 @@ covars <-  readRDS("analysis/data_derived/global_covariate_ranges.rds")
 new_df <- covars %>% select(id_1, iso3c) %>% left_join(new_df)
 
 # bring in a covariate dataset at the iso3c level from Economist for imputation help
-preds <- readRDS("/home/oj/Downloads/X_train.RDS")
+preds <- readRDS("analysis/data_raw/economist_covariates.RDS")
 preds <- preds %>% filter(date == 18264)
 pred_df <- preds %>% select(iso3c, hospital_beds_per_thousand, life_expectancy, vdem_freedom_of_expression_score:polity_democracy_score, wdi_obs_lag:wdi_urban_pop_1m_cities_pct, percent_land_area_in_tropics:total_deaths_latest_per_100k,gdpppc_ppp_imf)
 
