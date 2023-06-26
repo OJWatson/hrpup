@@ -1,6 +1,6 @@
 Package: hrpup
 Title: HRP23 update to risk mapping
-Version: 0.1.1
+Version: 0.2.0
 Authors@R: 
     c(person(given = "OJ",
              family = "Watson",
