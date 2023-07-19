@@ -19,4 +19,13 @@ for(i in seq_along(hrp2_map$.__enclos_env__$private$map_data)){
 }
 
 full_df <- do.call(rbind, full_dat)
-write.csv(full_df, "analysis/data_out/full_results.csv")
+
+# grab map with all map detail
+tf <- tempfile()
+download.file("https://github.com/OJWatson/hrpup/blob/main/analysis/data_derived/scenario_maps_full.rds?raw=true", destfile = tf)
+scen_map <- readRDS(tf)
+
+# write to file
+full_df2 <- left_join(full_df[,-2], scen_map$map %>% sf::st_drop_geometry() %>% select(id_1, name_1, iso), by = c("id_1"))
+write.csv(full_df2, "analysis/data_out/full_results.csv")
+

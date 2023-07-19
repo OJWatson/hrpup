@@ -150,7 +150,7 @@ for(i in c(1, as.integer(length(unique(out$t))/4)+1, as.integer(length(unique(ou
     theme_void(base_size = 16) +
     ggtitle(as.integer(2023+x)) +
     theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white")) +
-    scale_fill_viridis_c(name = "False Negative HRP2-RDTs \namongst clinical infections \ndue to pfhrp2/3 deletions\n",
+    scale_fill_viridis_c(name = "False negative HRP2-RDTs \namongst clinical infections \ndue to pfhrp2/3 deletions\n",
                          labels = scales::percent, limits = c(0,1)) +
     theme(plot.title = element_text(hjust = 0.5),
           legend.key.height = unit(1, "inch"),
@@ -184,7 +184,7 @@ out_plots <- furrr::future_map(seq_along(unique(out$t)), function(i) {
     theme_void(base_size = 16) +
     ggtitle(as.integer(2023+x)) +
     theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white")) +
-    scale_fill_viridis_c(name = "False Negative HRP2-RDTs \namongst clinical infections \ndue to pfhrp2/3 deletions\n",
+    scale_fill_viridis_c(name = "False negative HRP2-RDTs \namongst clinical infections \ndue to pfhrp2/3 deletions\n",
                          labels = scales::percent, limits = c(0,1)) +
     theme(plot.title = element_text(hjust = 0.5),
           legend.key.height = unit(1, "inch"),
