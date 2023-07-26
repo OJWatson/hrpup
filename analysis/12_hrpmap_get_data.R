@@ -21,11 +21,13 @@ for(i in seq_along(hrp2_map$.__enclos_env__$private$map_data)){
 full_df <- do.call(rbind, full_dat)
 
 # grab map with all map detail
-tf <- tempfile()
-download.file("https://github.com/OJWatson/hrpup/blob/main/analysis/data_derived/scenario_maps_full.rds?raw=true", destfile = tf)
-scen_map <- readRDS(tf)
+covars <-  readRDS("analysis/data_derived/global_covariate_ranges.rds")
+
+# MAP world map to use
+world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
 
 # write to file
-full_df2 <- left_join(full_df[,-2], scen_map$map %>% sf::st_drop_geometry() %>% select(id_1, name_1, iso), by = c("id_1"))
+full_df2 <- left_join(full_df[,-2], world_map %>% sf::st_drop_geometry() %>%
+                        select(id_1, name_1, iso), by = c("id_1"))
 write.csv(full_df2, "analysis/data_out/full_results.csv")
 
