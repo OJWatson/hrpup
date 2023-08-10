@@ -58,7 +58,8 @@ R6_hrp2_map <- R6::R6Class(
                     fitness = "central",
                     rdt.det = "central",
                     print = FALSE,
-                    risk = "innate") {
+                    risk = "innate",
+                    prev_plot = FALSE) {
 
       # checks on inputs
       stopifnot(region %in% c("global", "africa", "asia", "latam"))
@@ -110,6 +111,7 @@ R6_hrp2_map <- R6::R6Class(
         )
 
       # add prevalence mapping
+      if(prev_plot) {
       if(any((gg_map_risk$data$Micro.2.10 < 0.0005))) {
 
         gg_map_risk <- gg_map_risk +
@@ -123,6 +125,7 @@ R6_hrp2_map <- R6::R6Class(
             data = . %>% filter(Micro.2.10 < 0.0005), inherit.aes = FALSE) +
           ggplot2::scale_fill_manual(name="\nTransmission", labels="Unstable (<0.05% PfPR)", values="grey")
 
+      }
       }
 
       # add the admin 0 mappings in and some simplifying themes

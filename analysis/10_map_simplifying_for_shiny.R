@@ -45,9 +45,16 @@ world_map_0$region <- UNlocations$area_name[match(world_map_0$cont, UNlocations$
 world_map_0 <- world_map_0 %>% select(iso, region)
 new_obj$map_0 <- world_map_0
 
+
+
 # 5. create the object for easy plotting
+
+# shrink the map resolution
+map_small <- rmapshaper::ms_simplify(new_obj$map)
+
+# create our smaller object for file
 hrp2_map <- hrpup:::R6_hrp2_map$new(
-  map = new_obj$map,
+  map = map_small,
   map_data = new_obj$map_data,
   scenarios = new_obj$scenarios,
   map_0 = new_obj$map_0
