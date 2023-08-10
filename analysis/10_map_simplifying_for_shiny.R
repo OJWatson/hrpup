@@ -51,6 +51,8 @@ new_obj$map_0 <- world_map_0
 
 # shrink the map resolution
 map_small <- rmapshaper::ms_simplify(new_obj$map)
+map_smaller <- rmapshaper::ms_simplify(map_small)
+map_0_small <- rmapshaper::ms_simplify(new_obj$map_0)
 
 # create our smaller object for file
 hrp2_map <- hrpup:::R6_hrp2_map$new(
