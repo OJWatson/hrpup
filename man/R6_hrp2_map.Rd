@@ -60,7 +60,8 @@ All scenario parameters must be one of "central", "worst", "best"
   fitness = "central",
   rdt.det = "central",
   print = FALSE,
-  risk = "innate"
+  risk = "innate",
+  prev_plot = FALSE
 )}\if{html}{\out{</div>}}
 }
 

@@ -62,3 +62,10 @@ hrp2_map <- hrpup:::R6_hrp2_map$new(
   map_0 = new_obj$map_0
   )
 saveRDS(hrp2_map, "analysis/data_derived/R6_map.rds")
+
+# 6. Create map to share with WHO for website
+map_for_who <- left_join(hrp2_map$.__enclos_env__$private$map,
+          scenario_maps$map %>% select(name_0, name_1, id_1, type_1, source) %>%
+            sf::st_drop_geometry())
+dir.create("analysis/data_out/who_shp")
+sf::write_sf(map_for_who, "analysis/data_out/who_shp/map.shp")
