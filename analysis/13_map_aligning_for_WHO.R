@@ -1,5 +1,6 @@
 library(tidyverse)
 devtools::load_all()
+library(wpp2017)
 
 # 1. Create map to share with WHO for website
 hrp2_map <- readRDS("analysis/data_derived/R6_map.rds")
@@ -11,7 +12,7 @@ dir.create("analysis/data_out/shp_for_who")
 sf::write_sf(map_for_who, "analysis/data_out/shp_for_who/map.shp")
 
 # 2. Turns out it needs to be mapped to the WHO compliant map
-map_from_who <- sf::read_sf("analysis/data_out/who_malaria_shp/WHO_forMalaria.shp")
+map_from_who <- sf::read_sf("analysis/data_out/who_malaria_shp/WHO_forMalaria_20231201.shp")
 map_for_who <- sf::read_sf("analysis/data_out/shp_for_who/map.shp")
 old_map <- map_for_who
 
@@ -26,7 +27,8 @@ new_map <- new_map %>%
   mutate(id_1 = replace(id_1, GUID == "{5D25739B-8433-4036-ACE9-1DC45B76C98B}",10314646)) %>%
   mutate(id_1 = replace(id_1, GUID == "{DE4B78DA-6CF2-4168-B907-54CA006BF95F}",10316164)) %>%
   mutate(id_1 = replace(id_1, GUID == "{263F24DA-B994-4C44-AA46-3AD342DC86BC}",10313744)) %>%
-  mutate(id_1 = replace(id_1, GUID == "{E3B04CAF-21F8-4277-B164-AC8F64A0A2AD}",10316356))
+  mutate(id_1 = replace(id_1, GUID == "{E3B04CAF-21F8-4277-B164-AC8F64A0A2AD}",10316356)) %>%
+  mutate(id_1 = replace(id_1, GUID == "{7143C554-9A03-48C5-B51A-B2AEE32072DD}",10312917))
 
 
 # I don't know where Djibloho, capital of GNQ is in the WHO map but it is not
@@ -128,7 +130,8 @@ leg <- TRUE
 plot_full_comp(pl_new, pl_old, "BDI")
 plot_full_comp(pl_new, pl_old, "GIN")
 plot_full_comp(pl_new, pl_old, "GNQ")
-plot_full_comp(pl_new, pl_old, "YEM")
+plot_full_comp(pl_new, pl_old, "COG")
+plot_full_comp(pl_new, pl_old, "GAB")
 plot_full_comp(pl_new, pl_old, "KHM")
 plot_full_comp(pl_new, pl_old, "ZWE")
 plot_full_comp(pl_new, pl_old, "ZWE")
