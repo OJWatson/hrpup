@@ -3,12 +3,7 @@ devtools::load_all()
 library(wpp2017)
 
 # 0. Create lakes
-world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
-isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
-lakes <- world_map %>% filter(type_1 == "Water Body")
-data("UNlocations")
-lakes$cont <- countrycode::countrycode(lakes$iso, "iso3c", "iso3n")
-lakes$region <- UNlocations$area_name[match(lakes$cont, UNlocations$country_code)]
+lakes <- readRDS("analysis/data_derived/lakes_sf.rds")
 
 # 1. Create map to share with WHO for website
 hrp2_map <- readRDS("analysis/data_derived/R6_map.rds")
@@ -38,11 +33,6 @@ new_map <- new_map %>%
   mutate(id_1 = replace(id_1, GUID == "{E3B04CAF-21F8-4277-B164-AC8F64A0A2AD}",10316356)) %>%
   mutate(id_1 = replace(id_1, GUID == "{7143C554-9A03-48C5-B51A-B2AEE32072DD}",10312917))
 
-
-# I don't know where Djibloho, capital of GNQ is in the WHO map but it is not
-# showing when I filter for iso == GNQ
-# It should be id_1 = 10316356
-
 # get the current map and data
 hrp2_map_old <- readRDS("analysis/data_derived/R6_map.rds")
 
@@ -56,35 +46,7 @@ hrp2_map_new <- hrpup:::R6_hrp2_map$new(
 saveRDS(hrp2_map_new, "analysis/data_derived/R6_WHO_Compliant_map.rds")
 
 
-
-map_small <- rmapshaper::ms_simplify(hrp2_map_new$.__enclos_env__$private$map)
-hrp2_map_newest <- hrpup:::R6_hrp2_map$new(
-  map = map_small,
-  map_data = hrp2_map_new$.__enclos_env__$private$map_data,
-  scenarios = hrp2_map_new$.__enclos_env__$private$scenarios,
-  map_0 = hrp2_map_new$.__enclos_env__$private$map_0
-)
-
-world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
-isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
-lakes <- world_map %>% filter(type_1 == "Water Body")
-library(wpp2017)
-data("UNlocations")
-lakes$cont <- countrycode::countrycode(lakes$iso, "iso3c", "iso3n")
-lakes$region <- UNlocations$area_name[match(lakes$cont, UNlocations$country_code)]
-
-hrp2_map_newest <- hrpup:::R6_hrp2_map$new(
-  map = map_small,
-  map_data = hrp2_map_new$.__enclos_env__$private$map_data,
-  scenarios = hrp2_map_new$.__enclos_env__$private$scenarios,
-  map_0 = hrp2_map_new$.__enclos_env__$private$map_0,
-  lakes = lakes
-)
-
-
-
-
-# Code for doinf the map checking that has been copied above
+# Code for doing the map checking - was used to identify the GUIDs etc
 pl_old <- hrp2_map_old$plot(print = FALSE, region = "global")
 pl_new <- hrp2_map_new$plot(print = FALSE, region = "global")
 
