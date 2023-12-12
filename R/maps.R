@@ -20,16 +20,19 @@ R6_hrp2_map <- R6::R6Class(
     #' @param map_data Map result data for each scenario
     #' @param scenarios Scenarios data frame
     #' @param map_0 Admin 0 map sf object
+    #' @param lakes Lake sf object
     #' @return A new `hrp2_map` object.
     initialize = function(map,
                           map_data = NULL,
                           scenarios = NULL,
-                          map_0 = NULL) {
+                          map_0 = NULL,
+                          lakes = NULL) {
 
       private$map <- map
       private$map_data <- map_data
       private$scenarios <- scenarios
       private$map_0 <- map_0
+      private$lakes <- lakes
 
     },
 
@@ -47,7 +50,8 @@ R6_hrp2_map <- R6::R6Class(
     #' @param rdt.nonadherence Probability of treating neg. indiviudal scenario
     #' @param fitness Relative fitness of hrp2 deleted parasite scenario
     #' @param rdt.det Chance of hrp2 deleted parasite yielding pos test scenario
-    #' @param print Boolean for whether to print the plot as well as return it
+    #' @param print_bool Boolean for whether to print the plot as well as return it
+    #' @param lakes_bool Boolean for whether to add lakes (default = TRUE)
     #' @param risk What type of risk score to plot, either "innate" (default) or "prospective"
     #' @return ggplot map object silently
     plot = function(region = "africa",
@@ -57,7 +61,8 @@ R6_hrp2_map <- R6::R6Class(
                     rdt.nonadherence = "central",
                     fitness = "central",
                     rdt.det = "central",
-                    print = FALSE,
+                    print_bool = FALSE,
+                    lakes_bool = TRUE,
                     risk = "innate",
                     prev_plot = FALSE) {
 
@@ -99,6 +104,7 @@ R6_hrp2_map <- R6::R6Class(
         region <- c("Africa", "Asia", "Latin America and the Caribbean")[region]
         mapped <- mapped[mapped$region == region, ]
         mapped_0 <- mapped_0[mapped_0$region == region, ]
+        lakes <- private$lakes[private$lakes$region == region, ]
       }
 
       # generate map
@@ -112,20 +118,20 @@ R6_hrp2_map <- R6::R6Class(
 
       # add prevalence mapping
       if(prev_plot) {
-      if(any((gg_map_risk$data$Micro.2.10 < 0.0005))) {
+        if(any((gg_map_risk$data$Micro.2.10 < 0.0005))) {
 
-        gg_map_risk <- gg_map_risk +
-          ggnewscale::new_scale_fill() +
-          ggpattern::geom_sf_pattern(
-            pattern_fill = "grey", pattern = "stripe", fill = NA, show.legend = FALSE,
-            color = NA,
-            pattern_colour = NA,
-            pattern_density = 0.5,
-            pattern_spacing = 0.025,
-            data = . %>% filter(Micro.2.10 < 0.0005), inherit.aes = FALSE) +
-          ggplot2::scale_fill_manual(name="\nTransmission", labels="Unstable (<0.05% PfPR)", values="grey")
+          gg_map_risk <- gg_map_risk +
+            ggnewscale::new_scale_fill() +
+            ggpattern::geom_sf_pattern(
+              pattern_fill = "grey", pattern = "stripe", fill = NA, show.legend = FALSE,
+              color = NA,
+              pattern_colour = NA,
+              pattern_density = 0.5,
+              pattern_spacing = 0.025,
+              data = . %>% filter(Micro.2.10 < 0.0005), inherit.aes = FALSE) +
+            ggplot2::scale_fill_manual(name="\nTransmission", labels="Unstable (<0.05% PfPR)", values="grey")
 
-      }
+        }
       }
 
       # add the admin 0 mappings in and some simplifying themes
@@ -137,8 +143,17 @@ R6_hrp2_map <- R6::R6Class(
         ggplot2::theme(plot.caption = ggplot2::element_text(face = "italic"),
                        plot.background = ggplot2::element_rect(fill = "white", color = "white"))
 
+      # add lakes if needed
+      if (lakes_bool) {
+        gg_map_risk <- gg_map_risk + geom_sf(
+          data = lakes, fill = "white", color = "grey", lwd = 0.1
+        )
+      }
+
       # print the map
-      print(gg_map_risk)
+      if(print_bool){
+        print(gg_map_risk)
+      }
       invisible(gg_map_risk)
 
     },
@@ -147,6 +162,10 @@ R6_hrp2_map <- R6::R6Class(
     #' Set map data
     #' @param map_data Map data of selection coefficients for each scenario
     set_map_data = function(map_data) {private$map_data <- map_data},
+
+    #' Set lakes
+    #' @param lakes Map lake objects
+    set_lakes = function(lakes) {private$lakes <- lakes},
 
     #' Set map data
     #' @param scenarios Scenario data frame that matches map_data
@@ -158,6 +177,7 @@ R6_hrp2_map <- R6::R6Class(
     map = NULL,
     map_data = NULL,
     scenarios = NULL,
-    map_0 = NULL
+    map_0 = NULL,
+    lakes = NULL
   )
 )

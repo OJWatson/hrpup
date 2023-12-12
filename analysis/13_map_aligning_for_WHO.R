@@ -2,6 +2,14 @@ library(tidyverse)
 devtools::load_all()
 library(wpp2017)
 
+# 0. Create lakes
+world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
+isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
+lakes <- world_map %>% filter(type_1 == "Water Body")
+data("UNlocations")
+lakes$cont <- countrycode::countrycode(lakes$iso, "iso3c", "iso3n")
+lakes$region <- UNlocations$area_name[match(lakes$cont, UNlocations$country_code)]
+
 # 1. Create map to share with WHO for website
 hrp2_map <- readRDS("analysis/data_derived/R6_map.rds")
 scenario_maps <- readRDS("analysis/data_derived/scenario_maps_full.rds")
@@ -42,10 +50,36 @@ hrp2_map_new <- hrpup:::R6_hrp2_map$new(
   map = new_map,
   map_data = hrp2_map_old$.__enclos_env__$private$map_data,
   scenarios = hrp2_map_old$.__enclos_env__$private$scenarios,
-  map_0 = hrp2_map_old$.__enclos_env__$private$map_0
+  map_0 = hrp2_map_old$.__enclos_env__$private$map_0,
+  lakes = lakes
 )
 saveRDS(hrp2_map_new, "analysis/data_derived/R6_WHO_Compliant_map.rds")
 
+
+
+map_small <- rmapshaper::ms_simplify(hrp2_map_new$.__enclos_env__$private$map)
+hrp2_map_newest <- hrpup:::R6_hrp2_map$new(
+  map = map_small,
+  map_data = hrp2_map_new$.__enclos_env__$private$map_data,
+  scenarios = hrp2_map_new$.__enclos_env__$private$scenarios,
+  map_0 = hrp2_map_new$.__enclos_env__$private$map_0
+)
+
+world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
+isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
+lakes <- world_map %>% filter(type_1 == "Water Body")
+library(wpp2017)
+data("UNlocations")
+lakes$cont <- countrycode::countrycode(lakes$iso, "iso3c", "iso3n")
+lakes$region <- UNlocations$area_name[match(lakes$cont, UNlocations$country_code)]
+
+hrp2_map_newest <- hrpup:::R6_hrp2_map$new(
+  map = map_small,
+  map_data = hrp2_map_new$.__enclos_env__$private$map_data,
+  scenarios = hrp2_map_new$.__enclos_env__$private$scenarios,
+  map_0 = hrp2_map_new$.__enclos_env__$private$map_0,
+  lakes = lakes
+)
 
 
 

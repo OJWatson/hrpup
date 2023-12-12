@@ -47,9 +47,17 @@ world_map_0$region <- UNlocations$area_name[match(world_map_0$cont, UNlocations$
 world_map_0 <- world_map_0 %>% select(iso, region)
 new_obj$map_0 <- world_map_0
 
+# 5. Add lakes
+world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
+isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
+lakes <- world_map %>% filter(type_1 == "Water Body")
+data("UNlocations")
+lakes$cont <- countrycode::countrycode(lakes$iso, "iso3c", "iso3n")
+lakes$region <- UNlocations$area_name[match(lakes$cont, UNlocations$country_code)]
+saveRDS(lakes, "analysis/data_derived/lakes_sf.rds")
 
 
-# 5. create the object for easy plotting
+# 6. create the object for easy plotting
 
 # shrink the map resolution
 map_small <- rmapshaper::ms_simplify(new_obj$map)
@@ -59,6 +67,7 @@ hrp2_map <- hrpup:::R6_hrp2_map$new(
   map = map_small,
   map_data = new_obj$map_data,
   scenarios = new_obj$scenarios,
-  map_0 = new_obj$map_0
+  map_0 = new_obj$map_0,
+  lakes = lakes
   )
 saveRDS(hrp2_map, "analysis/data_derived/R6_map.rds")
