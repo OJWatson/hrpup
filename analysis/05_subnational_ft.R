@@ -1,3 +1,4 @@
+library(tidyverse)
 
 # ---------------------------------------------------- #
 # 1. Get access covariate dataset from MAP rasters ----
@@ -43,7 +44,7 @@ pop_total = sum(pop))
 
 }
 
-scenario_maps <- readRDS("analysis/data_derived/scenario_maps_full_monotonic.rds")
+scenario_maps <- readRDS("analysis/data_derived/scenario_maps_full.rds")
 map <- scenario_maps$map
 
 iso3cs <- unique(map$iso)
@@ -69,7 +70,8 @@ shp <- sf::read_sf("analysis/data_raw/data_dhs/shps/sdr_subnational_data.shp")
 
 # MAP world map
 covars <-  readRDS("analysis/data_derived/global_covariate_ranges.rds")
-world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
+#world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
+world_map <- readRDS("analysis/data_derived/admin1_sf.rds")
 shp$iso3c <- countrycode::countrycode(shp$CNTRYNAMEE, origin = "country.name.en","iso3c")
 
 # start matching it to our MAP map
@@ -115,7 +117,7 @@ preds <- preds %>% filter(date == 18264)
 pred_df <- preds %>% select(iso3c, hospital_beds_per_thousand, life_expectancy, vdem_freedom_of_expression_score:polity_democracy_score, wdi_obs_lag:wdi_urban_pop_1m_cities_pct, percent_land_area_in_tropics:total_deaths_latest_per_100k,gdpppc_ppp_imf)
 
 # impute missing predictors
-full_df <- new_df %>% left_join(pred_df)
+full_df <- new_df %>% left_join(pred_df) %>% ungroup()
 mic <- mice::mice(full_df %>% select(-id_1, -iso3c, -ft, -pop_total))
 comp <- mice::complete(mic)
 full_df[,-which(names(full_df) %in% c("id_1","ft", "iso3c", "pop_total"))] <- comp
@@ -203,7 +205,7 @@ saveRDS(new_covars, "analysis/data_derived/global_covariate_ranges.rds")
 
 # get data and set up objects
 dat <- jsonify::from_json("analysis/data_raw/MAP_comm_historical.json", simplify = TRUE)
-isos <- c("ETH", "ERI")
+isos <- c("ETH", "ERI", "UGA")
 isols <- match(isos, dat$countryIso3)
 isols_list <- vector("list", length(isols))
 
@@ -264,11 +266,11 @@ df_i$untesttreat_priv <- (dat$commodityDemand$breakdown$nUntestedPosGotAm$priv[[
      dat$commodityDemand$breakdown$nUntestedNegO5$priv[[isols_i]])
 
 # correct for untest outliers in ERI
-if(isos[i] == "ERI") {
+if(isos[i] %in% c("ERI", "UGA")) {
   df_i$untesttreat_priv <- df_i$untesttreat_priv *
-   (iso_covariates$untesttreat_priv[iso_covariates$iso3c == "ERI"] / tail(df_i$untesttreat_priv,1))
+   (iso_covariates$untesttreat_priv[iso_covariates$iso3c == isos[i]] / tail(df_i$untesttreat_priv,1))
   df_i$untesttreat_publ <- df_i$untesttreat_publ *
-    (iso_covariates$untesttreat_publ[iso_covariates$iso3c == "ERI"] / tail(df_i$untesttreat_publ,1))
+    (iso_covariates$untesttreat_publ[iso_covariates$iso3c == isos[i]] / tail(df_i$untesttreat_publ,1))
 }
 
 # overall treatment for symptomatic cases
@@ -312,25 +314,40 @@ read_map_json <- function(type, prev = "Micro.2.10_mean") {
 
 }
 mean <- read_map_json("mean", "Micro.2.10_mean")
-df_prev <- mean %>% mutate(id_1 = as.integer(as.character(id_1)))
+low <- read_map_json("lci", "Micro.2.10_low")
+high <- read_map_json("uci", "Micro.2.10_high")
+df_prev <- mean %>% mutate(id_1 = as.integer(as.character(id_1))) %>%
+  left_join(low %>% mutate(id_1 = as.integer(as.character(id_1)))) %>%
+  left_join(high %>% mutate(id_1 = as.integer(as.character(id_1))))
+
 
   # use this just for matching codes for MAP data
   tf <- tempfile()
 download.file("https://cloud.ihme.washington.edu/s/teDKnPGcJnBjJ5F/download?path=%2F2%20-%20Data%20%5BCSV%5D%2F3%20-%20Prevalence%3A%20Plasmodium%20falciparum%20%5BGeoTIFF%5D&files=IHME_MALARIA_2000_2019_PFPR_ADMIN1_Y2020M08D31.CSV", tf)
-prev <- read.csv(tf) %>% filter(year == 2019)
+prev <- read.csv(tf)
+
+# have to get prevalence for Uganda from this for admin 1
+df_prev <- rbind(prev %>% filter(ISO3 == "UGA") %>%
+  rename(Micro.2.10_mean = mean,
+         Micro.2.10_low = lower,
+         Micro.2.10_high = upper,
+         id_1 = ADM1_Code) %>%
+  select(Micro.2.10_mean, year, id_1, Micro.2.10_low, Micro.2.10_high) %>%
+    arrange(id_1),
+  df_prev)
 
 prev_vars <- left_join(
   df_prev,
-  prev %>%
+  prev %>% filter(year == 2019) %>% # just used for id_1 matching here
     select(ISO3, ADM1_Code) %>%
     rename(iso3c = ISO3, id_1 = ADM1_Code)
 ) %>%
-  filter(iso3c %in% c("ERI", "ETH")) %>%
-  select(iso3c, id_1, year, Micro.2.10_mean) %>%
+  filter(iso3c %in% c("ERI", "ETH", "UGA")) %>%
+  select(iso3c, id_1, year, Micro.2.10_mean, Micro.2.10_low, Micro.2.10_high) %>%
   arrange(iso3c)
 
 # join with our iso level covars
-spec_covars <- left_join(prev_vars %>% mutate(year = as.integer(as.character(year))),
+spec_covars <- left_join(prev_vars %>% mutate(year = as.integer(as.character(year))) %>% filter(year >= 2010),
                          isos_df, by = c("iso3c", "year"))
 
 # add in the DHS informed fts
@@ -340,7 +357,7 @@ new_spec_covars  <- spec_covars %>% left_join(full_df %>% select(id_1, ft, pop_t
 new_spec_covars <- new_spec_covars %>%
   group_by(iso3c) %>%
   mutate(ft_mean = ((ft*sum(pop_total))/(sum(fs*pop_total))) * fs) %>%
-  select(iso3c, id_1, year, Micro.2.10_mean, ft_mean, micro, non_adherence) %>%
+  select(iso3c, id_1, year, Micro.2.10_mean, Micro.2.10_low, Micro.2.10_high, ft_mean, micro, non_adherence) %>%
   mutate(id_1 = as.integer(id_1)) %>%
   rename(rdt.nonadherence_mean = non_adherence) %>%
   rename(microscopy.use_mean = micro) %>%
