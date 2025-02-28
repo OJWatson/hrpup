@@ -442,10 +442,10 @@ fitness_range <- as.numeric(round(quantile(pfd$fitness, c(0.025,0.5,0.975)), 3))
 
 # add in the fitness and rdt.det data
 covars <-  readRDS("analysis/data_derived/global_covariate_ranges.rds")
-# Add these in and multiply rdt det by results of independence modelling earlier (i.e. 1 - 0.66)
+# Add these in and multiply rdt det by results of independence modelling earlier (i.e. 1 - 0.617)
 covars <- covars %>%
   mutate(fitness_mean = fitness_range[2], fitness_low = fitness_range[1], fitness_high = fitness_range[3]) %>%
-  mutate(rdt.det_mean = rdt_range[2]*0.33, rdt.det_low = rdt_range[1]*0.33, rdt.det_high = rdt_range[3]*0.33)
+  mutate(rdt.det_mean = rdt_range[2]*0.383, rdt.det_low = rdt_range[1]*0.383, rdt.det_high = rdt_range[3]*0.383)
 
 saveRDS(covars, "analysis/data_derived/global_covariate_ranges.rds")
 

@@ -49,6 +49,7 @@ mtmp <- function(prob, theta, continent) {
 # summary for specific continents and CI
 mafrica <- bbmle::mle2(mtmp, start=list(prob=0.6,theta=1), fixed = list("continent" = 1))
 bbmle::confint(mafrica)
+mafrica@coef
 bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 2))
 bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 3))
 bbmle::mle2(mtmp, start=list(prob=0.8,theta=9), fixed = list("continent" = 4))

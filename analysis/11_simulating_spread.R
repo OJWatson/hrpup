@@ -433,11 +433,11 @@ hrp2_map$set_map_data(new_map_data)
 saveRDS(hrp2_map, "analysis/data_derived/R6_map.rds")
 
 # Simple comparison plot for ease
-risk_gg1 <- hrp2_map$plot(scale_bar_bool = FALSE) + custom_theming() +
+risk_gg1 <- hrp2_map$plot() + custom_theming() +
   theme(legend.key.spacing.y = unit(0.25, "cm"),
         legend.key.width = unit(1, "cm"),
         legend.key.spacing = unit(0.125, "cm"))
-risk_gg2 <- hrp2_map$plot(risk = "prospective",scale_bar_bool = FALSE) + custom_theming() +
+risk_gg2 <- hrp2_map$plot(risk = "prospective") + custom_theming() +
   theme(legend.key.spacing.y = unit(0.25, "cm"),
         legend.key.width = unit(1, "cm"),
         legend.key.spacing = unit(0.125, "cm"))
@@ -449,4 +449,4 @@ risk_gg <- cowplot::plot_grid(add_africa_scale(risk_gg1) + theme(legend.position
                    ncol = 3) +
   theme(plot.background = element_rect("white","white"))
 
-save_figs("innate_vs_prospective1", risk_gg, width = 12, height = 6, pdf_plot = FALSE)
+save_figs("innate_vs_prospective", risk_gg, width = 12, height = 6, pdf_plot = FALSE)
