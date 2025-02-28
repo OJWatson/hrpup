@@ -5,9 +5,8 @@
 library(tidyverse)
 devtools::load_all()
 
-# MAP world map boundaries
-available_admin <- malariaAtlas::listShp(printed = FALSE, admin_level = "admin0")
-world_map_0 <- malariaAtlas::getShp(ISO = available_admin$iso, admin_level = c("admin0")) %>% sf::st_as_sf()
+# WHO world map boundaries
+who_shps <- readRDS("analysis/data_derived/who_shps.rds")
 
 # scenario data
 scenario_maps <- readRDS("analysis/data_derived/scenario_maps_full.rds")
@@ -16,164 +15,71 @@ scenario_maps <- readRDS("analysis/data_derived/scenario_maps_full.rds")
 # 1. Plotting central time maps  ----
 # ---------------------------------------------------- #
 
-# plotting t maps -------------------------------#
-
-# get scenario data
-world_f <- function(scenario, bounds = FALSE){
-
-world <- left_join(scenario_maps$map, scenario_maps$map_data[[scenario]]) %>%
-  filter(iso %in% isos)
-if(bounds){
-  world <- world %>%
-    filter(!is.na(t)) %>%
-  mutate(t = replace(t, t>=40, NA)) %>%
-  mutate(t = replace(t, t<0, NA))
-}
-return(world)
-}
-
-# create map
-create_map_t <- function(world, world_map_0, limits = FALSE) {
-
-gg_map <- world %>%
-  #filter(Micro.2.10 > 0.0001) %>%
-  ggplot() +
-  #geom_sf(aes(fill = cut(ft, seq(0,1,0.2))), color = NA, show.legend = TRUE) +
-  geom_sf(aes(fill = t), color = "grey", show.legend = TRUE, lwd = 0.1) +
-  scale_fill_viridis_c(name = "Years", breaks = c(0,10,20,30,40), limits = c(0,40), option = "C", direction = -1, end = 0.7)
-
-
-if(any((gg_map$data$Micro.2.10 < 0.0005))) {
-
-  gg_map <- gg_map +
-    ggnewscale::new_scale_fill() +
-    ggpattern::geom_sf_pattern(
-      pattern_fill = "grey", pattern = "stripe", fill = NA, show.legend = FALSE,
-      color = NA,
-      pattern_colour = NA,
-      pattern_density = 0.5,
-      pattern_spacing = 0.025,
-      data = . %>% filter(Micro.2.10 < 0.0005), inherit.aes = FALSE) +
-    scale_fill_manual(name="\nTransmission", labels="Unstable (<0.05% PfPR)", values="grey")
-
-}
-
-lrb <- "#4169e1"
-if(any(is.na(gg_map$data$t))) {
-
-  gg_map <- gg_map +
-    ggnewscale::new_scale_fill() +
-    geom_sf(aes(fill = "blue"), color = NA, show.legend = TRUE, data = . %>% filter(is.na(t))) +
-    scale_fill_manual(name=" ", labels="40+ Years", values="blue")
-
-}
-
-
-xlim <- layer_scales(gg_map)$x$get_limits()
-ylim <- layer_scales(gg_map)$y$get_limits()
-
-gg_map <- gg_map +
-  geom_sf(fill = NA, color = "black", show.legend = FALSE,
-          data = world_map_0 %>% filter(iso %in% isos), lwd = 0.2) +
-  coord_sf() +
-  theme_void() +
-  theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white"))
-
-if(limits){
-  gg_map <- gg_map + xlim(xlim) + ylim(ylim)
-}
-gg_map
-}
-
 # central
-scenario <- 365
+scenario <- which(apply(scenario_maps$scenarios, 1, function(x){all(x == "central")}))
+
+# cut off function
+cut_off <- list(
+  breaks = c(0,10,20,30,40),
+  limits = c(0,40),
+  color = "blue",
+  cutoff = function(x){x %>% filter(t>40 | t < 0)},
+  name = "Years",
+  label = "40+ Years"
+)
 
 # africa t
-isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
-world <- world_f(scenario, TRUE)
-gg_map <- create_map_t(world, world_map_0)
-save_figs("central_afr_map", gg_map, width = 10, height = 8, pdf_plot = FALSE)
+gg_map <- who_compliant_continuous_plot(scenario_maps$map_data[[scenario]], who_shps, region = "africa",
+                                        var = "t", title = "Years", limits = TRUE, cut_off = cut_off, prev_plot = TRUE, prev_var = "Micro.2.10")
+save_figs("central_afr_map", add_africa_scale(gg_map), width = 10, height = 8, pdf_plot = FALSE)
 
 # world t
-isos <- unique(countrycode::codelist$iso3c)
-world <- world_f(scenario, TRUE)
-gg_map2 <- create_map_t(world, world_map_0, TRUE)
-save_figs("central_world_map", gg_map2, width = 30, height = 8, pdf_plot = FALSE)
+gg_map2 <- who_compliant_continuous_plot(scenario_maps$map_data[[scenario]], who_shps, region = "global",
+                                        var = "t", title = "Years", limits = TRUE, cut_off = cut_off, prev_plot = TRUE, prev_var = "Micro.2.10") +
+  theme(legend.text = element_text(family = "Helvetica", size = 14), legend.title = element_text(family = "Helvetica", size = 16))
+save_figs("central_world_map", add_global_scale(gg_map2), width = 20, height = 6, pdf_plot = FALSE)
 
 # ---------------------------------------------------- #
 # 2. Plotting central risk maps ----
 # ---------------------------------------------------- #
 
-# ------- Plotting Risk Maps----------------------- #
-
-create_map_risk <- function(scenario_maps, scenario, isos, limits = FALSE)  {
-
-# bin risk
-pal <- colorRampPalette(c("blue", "cyan", "yellow", "red"), bias=1)
-
-world <- left_join(scenario_maps$map, scenario_maps$map_data[[scenario]]) %>%
-  filter(!is.na(t)) %>%
-  filter(iso %in% isos) %>%
-  mutate(t = replace(t, t < 0, Inf)) %>%
-  mutate(t_bin = cut(t, breaks = c(0,6,12,20, Inf)))
-
-gg_map_risk <- world %>%
-  ggplot() +
-  geom_sf(aes(fill = t_bin), color = "grey", show.legend = TRUE, lwd = 0.1) +
-  scale_fill_manual(name = "HRP2 Concern", values = rev(c("blue", "cyan", "yellow", "red")),
-                    labels = rev(c("Marginal", "Slight", "Moderate", "High")))
-
-if(any((gg_map_risk$data$Micro.2.10 < 0.0005))) {
-
-  gg_map_risk <- gg_map_risk +
-    ggnewscale::new_scale_fill() +
-    ggpattern::geom_sf_pattern(
-      pattern_fill = "grey", pattern = "stripe", fill = NA, show.legend = FALSE,
-      color = NA,
-      pattern_colour = NA,
-      pattern_density = 0.5,
-      pattern_spacing = 0.025,
-      data = . %>% filter(Micro.2.10 < 0.0005), inherit.aes = FALSE) +
-    scale_fill_manual(name="\nTransmission", labels="Unstable (<0.05% PfPR)", values="grey")
-
-}
-
-xlim <- layer_scales(gg_map_risk)$x$get_limits()
-ylim <- layer_scales(gg_map_risk)$y$get_limits()
-
-gg_map_risk <- gg_map_risk +
-  geom_sf(fill = NA, color = "black", show.legend = FALSE,
-          data = world_map_0 %>% filter(iso %in% isos), lwd = 0.2) +
-  coord_sf() +
-  theme_void() +
-  theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white"))
-
-if(limits){
-  gg_map_risk <- gg_map_risk + xlim(xlim) + ylim(ylim)
-}
-gg_map_risk
-
-}
-
-# africa_risk
+# africa_risk first
 scenario <- 365
-isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
-gg_map3 <- create_map_risk(scenario_maps, scenario, isos, FALSE)
-save_figs("central_afr_risk", gg_map3, width = 10, height = 8, pdf_plot = FALSE)
+create_risk <- function(x){
+  x %>% mutate(t = replace(t, t < 0, Inf)) %>% mutate(t_bin = cut(t, breaks = c(0,6,12,20, Inf)))
+}
 
-scenario <- 364
-gg_map3 <- create_map_risk(scenario_maps, scenario, isos, FALSE)
-save_figs("worst_afr_risk", gg_map3, width = 10, height = 8, pdf_plot = FALSE)
+# central
+central_gg <- who_compliant_discrete_plot(create_risk(scenario_maps$map_data[[scenario]]),who_shps, region = "africa",
+                                      var = "t_bin", title = "HRP2 Concern",limits = TRUE, prev_plot = TRUE, prev_var = "Micro.2.10")
+save_figs("central_afr_risk", add_africa_scale(central_gg), width = 10, height = 8, pdf_plot = FALSE)
 
-scenario <- 366
-gg_map3 <- create_map_risk(scenario_maps, scenario, isos, FALSE)
-save_figs("best_afr_risk", gg_map3, width = 10, height = 8, pdf_plot = FALSE)
+# worst
+worst_gg <- who_compliant_discrete_plot(create_risk(scenario_maps$map_data[[scenario-1]]),who_shps, region = "africa",
+                                        var = "t_bin", title = "HRP2 Concern",limits = TRUE, prev_plot = TRUE, prev_var = "Micro.2.10")
+save_figs("worst_afr_risk", add_africa_scale(worst_gg), width = 10, height = 8, pdf_plot = FALSE)
+
+# best
+best_gg <- who_compliant_discrete_plot(create_risk(scenario_maps$map_data[[scenario+1]]),who_shps, region = "africa",
+                                        var = "t_bin", title = "HRP2 Concern",limits = TRUE, prev_plot = TRUE, prev_var = "Micro.2.10")
+save_figs("best_afr_risk", add_africa_scale(best_gg), width = 10, height = 8, pdf_plot = FALSE)
 
 # world_risk
-scenario <- 365
-isos <- unique(countrycode::codelist$iso3c)
-gg_map4 <- create_map_risk(scenario_maps, scenario, isos, TRUE)
-save_figs("central_world_risk", gg_map4, width = 30, height = 8, pdf_plot = FALSE)
+gg_map4 <- who_compliant_discrete_plot(create_risk(scenario_maps$map_data[[scenario]]),who_shps, region = "global",
+                                          var = "t_bin", title = "HRP2 Concern",limits = TRUE, prev_plot = TRUE, prev_var = "Micro.2.10")
+save_figs("central_world_risk1", add_global_scale(gg_map4), width = 20, height = 6, pdf_plot = FALSE)
+
+# combine so we don't have to make by hand:
+gg_map5 <- cowplot::plot_grid(
+  add_africa_scale(worst_gg) + theme(legend.position = "none", plot.title = element_text(hjust = 0.5, size = 22, family = "Helvetica")) + ggtitle("Worst Case"),
+  add_africa_scale(central_gg) + theme(legend.position = "none", plot.title = element_text(hjust = 0.5, size = 22, family = "Helvetica")) + ggtitle("Central Case"),
+  add_africa_scale(best_gg) + theme(legend.position = "none", plot.title = element_text(hjust = 0.5, size = 22, family = "Helvetica")) + ggtitle("Best Case"),
+  cowplot::get_legend(central_gg + theme(legend.text = element_text(family = "Helvetica", size = 14), legend.title = element_text(family = "Helvetica", size = 16))),
+  ncol = 4,
+  rel_widths = c(1, 1, 1, 0.7)
+) + theme(plot.background = element_rect(fill = "white", color = "white"))
+save_figs("worst_central_best_africa_risk", gg_map5, width = 20, height = 6, pdf_plot = FALSE)
+
 
 # ---------------------------------------------------- #
 # 3. Creating Data Outputs  ----
@@ -281,4 +187,4 @@ hrtable <- world %>% sf::st_drop_geometry() %>%
   mutate(r = scales::percent_format()(r)) %>%
   setNames(c("Country", "% Admin 1 High Risk"))
 
-write.csv(hrtable, file = "analysis/tables/high_innate_risk_countries.csv")
+write.csv(hrtable, file = "analysis/tables/high_innate_risk_countries.csv", row.names = FALSE)

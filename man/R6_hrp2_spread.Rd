@@ -13,6 +13,7 @@ A simulating model
 \item \href{#method-hrp2_spread-set_seeds}{\code{R6_hrp2_spread$set_seeds()}}
 \item \href{#method-hrp2_spread-set_map_data}{\code{R6_hrp2_spread$set_map_data()}}
 \item \href{#method-hrp2_spread-simulate_spread}{\code{R6_hrp2_spread$simulate_spread()}}
+\item \href{#method-hrp2_spread-simulate_spread_and_rdts}{\code{R6_hrp2_spread$simulate_spread_and_rdts()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -98,6 +99,40 @@ Simulated spread
 \item{\code{t_break}}{Gap between time breaks. Default = 1}
 
 \item{\code{import_gap}}{Number of years for importation to occur over. Default = 1}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-hrp2_spread-simulate_spread_and_rdts"></a>}}
+\if{latex}{\out{\hypertarget{method-hrp2_spread-simulate_spread_and_rdts}{}}}
+\subsection{Method \code{simulate_spread_and_rdts()}}{
+Simulated spread and RDT rollout
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_spread$simulate_spread_and_rdts(
+  import_freq = 0.01,
+  export_freq = 0.25,
+  t_end = 40,
+  t_break = 1,
+  import_gap = 1,
+  switch_list = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{import_freq}}{What frequency does importation result in. Default = 0.01}
+
+\item{\code{export_freq}}{At what frequency does exportation occur at. Default = 0.25}
+
+\item{\code{t_end}}{What year does simulation end. Default = 40}
+
+\item{\code{t_break}}{Gap between time breaks. Default = 1}
+
+\item{\code{import_gap}}{Number of years for importation to occur over. Default = 1}
+
+\item{\code{switch_list}}{List of switch rules}
 }
 \if{html}{\out{</div>}}
 }

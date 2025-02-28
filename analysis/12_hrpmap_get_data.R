@@ -1,6 +1,6 @@
-tf <- tempfile()
-download.file("https://github.com/OJWatson/hrpup/blob/main/analysis/data_derived/R6_map.rds?raw=true", destfile = tf)
-hrp2_map <- readRDS(tf)
+
+# to create the full data we can use the map object
+hrp2_map <- readRDS("analysis/data_derived/R6_map.rds")
 
 # this is where all the map data is for each scenario
 hrp2_map$.__enclos_env__$private$map_data[[1]][1:5, ]
@@ -24,10 +24,11 @@ full_df <- do.call(rbind, full_dat)
 covars <-  readRDS("analysis/data_derived/global_covariate_ranges.rds")
 
 # MAP world map to use
-world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
+world_map <- readRDS(here::here("analysis/data_derived/admin1_sf.rds"))
 
 # write to file
 full_df2 <- left_join(full_df[,-2], world_map %>% sf::st_drop_geometry() %>%
                         select(id_1, name_1, iso), by = c("id_1"))
-write.csv(full_df2, "analysis/data_out/full_results.csv")
-
+write.csv(full_df2, "analysis/data_out/full_results.csv", row.names = FALSE)
+zip::zip("analysis/data_out/full_results.csv.zip", "analysis/data_out/full_results.csv")
+file.remove("analysis/data_out/full_results.csv")

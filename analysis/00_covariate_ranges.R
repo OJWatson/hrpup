@@ -19,6 +19,7 @@ df$negtesttreat_publ <- dat$complianceSettings$rateTestedNegGotAm$pub
 df$untesttreat_priv <- dat$complianceSettings$rateUntestedGotAm$priv
 df$untesttreat_publ <- dat$complianceSettings$rateUntestedGotAm$pub
 df$ACT_publ <- dat$complianceSettings$rateAmAreAct$pub
+df$ACT_priv <- dat$complianceSettings$rateAmAreAct$priv
 
 # overall treatment for symptomatic cases
 df$ft <- (df$ft_priv * df$test_priv * df$postesttreat_priv) +

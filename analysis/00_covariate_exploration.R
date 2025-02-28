@@ -22,12 +22,6 @@ df$untesttreat_priv <- dat$complianceSettings$rateUntestedGotAm$priv
 df$untesttreat_publ <- dat$complianceSettings$rateUntestedGotAm$pub
 df$ACT_publ <- dat$complianceSettings$rateAmAreAct$pub
 
-# overall treatment for symptomatic cases
-df$ft <- (df$ft_priv * df$test_priv * df$postesttreat_priv) +
-  (df$ft_priv * (1-df$test_priv) * df$untesttreat_priv) +
-  (df$ft_publ * (df$test_publ) * df$postesttreat_publ) +
-  (df$ft_publ * (1-df$test_publ) * df$untesttreat_publ)
-
 # use of microscopy assuming not used in private
 df$micro <- ((1 - df$rdt_prop)*df$ft_publ)/(df$ft_priv + df$ft_publ)
 
@@ -87,3 +81,59 @@ df$non_adherence <- df$ft_priv/(df$ft_priv + df$ft_publ) * df$negtesttreat_priv 
 
 # save the output for the time being
 saveRDS(df, "analysis/data_derived/iso_covariates.rds")
+
+
+
+
+
+(df$ft_priv * df$test_priv * df$postesttreat_priv * df$ACT_priv) +
+  (df$ft_priv * df$test_priv * df$postesttreat_priv * (1-df$ACT_priv)*0.8) +
+  (df$ft_priv * (1-df$test_priv) * df$untesttreat_priv * df$ACT_priv) +
+  (df$ft_priv * (1-df$test_priv) * df$untesttreat_priv* (1-df$ACT_priv)*0.8) +
+  (df$ft_publ * (df$test_publ) * df$postesttreat_publ * df$ACT_publ) +
+  (df$ft_publ * (df$test_publ) * df$postesttreat_publ * (1-df$ACT_publ)*0.8) +
+  (df$ft_publ * (1-df$test_publ) * df$untesttreat_publ * df$ACT_publ) +
+  (df$ft_publ * (1-df$test_publ) * df$untesttreat_publ * (1-df$ACT_publ)*0.8) -> df$eff
+
+
+
+# of all public treatments, which are true cases (pos test, and % pos tests * untested)
+true_public_cases_treated <- (1.019+(0.054*2.825))
+# of these which are effective assuming 95% eff for ACT and 50% eff for non-ACT
+true_public_cases_eff <- (true_public_cases_treated*0.773*0.95) + (true_public_cases_treated*(1-0.773)*0.5)
+# of all attendance in public, how many are true malaria (all public attendance * % pos test)
+true_public_cases <- 0.054*(36.94+17.8)
+
+# doo same private
+true_private_cases_treated <- (0.08572+(0.054*1.451))
+true_private_cases_eff <- (true_private_cases_treated*0.705*0.95) + (true_private_cases_treated*(1-0.705)*0.5)
+true_private_cases <- 0.054*(12.35+5.212)
+
+# overall eff treatment
+(true_public_cases_eff + true_private_cases_eff)/(true_private_cases + true_public_cases)
+
+
+
+
+read_map_admin0_ft <- function(type, prev = "ft") {
+
+  url <- paste0(
+    "https://data.malariaatlas.org/map-platform-app-backend/api/v1/trends/interventions/Antimalarial_EFT-rate/admin0/",
+    type,
+    "?version=202406")
+  lci <- jsonlite::read_json(url)
+
+  df <- data.frame("prev" = unlist(lci$value)) %>%
+    cbind(expand.grid(
+      "year" = unlist(lci$dimension$Year$category$label),
+      "iso3c" = as.character(unlist(lci$dimension$ISO$category$label))
+    ))
+
+
+  names(df)[1] <- prev
+
+  return(df)
+
+}
+
+ft_mean <- read_map_admin0_ft("mean", "ft")

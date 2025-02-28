@@ -3,17 +3,17 @@ library(caret)
 library(scam)
 library(brnn)
 
-
+# Grab shps
+world_map_1 <- readRDS(here::here("analysis/data_derived/admin1_sf.rds"))
 
 # Grab our model that we will use to simulate with in our MCMC
 hrp2_model <- readRDS("analysis/data_derived/ensemble_selection_model.rds")
 
 # Grab our covariate parameter ranges
 covars <-  readRDS("analysis/data_derived/covars_for_fitness_rdtdet_fitting.rds")
+covars <- covars %>% filter(iso3c %in% c("ERI", "ETH"))
 
 # MAP world map boundaries
-available_admin <- malariaAtlas::listShp(printed = FALSE, admin_level = "admin0")
-world_map_1 <- malariaAtlas::getShp(ISO = available_admin$iso, admin_level = c("admin1")) %>% sf::st_as_sf()
 world <- left_join(covars, world_map_1) %>% sf::st_drop_geometry() %>%
   rename(admin_1 = name_1)
 
@@ -166,6 +166,8 @@ model_params <- world %>%
          rdt.det = rdt.det_mean
   ) %>%
   select(Micro.2.10,
+         Micro.2.10_low,
+         Micro.2.10_high,
          ft,
          microscopy.use,
          rdt.nonadherence,
@@ -215,6 +217,16 @@ r_loglike <- function(params, data_list, misc) {
   # set up where we store the final f2s
   f2_s <- rep(0, length(newdat$x))
 
+  q_get <- function(m, l, h, q){
+    if(q == 0.5){
+      return(m)
+    } else if(q>0.5){
+      m+((h-m)*((q-0.5)/0.475))
+    } else {
+      m-((m-l)*((0.5-q)/0.475))
+    }
+  }
+
   # per year estimate f2
   for(i in seq_along(newdat$admin_1)){
 
@@ -230,7 +242,9 @@ r_loglike <- function(params, data_list, misc) {
 
       t_run <- min(1, newdat$time[i] - t_it)
       f2 <- misc$hrp2_mod$predict_f2(
-      mod_dat %>% filter(admin_1 == ad & year == start), f1 = f2, t = t_run)
+      mod_dat %>% filter(admin_1 == ad & year == start) %>%
+        mutate(Micro.2.10 = as.numeric(q_get(m = Micro.2.10, l = Micro.2.10_low, h = Micro.2.10_high, q = params["q"]))),
+      f1 = f2, t = t_run)
 
     start <- start + 1
     t_it <- t_it + 1
@@ -242,7 +256,12 @@ r_loglike <- function(params, data_list, misc) {
   }
 
   # calculate log-likelihood
-  ret <- dbinom(round(newdat$n * f2_s), size = newdat$n, prob = newdat$prob, log = TRUE)
+  # calculate log-likelihood
+  if("rho" %in% names(params)) {
+    ret <- VGAM::dbetabinom(round(newdat$n * f2_s), newdat$n, prob = newdat$prob, rho = as.numeric(params["rho"]),  log = TRUE)
+  } else {
+    ret <- dbinom(round(newdat$n * f2_s), size = newdat$n, prob = newdat$prob, log = TRUE)
+  }
 
   # DATA 2
 
@@ -313,8 +332,11 @@ r_loglike <- function(params, data_list, misc) {
   }
 
   # calculate log-likelihood
-  ret_2 <- dbinom(round(newdat2$n * f2_2_s), size = newdat2$n, prob = newdat2$prob, log = TRUE)
-
+  if("rho" %in% names(params)) {
+    ret_2 <- VGAM::dbetabinom(round(newdat2$n * f2_2_s), newdat2$n, prob = newdat2$prob, rho = as.numeric(params["rho"]),  log = TRUE)
+  } else {
+    ret_2 <- dbinom(round(newdat2$n * f2_2_s), size = newdat2$n, prob = newdat2$prob, log = TRUE)
+  }
   # return sum of the ll
   return(sum(ret) + sum(ret_2))
 }
@@ -337,8 +359,10 @@ r_logprior <- function(params, misc) {
 }
 
 # scan suitable range (range identified after first doing broad search)
-params <- expand.grid(rdtdet = seq(0.20,0.5,0.01),
-                      fitness = seq(0.95,0.99,0.0005))
+params <- expand.grid(rdtdet = seq(0.2,0.5,0.01),
+                      fitness = seq(0.93,0.99,0.001),
+                      rho = c(0.0005, 0.001, 0.005),
+                      q = 0.5)
 
 # set up parallel cluster here
 n.cores <- 14
@@ -362,7 +386,7 @@ params <-
   ) %>%
   mutate(posterior = ll + lp)
 
-parallel::stopCluster()
+parallel::stopCluster(my.cluster)
 
 # Does this seem correct. Quick Ll plot
 ll_plot <- params %>%
@@ -380,16 +404,23 @@ scale_fill_gradientn(name = "Negative Log \nLikelihood",
   scale_y_continuous(expand = c(0,0)) +
   scale_x_continuous(expand = c(0,0))
 
+
+params <- params %>% filter(fitness < 0.98 & fitness > 0.94)
+params <- params %>% filter(rdtdet < 0.45)
+params <- sav2
+params$posterior <- params$posterior * (params$rdtdet^0.03)
+
 # Now draw from our posterior to get a data set range
 draws <- sample(seq_len(nrow(params)), 1000, TRUE, exp(params$posterior))
-saveRDS(params[draws,], "analysis/data_derived/mcmc_model_fitting.rds")
+dat <- params[draws,]
+saveRDS(dat, "analysis/data_derived/mcmc_model_fitting.rds")
 
 # values for manuscript
-params[draws,]$rdtdet %>% quantile(c(0.025,0.5,0.975))
-params[draws,]$fitness %>% quantile(c(0.025,0.5,0.975))
+dat$rdtdet %>% quantile(c(0.025,0.5,0.975))
+dat$fitness %>% quantile(c(0.025,0.5,0.975))
 
 # Create a plot of the posterior
-ll_plot_alt <- params[draws,] %>%
+ll_plot_alt <- dat %>%
   ggplot(aes(x = fitness, y = rdtdet)) +
   geom_density2d_filled(contour_var = "ndensity", bins = 8) +
   ggpubr::theme_pubclean(base_family = "Helvetica") +
@@ -400,13 +431,9 @@ ll_plot_alt <- params[draws,] %>%
   scale_fill_manual(name = "Posterior Density \nScaled to 1",
                        values = RColorBrewer::brewer.pal(9,"YlOrBr")[2:9])  +
   theme(legend.position = "right")
+ll_plot_alt
 
 save_figs(name = "fitness_hrp3_ll", fig = ll_plot_alt, width = 8, height = 5)
-comb_ll <- cowplot::plot_grid(
-  ll_plot + theme(legend.position = "right", text = element_text(family = "Helvetica")),
-  ll_plot_alt,
-  labels = c("A", "B"), ncol = 1, align = "v")
-save_figs(name = "fitness_hrp3_ll_comb", fig = comb_ll, width = 8, height = 10, font_family = "Helvetica")
 
 # get the posterior draws from the exhaustive search
 pfd <- readRDS("analysis/data_derived/mcmc_model_fitting.rds")

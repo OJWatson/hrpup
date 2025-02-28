@@ -5,20 +5,28 @@ library(earth)
 library(scam)
 library(furrr)
 library(future)
+library(wpp2017)
 sf::sf_use_s2(FALSE)
 
 # --------------------------------------------------------------------------#
 # 1. Get our needed objects to start simulating African spread of hrp2 -----
 # --------------------------------------------------------------------------#
 
-# Get the mapping object
-map_obj <- readRDS("analysis/data_derived/R6_map.rds")
+# Get the maps for simulating
+admin0 <- readRDS(here::here("analysis/data_derived/admin0_sf.rds"))
+admin1 <- readRDS(here::here("analysis/data_derived/admin1_sf.rds"))
+
+# and who for plotting
+who_shps <- readRDS("analysis/data_derived/who_shps.rds")
 
 # Get the selection model object
 mod_obj <- readRDS("analysis/data_derived/ensemble_selection_model.rds")
 
 # subset to Africa as that is where we will do the prospective mapping
-afr_map <- map_obj$.__enclos_env__$private$map %>% filter(region == "Africa")
+data("UNlocations")
+admin1$cont <- countrycode::countrycode(admin1$iso, "iso3c", "iso3n")
+admin1$region <- UNlocations$area_name[match(admin1$cont, UNlocations$country_code)]
+afr_map <- admin1 %>% filter(region == "Africa")
 
 # get our non_hrp2 data
 non_hrp2_use <- read.csv("analysis/data_raw/hrp2_RDT_usage.csv")
@@ -130,38 +138,42 @@ out_all <- furrr::future_map(scenario_maps$map_data, function(x){
 parallel::stopCluster(my.cluster)
 
 # --------------------------------------------------------------------------#
-# 3. Plot our output video -----------------------------------------------------
+# 3. Plot our outputs -----------------------------------------------------
 # --------------------------------------------------------------------------#
 
-isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
+# plotting args and themes
+var  <- "freq"
+title <- "False negative HRP2-RDTs \namongst clinical infections \ndue to pfhrp2/3 deletions\n"
+scale_func <- function(...) {scale_fill_viridis_c(labels = scales::percent, limits = c(0,1), ...)}
+custom_theming <- function() {
+  theme(plot.background = element_rect(fill = "white", color = "white"),
+        plot.title = element_text(hjust = 0.5, size = 16, family = "Helvetica"),
+        legend.key.height = unit(0.4, "inch"),
+        legend.key.width = unit(0.4, "inch"),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 16),
+        legend.title.align = 0)
+}
 
-# Make a map at each t interval
+# add an NA for region in Morcco so we have NA for the legend
+out <- out %>% rbind(data.frame(id_1 = 10314922,t = unique(out$t),freq=NA, t_pos=unique(out$t_pos)))
+
+# Make a map at each key t interval
 pl_list <- vector("list", length(unique(out$t)))
 for(i in c(1, as.integer(length(unique(out$t))/4)+1, as.integer(length(unique(out$t))/2)+1)) {
   x <- unique(out$t)[i]
   pl_list[[i]] <-
-    map_obj$.__enclos_env__$private$map %>% filter(id_1 %in% out$id_1) %>%
-    left_join(out %>% filter(t == x) %>% select(-t) %>% rename(t = freq)) %>%
-    ggplot() +
-    geom_sf(aes(fill = t), color = "grey", show.legend = TRUE, lwd = 0.1) +
-    geom_sf(fill = NA, color = "black", show.legend = FALSE,
-            data = map_obj$.__enclos_env__$private$map_0 %>% filter(iso %in% isos), lwd = 0.2) +
-    coord_sf() +
-    theme_void(base_size = 16) +
+    who_compliant_continuous_plot(
+      out %>% filter(t == x), var = var, title = title,
+      who_shps = who_shps, region = "africa",
+      limits = TRUE, scale_fill_func = scale_func) +
     ggtitle(as.integer(2023+x)) +
-    theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white")) +
-    scale_fill_viridis_c(name = "False negative HRP2-RDTs \namongst clinical infections \ndue to pfhrp2/3 deletions\n",
-                         labels = scales::percent, limits = c(0,1)) +
-    theme(plot.title = element_text(hjust = 0.5),
-          legend.key.height = unit(1, "inch"),
-          legend.key.width = unit(0.5, "inch"),
-          legend.text = element_text(size = 14),
-          legend.title.align = 0)
+    custom_theming()
 }
 
 
 # set up parallel cluster here
-n.cores <- 8
+n.cores <- 14
 my.cluster <- parallel::makeCluster(
   n.cores,
   type = "PSOCK"
@@ -173,24 +185,12 @@ dir.create("analysis/plots/time_series")
 out_plots <- furrr::future_map(seq_along(unique(out$t)), function(i) {
 
   x <- unique(out$t)[i]
-  gg_x <-
-    map_obj$.__enclos_env__$private$map %>% filter(id_1 %in% out$id_1) %>%
-    left_join(out %>% filter(t == x) %>% select(-t) %>% rename(t = freq)) %>%
-    ggplot() +
-    geom_sf(aes(fill = t), color = "grey", show.legend = TRUE, lwd = 0.1) +
-    geom_sf(fill = NA, color = "black", show.legend = FALSE,
-            data = map_obj$.__enclos_env__$private$map_0 %>% filter(iso %in% isos), lwd = 0.2) +
-    coord_sf() +
-    theme_void(base_size = 16) +
+  gg_x <- who_compliant_continuous_plot(
+    out %>% filter(t == x), var = var, title = title,
+    who_shps = who_shps, region = "africa",
+    limits = TRUE, scale_fill_func = scale_func) +
     ggtitle(as.integer(2023+x)) +
-    theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white")) +
-    scale_fill_viridis_c(name = "False negative HRP2-RDTs \namongst clinical infections \ndue to pfhrp2/3 deletions\n",
-                         labels = scales::percent, limits = c(0,1)) +
-    theme(plot.title = element_text(hjust = 0.5),
-          legend.key.height = unit(1, "inch"),
-          legend.key.width = unit(0.5, "inch"),
-          legend.text = element_text(size = 14),
-          legend.title.align = 0)
+    custom_theming()
 
   hrpup:::save_figs(paste0("test_",sprintf("%03d",i)), fig = gg_x,
             width = 12, height = 12, pdf_plot = FALSE, plot_dir = "analysis/plots/time_series/",
@@ -204,7 +204,7 @@ parallel::stopCluster(my.cluster)
 # Make a movie of these
 mapmate::ffmpeg(dir = "analysis/plots/time_series/",
                 output_dir = "analysis/plots/time_series/",
-                pattern = "test_%03d.png", output = "test_video.mp4",
+                pattern = "test_%03d.png", output = "test_video2.mp4",
                 delay = 1/12, overwrite = TRUE
                 )
 
@@ -213,116 +213,97 @@ file.remove(grep("test_\\d", list.files("analysis/plots/time_series/", full.name
 # 4. Plot our output figure -----------------------------------------------------
 # --------------------------------------------------------------------------#
 
+## 4.a. Plot our national data -----------------------------------------------------
+
 # Get the starting data
 who_cols <- c("#b4c6e7", "#fefd81ff", "#e9a934ff", "#c3271bff","#5e3218ff")
 
-# coordinates for zoom in
+who_scale_fill_func <- function(...){
+  ggplot2::scale_fill_manual(
+    values = c("#b4c6e7", "#fefd81ff", "#e9a934ff", "#c3271bff","#5e3218ff"),
+    labels = (c("0-1%", ">1-8%",">8-15%",">15-25%",">25%")),...)}
+
+nat_df <- left_join(who_shps$admin1, seeds) %>%
+  select(id_1, prev) %>%
+  sf::st_drop_geometry() %>%
+  mutate(prev_break = cut(prev, c(0,1,8,15,25,100)/100, include.lowest = FALSE))
+
+# national level plot
+gg_1 <- who_compliant_discrete_plot(nat_df, var = "prev_break",
+                                    title = "WHO Threat Map \npfhrp2 deletion \nprevalence",
+                                    who_shps = who_shps, region = "africa",
+                                    limits = TRUE, scale_fill_func = who_scale_fill_func) +
+  ggtitle(as.integer(2023)) +
+  custom_theming() +
+geom_rect(xmin = x_coords[1], ymin = y_coords[1],
+          xmax = x_coords[2], ymax = y_coords[2],
+          fill = NA, colour = "black", size = 2)
+
+## 4.b. Plot our initial spread -----------------------------------------------------
+
+# countries to zoom in on
+hoa_iso <- c("ERI", "DJI", "ETH", "SOM", "KEN", "UGA", "SSD","SDN")
 x_coords <- c(33.24, 51.88)
 y_coords <- c(1.80, 19.24)
-isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
-gg_1 <- left_join(map_obj$.__enclos_env__$private$map_0, seeds) %>%
-  filter(region == "Africa") %>%
-  mutate(prev_break = cut(prev, c(0,1,8,15,25,100)/100, include.lowest = FALSE)) %>%
-  ggplot() +
-  geom_sf(fill = NA, color = "black", show.legend = FALSE,
-          data = map_obj$.__enclos_env__$private$map_0 %>% filter(iso %in% isos), lwd = 0.2) +
-  geom_sf(aes(fill = prev_break), color = "black", show.legend = TRUE, lwd = 0.2) +
-  geom_rect(xmin = x_coords[1], ymin = y_coords[1],
-            xmax = x_coords[2], ymax = y_coords[2],
-            fill = NA, colour = "black", size = 2) +
-  coord_sf() +
-  theme_void(base_size = 16) +
-  theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white")) +
-  scale_fill_manual(name = "WHO Threat Map \npfhrp2 deletion \nprevalence",
-                    values = who_cols, na.value = "#f0f0f0ff",
-                    labels = c("0-1%", ">1-8%",">8-15%",">15-25%",">25%", "No Data")) +
-  ggtitle("2023\n") +
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.key.height = unit(1, "inch"),
-        legend.key.width = unit(0.5, "inch"),
-        legend.text = element_text(size = 14),
-        legend.title.align = 0)
 
-# Zoom in on the starting data and start showing spread
-hoa_iso <- c("ERI", "DJI", "ETH", "SOM", "KEN", "UGA", "SSD","SDN")
-gg_2 <- map_obj$.__enclos_env__$private$map %>%
-  filter(iso %in% hoa_iso) %>%
-  left_join(out %>% filter(t_pos == 11) %>% select(-t) %>% rename(prev = freq)) %>%
-  filter(region == "Africa") %>%
-  mutate(prev_break = cut(prev, c(0,1,8,15,25,100)/100, include.lowest = FALSE)) %>%
-  ggplot() +
-  geom_sf(aes(fill = prev_break), color = "black", show.legend = TRUE, lwd = 0.1) +
-  geom_sf(fill = NA, color = "black", show.legend = FALSE,
-          data = map_obj$.__enclos_env__$private$map_0 %>%
-            filter(iso %in% hoa_iso),
-          lwd = 0.2) +
-  coord_sf() +
-  theme_void(base_size = 16) +
-  theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white")) +
-  scale_fill_manual(name = "WHO Threat Map \npfhrp2 deletion \nprevalence",
-                    values = who_cols, na.value = "#f0f0f0ff",
-                    labels = c("0-1%", ">1-8%",">8-15%",">15-25%",">25%", "No Data"),
-                    drop = FALSE) +
+# initial spread plot
+gg_2 <- out %>% filter(t_pos == 11) %>% select(-t) %>%
+  mutate(prev_break = cut(freq, c(0,1,8,15,25,100)/100, include.lowest = FALSE)) %>%
+  who_compliant_discrete_plot(var = "prev_break",
+                              title = "WHO Threat Map \npfhrp2 deletion \nprevalence",
+                              who_shps = who_shps, region = "africa",
+                              limits = TRUE, scale_fill_func = who_scale_fill_func) +
+  ggtitle(as.integer(2024)) +
+  custom_theming() +
   xlim(x_coords) +
   ylim(y_coords) +
+  theme(panel.border = element_rect(color = "black", linewidth = 3, fill = NA)) +
   ggtitle("2024\n") +
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.key.height = unit(1, "inch"),
-        legend.key.width = unit(0.5, "inch"),
-        legend.text = element_text(size = 14),
-        legend.title.align = 0,
-        panel.border = element_rect(color = "black", linewidth = 3, fill = NA))
+  ggplot2::geom_sf(data = gg_2$data %>% filter(iso %in% hoa_iso), fill = NA,
+                   color = "#696969ff", show.legend = FALSE, lwd = 0.05, inherit.aes = FALSE)
 
-# Zoom in on the starting data and start showing spread
-gg_3 <- map_obj$.__enclos_env__$private$map %>%
-  filter(iso %in% hoa_iso) %>%
-  left_join(out %>% filter(t_pos == 28) %>% select(-t) %>% rename(prev = freq)) %>%
-  filter(region == "Africa") %>%
-  mutate(prev_break = cut(prev, c(0,1,8,15,25,100)/100, include.lowest = FALSE)) %>%
-  ggplot() +
-  geom_sf(aes(fill = prev_break), color = "black", show.legend = TRUE, lwd = 0.1) +
-  geom_sf(fill = NA, color = "black", show.legend = FALSE,
-          data = map_obj$.__enclos_env__$private$map_0 %>%
-            filter(iso %in% hoa_iso),
-          lwd = 0.2) +
-  coord_sf() +
-  theme_void(base_size = 16) +
-  theme(plot.caption = element_text(face = "italic"), plot.background = element_rect(fill = "white", color = "white")) +
-  scale_fill_manual(name = "WHO Threat Map \npfhrp2 deletion \nprevalence",
-                    values = who_cols, na.value = "#f0f0f0ff",
-                    labels = c("0-1%", ">1-8%",">8-15%",">15-25%",">25%", "No Data"),
-                    drop = FALSE) +
+## 4.c. Plot our successive spread -----------------------------------------------------
+
+gg_3 <- out %>% filter(t_pos == 29) %>% select(-t) %>%
+  mutate(prev_break = cut(freq, c(0,1,8,15,25,100)/100, include.lowest = FALSE)) %>%
+  who_compliant_discrete_plot(var = "prev_break",
+                              title = "WHO Threat Map \npfhrp2 deletion \nprevalence",
+                              who_shps = who_shps, region = "africa",
+                              limits = TRUE, scale_fill_func = who_scale_fill_func) +
+  ggtitle(as.integer(2024)) +
+  custom_theming() +
   xlim(x_coords) +
   ylim(y_coords) +
-  ggtitle("2026\n") +
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.key.height = unit(1, "inch"),
-        legend.key.width = unit(0.5, "inch"),
-        legend.text = element_text(size = 14),
-        legend.title.align = 0,
-        panel.border = element_rect(color = "black", linewidth = 3, fill = NA))
+  theme(panel.border = element_rect(color = "black", linewidth = 3, fill = NA)) +
+  ggtitle("2024\n") +
+  ggplot2::geom_sf(data = gg_2$data %>% filter(iso %in% hoa_iso), fill = NA,
+                   color = "#696969ff", show.legend = FALSE, lwd = 0.05, inherit.aes = FALSE)
+
+## 4.a-f. Bring all together -----------------------------------------------------
 
 # Bring top row together
 top_row_gg <- cowplot::plot_grid(
   cowplot::get_legend(gg_3 + theme(text = element_text("Helvetica"))),
-  gg_1 + theme(legend.position = "none", text = element_text("Helvetica")),
+  add_africa_scale(gg_1) + theme(legend.position = "none", text = element_text("Helvetica")),
   gg_2 + theme(legend.position = "none", text = element_text("Helvetica")),
   gg_3 + theme(legend.position = "none", text = element_text("Helvetica")),
   ncol = 4, rel_widths = c(0.5, 1,1,1),
   labels = c("",LETTERS[1:3]), scale = 0.9, label_size = 18)
+
+# Bring bottom row together
 bottom_row_gg <- cowplot::plot_grid(
-  pl_list[[1]] + theme(legend.position = "none", text = element_text("Helvetica")) + ggtitle("April 2023"),
-  pl_list[[as.integer(length(pl_list)/4)+1]] +
-    theme(legend.position = "none", text = element_text("Helvetica")) + ggtitle("April 2033"),
-  pl_list[[as.integer(length(pl_list)/2)+1]] +
-    theme(legend.position = "none", text = element_text("Helvetica")) + ggtitle("April 2043"),
+  add_africa_scale(pl_list[[1]]) + theme(legend.position = "none", text = element_text("Helvetica")) + ggtitle("2023"),
+  add_africa_scale(pl_list[[as.integer(length(pl_list)/4)+1]]) +
+    theme(legend.position = "none", text = element_text("Helvetica")) + ggtitle("2033"),
+  add_africa_scale(pl_list[[as.integer(length(pl_list)/2)+1]]) +
+    theme(legend.position = "none", text = element_text("Helvetica")) + ggtitle("2043"),
   cowplot::get_legend(pl_list[[1]] + theme(text = element_text("Helvetica"))),
   ncol = 4, rel_widths = c(1,1,1,0.5),
   labels = c(LETTERS[4:6], ""), label_size = 18)
 
-spread_gg <- cowplot::plot_grid(top_row_gg, bottom_row_gg, ncol = 1, rel_heights = c(1,1.2)) +
+spread_gg <- cowplot::plot_grid(top_row_gg, bottom_row_gg, ncol = 1, rel_heights = c(1,1.3)) +
   theme(plot.background = element_rect(fill = "white", color ="white"))
-save_figs("spread_africa", spread_gg, width = 25, height = 16, pdf_plot = FALSE, font_family = "Helvetica")
+save_figs("spread_africa", spread_gg, width = 22, height = 14, pdf_plot = FALSE, font_family = "Helvetica")
 
 # ---------------------------------------------------- #
 # 5. Creating Data Outputs  ----
@@ -452,14 +433,20 @@ hrp2_map$set_map_data(new_map_data)
 saveRDS(hrp2_map, "analysis/data_derived/R6_map.rds")
 
 # Simple comparison plot for ease
-risk_gg1 <- hrp2_map$plot()
-risk_gg2 <- hrp2_map$plot(risk = "prospective")
-risk_gg <- cowplot::plot_grid(risk_gg1 + theme(legend.position = "none"),
-                   risk_gg2 + theme(legend.position = "none"),
+risk_gg1 <- hrp2_map$plot(scale_bar_bool = FALSE) + custom_theming() +
+  theme(legend.key.spacing.y = unit(0.25, "cm"),
+        legend.key.width = unit(1, "cm"),
+        legend.key.spacing = unit(0.125, "cm"))
+risk_gg2 <- hrp2_map$plot(risk = "prospective",scale_bar_bool = FALSE) + custom_theming() +
+  theme(legend.key.spacing.y = unit(0.25, "cm"),
+        legend.key.width = unit(1, "cm"),
+        legend.key.spacing = unit(0.125, "cm"))
+risk_gg <- cowplot::plot_grid(add_africa_scale(risk_gg1) + theme(legend.position = "none") + ggtitle("Innate Risk"),
+                              add_africa_scale(risk_gg2) + theme(legend.position = "none") + ggtitle("Prospective Risk"),
                    cowplot::get_legend(risk_gg2 + theme(text = element_text("Helvetica"))),
                    labels = c("A", "B", ""),
-                   rel_widths = c(1, 1, 0.3),
+                   rel_widths = c(1, 1, 0.5),
                    ncol = 3) +
   theme(plot.background = element_rect("white","white"))
 
-save_figs("innate_vs_prospective", risk_gg, width = 10, height = 6, pdf_plot = FALSE)
+save_figs("innate_vs_prospective1", risk_gg, width = 12, height = 6, pdf_plot = FALSE)

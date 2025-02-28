@@ -6,7 +6,7 @@ sh2 <- readxl::read_excel("analysis/data_raw/PMI_GF_RDTs by brand name.xlsx", 2,
 sh1 <- sh1 %>% select(Country, Quantity, `Calendar Year Product Delivered`, `Product Long Name`) %>%
   setNames(c("country", "total", "year", "product")) %>%
   mutate(product = replace(product, grep("PAN", product), "PAN")) %>%
-  mutate(product = replace(product, grep("pLDH", product), "HRP2")) %>%
+  mutate(product = replace(product, grep("pLDH/pLDH", product), "PAN")) %>%
   mutate(product = replace(product, grep("HRP2", product), "HRP2"))
 
 
@@ -14,6 +14,7 @@ sh2 <- sh2 %>% select(`Country (simplified)`, `Total RDTs`, `PO Year`, `Descript
   setNames(c("country", "total", "year", "product")) %>%
   mutate(product = replace(product, grep("Pan|pan|PAN", product), "PAN")) %>%
   mutate(product = replace(product, grep("pLDH/pLDH", product, fixed = TRUE), "PAN")) %>%
+  mutate(product = replace(product, grep("First Response Malaria Ag. pLDH/HRP2 Combo Card Test ", product, fixed = TRUE), "PAN")) %>%
   mutate(product = replace(product, grep("LDH", product), "HRP2")) %>%
   mutate(product = replace(product, grep("Pv", product), "HRP2")) %>%
   mutate(product = replace(product, grep("Other", product), "Unknown")) %>%

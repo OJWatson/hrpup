@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5f5bf5c1780b705568e05c6e90db837da146fdfc6ce4d93c9a36651c7effa421
-size 254
+Country,Region,Year,x,n,pubmed
+Uganda,Multiple,2017-2019,1,10,https://pubmed.ncbi.nlm.nih.gov/32843041/
+Ethiopia,Multiple,2017-2018,12,26,https://pubmed.ncbi.nlm.nih.gov/34580442/
+Djibouti,Djibouti City,2020,0,5,https://pubmed.ncbi.nlm.nih.gov/36148905/

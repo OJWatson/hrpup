@@ -1,0 +1,268 @@
+"","ISO_ctry","LATITUDE","LONGITUDE","YEAR_START","YEAR_END","PATIENT_TYPE","SURVEY_TYPE","HRP2_DELETION_TESTED_N","HRP2_DELETION_PERCENT","HRP3_DELETION_TESTED_N","HRP3_DELETION_PERCENT","HRP2_HRP3_DELETIONS_TESTED_N","HRP2_HRP3_DELETIONS_PERCENT","HRP2_HRP3_DELETIONS_POS_N","TYPE_SAMPL_ANALYZED","mid_date","prev","continent","HRP2_DELETION_POS_N","HRP3_DELETION_POS_N"
+"1","COL",2.761889,-72.6225,1999-01-01,2007-01-01,"Symptomatic","Convenience survey",4,0,4,0.75,4,0,0,"All samples.",2003-01-01,0.000552580109797418,"Americas",0,3
+"2","COL",2.45,-76.616667,2003-01-01,2003-01-01,"Symptomatic","Convenience survey",33,0,33,0.060606061,33,0,0,"All samples.",2003-01-01,1e-05,"Americas",0,2
+"3","PER",-3.733333,-73.25,2003-01-01,2007-01-01,"Symptomatic","Convenience survey",114,0.359649123,114,0.692982456,114,0.184210526,21,"All samples.",2004-12-31,0.0249626208096743,"Americas",41,79
+"4","PER",-5.807148,-76.177656,2004-01-01,2004-01-01,"Symptomatic","Convenience survey",12,0.5,12,0.833333333,12,0.333333333,4,"All samples.",2004-01-01,0.00356050906702876,"Americas",6,10
+"5","PER",-5.712889,-78.7985,2005-01-01,2005-01-01,"Symptomatic","Convenience survey",2,1,2,0,2,0,0,"All samples.",2005-01-01,0.000179984635906294,"Americas",2,0
+"6","COL",3.883047,-77.019721,2004-01-01,2006-01-01,"Symptomatic","Convenience survey",26,0,26,0.230769231,26,0,0,"All samples.",2005-01-01,0.0215737819671631,"Americas",0,6
+"7","COL",-1.5,-71.5,2007-01-01,2007-01-01,"Symptomatic","Convenience survey",21,0.666666667,21,0.428571429,21,0.428571429,9,"All samples.",2007-01-01,1e-05,"Americas",14,9
+"8","RWA",-1.970579,30.104429,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",10,0,10,0,10,0,0,NA,2007-07-03,0.0161597896367311,"Africa",0,0
+"9","RWA",-2.354806,29.750139,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",5,0,5,0,5,0,0,NA,2007-07-03,0.0202142000198364,"Africa",0,0
+"10","TZA",-5.161944,38.455972,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",3,0,3,0,3,0,0,"All samples.",2007-07-03,0.140739053487778,"Africa",0,0
+"11","TZA",-5,38.916667,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",15,0,15,0,15,0,0,"All samples.",2007-07-03,0.208232089877129,"Africa",0,0
+"12","UGA",-0.60716,30.654502,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",5,0,5,0,5,0,0,"All samples.",2007-07-03,0.149076521396637,"Africa",0,0
+"13","GMB",13.486961,-16.581501,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",2,0,2,0,2,0,0,NA,2007-07-03,0.0532964989542961,"Africa",0,0
+"14","KEN",-3.510651,39.909327,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",12,0,12,0,12,0,0,NA,2007-07-03,0.0442124269902706,"Africa",0,0
+"15","MMR",24.754011,97.550451,2004-01-01,2011-01-01,"Symptomatic","Convenience survey",138,0.094202899,138,0.036231884,138,0,0,"All samples.",2007-07-02,0.0223491098731756,"Asia",13,5
+"16","MOZ",-19.833333,34.85,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",19,0,19,0,19,0,0,"All samples.",2007-07-03,0.111277639865875,"Africa",0,0
+"17","PER",-3.733333,-73.25,2007-01-01,2007-01-01,"Symptomatic","Convenience survey",9,0.888888889,9,0.444444444,9,0.444444444,4,"All samples.",2007-01-01,0.0162720624357462,"Americas",8,4
+"18","PER",-4.155833,-78.049583,2006-01-01,2008-01-01,"Symptomatic","Convenience survey",5,1,5,0.2,5,0.2,1,"All samples.",2007-01-01,6.32627125014551e-05,"Americas",5,1
+"19","PER",-4.813361,-76.548944,2007-01-01,2007-01-01,"Symptomatic","Convenience survey",15,0.466666667,15,0.866666667,15,0.4,6,"All samples.",2007-01-01,0.00318891787901521,"Americas",7,13
+"20","COD",-4.325,15.322222,2005-01-01,2010-01-01,"Symptomatic","Convenience survey",6,0,6,0,6,0,0,"All samples.",2007-07-03,0.20827254652977,"Africa",0,0
+"21","COL",8.75,-75.883333,2008-01-01,2009-01-01,"Symptomatic","Convenience survey",16,0.125,16,1,16,0.125,2,NA,2008-07-02,6.31257280474529e-05,"Americas",2,16
+"22","COL",1.16667,-77.266667,2008-01-01,2009-01-01,"Symptomatic","Convenience survey",34,0.029411765,34,0.411764706,34,0.029411765,1,NA,2008-07-02,1e-05,"Americas",1,14
+"23","COL",3.883047,-77.019721,2008-01-01,2009-01-01,"Symptomatic","Convenience survey",25,0.04,25,0.4,25,0.04,1,NA,2008-07-02,0.0247970763593912,"Americas",1,10
+"24","HND",15.25743,-83.780617,2008-01-01,2009-01-01,"Symptomatic","Convenience survey",68,0,68,0.441176471,68,0,0,NA,2008-07-02,0.00241443491540849,"Americas",0,30
+"25","COL",8.75,-75.883333,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",6,0.333333333,6,1,6,0.333333333,2,"All samples.",2009-07-02,4.03842313971836e-05,"Americas",2,6
+"26","COL",1.16667,-77.266667,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",22,0,22,0.318181818,22,0,0,"All samples.",2009-07-02,1e-05,"Americas",0,7
+"27","PER",-10.731621,-73.760104,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",19,0,19,0.157894737,19,0,0,"All samples.",2009-07-02,7.50955405237619e-06,"Americas",0,3
+"28","PER",-3.910789,-70.516081,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",1,1,1,1,1,1,1,"All samples.",2009-07-02,0.321032792329788,"Americas",1,1
+"29","PER",-4.83,-76.7,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",2,1,2,1,2,1,2,"All samples.",2009-07-02,4.27659106208012e-05,"Americas",2,2
+"30","PER",-3.4958,-73.0955,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",11,0.272727273,11,0.636363636,NA,NA,NA,"All samples.",2009-07-02,0.00982264429330826,"Americas",3,7
+"31","PER",-3.733333,-73.25,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",1,1,1,1,1,1,1,"All samples.",2009-07-02,0.0151458643376827,"Americas",1,1
+"32","PER",-5.908611,-74.514222,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",11,1,11,1,11,1,11,"All samples.",2009-07-02,0.000310808740323409,"Americas",11,11
+"33","PER",-6.812799,-74.497971,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",31,0.258064516,31,0.548387097,NA,NA,NA,"All samples.",2009-07-02,3.45204243785702e-05,"Americas",8,17
+"34","PER",-4.5793,-75.3107,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",5,0.6,5,0.8,NA,NA,NA,"All samples.",2009-07-02,3.3628679375397e-05,"Americas",3,4
+"35","PER",-5.807148,-76.177656,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",12,0.166666667,12,0.333333333,NA,NA,NA,"All samples.",2009-07-02,3.94059679820202e-05,"Americas",2,4
+"36","PER",-3.733333,-73.25,2009-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",32,0.28125,32,0.5625,32,0.28125,9,"All samples.",2009-07-02,0.0151458643376827,"Americas",9,18
+"37","PER",-5.807148,-76.177656,2009-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",12,0.166666667,12,0.333333333,12,0.083333333,1,"All samples.",2009-07-02,3.94059679820202e-05,"Americas",2,4
+"38","PER",-3.4958,-73.0955,2009-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",11,0.272727273,11,0.636363636,11,0.181818182,2,"All samples.",2009-07-02,0.00982264429330826,"Americas",3,7
+"39","PER",-10.731621,-73.760104,2009-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",19,0,19,0.157894737,19,0,0,"All samples.",2009-07-02,7.50955405237619e-06,"Americas",0,3
+"40","PER",-5.908611,-74.514222,2009-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",11,1,11,1,11,1,11,"All samples.",2009-07-02,0.000310808740323409,"Americas",11,11
+"41","PER",-4.5793,-75.3107,2009-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",5,0.6,5,0.8,5,0.6,3,"All samples.",2009-07-02,3.3628679375397e-05,"Americas",3,4
+"42","PER",-4.83,-76.7,2009-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",2,1,2,1,2,1,2,"All samples.",2009-07-02,4.27659106208012e-05,"Americas",2,2
+"43","PER",-3.910789,-70.516081,2009-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",1,1,1,1,1,1,1,"All samples.",2009-07-02,0.321032792329788,"Americas",1,1
+"44","SUR",5.866667,-55.166667,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",55,0,55,0.018181818,NA,NA,NA,NA,2009-07-02,1e-05,"Americas",0,1
+"45","ZMB",-16.666667,27.166667,2008-01-01,2012-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",61,0.196721311,61,0.196721311,61,0.196721311,12,"All samples.",2009-12-31,0.0434184074401855,"Africa",12,12
+"46","GUF",3.933889,-53.125782,2009-01-01,2009-01-01,"Symptomatic","Convenience survey",140,0,140,0.028571429,140,0,0,NA,2009-01-01,1e-05,"Americas",0,4
+"47","GHA",8.059261,-1.72955,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",154,0,154,0,154,0,0,NA,2009-07-02,0.699457883834839,"Africa",0,0
+"48","COL",-1.5,-71.5,2008-01-01,2010-01-01,"Symptomatic","Convenience survey",28,0.535714286,28,0.714285714,28,0.535714286,15,"All samples.",2009-01-01,1e-05,"Americas",15,20
+"49","COL",6.216667,-75.566667,2008-01-01,2010-01-01,"Symptomatic","Convenience survey",19,0,19,0.894736842,19,0,0,"All samples.",2009-01-01,0.000284593494143337,"Americas",0,17
+"50","COL",5.7,-76.666667,2008-01-01,2010-01-01,"Symptomatic","Convenience survey",42,0,42,0.095238095,42,0,0,"All samples.",2009-01-01,0.00211917283013463,"Americas",0,4
+"51","COL",2.566667,-72.633333,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",15,0,15,1,15,0,0,"All samples.",2009-07-02,7.5192227086518e-05,"Americas",0,15
+"52","COL",1.16667,-77.266667,2008-01-01,2010-01-01,"Symptomatic","Convenience survey",90,0,90,0.411111111,90,0,0,"All samples.",2009-01-01,1e-05,"Americas",0,37
+"53","COL",3.883047,-77.019721,2009-01-01,2010-01-01,"Symptomatic","Convenience survey",12,0.083333333,12,0.416666667,NA,NA,NA,"All samples.",2009-07-02,0.0273360460996628,"Americas",1,5
+"54","TZA",-6.35333,30.488584,2010-01-01,2010-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",148,0.02027027,148,0.013513514,148,0.006756757,1,"Discordant only.",2010-01-01,0.170305371284485,"Africa",3,2
+"55","IND",22.079625,82.139141,2010-01-01,2010-01-01,"Symptomatic","Convenience survey",48,0.041666667,48,0.041666667,48,0.041666667,2,"All samples.",2010-01-01,0.0075165475718677,"Asia",2,2
+"56","BRA",-10.294444,-63.325278,2010-01-01,2011-01-01,"Symptomatic","Convenience survey",60,0.033333333,60,0.183333333,60,0.033333333,2,"All samples.",2010-07-02,0.000203553907340392,"Americas",2,11
+"57","SEN",14.764504,-17.366029,2009-01-01,2012-01-01,"Symptomatic","Convenience survey",125,0.024,125,0.128,125,0.016,2,"All samples.",2010-07-03,0.000912543735466897,"Africa",3,16
+"58","GUF",4.92242,-52.313453,2010-01-01,2011-01-01,"Symptomatic","Convenience survey",81,0,81,0.074074074,81,0,0,NA,2010-07-02,0.00405235728248954,"Americas",0,6
+"59","GUY",6.805833,-58.166667,2010-01-01,2010-01-01,"Symptomatic","Convenience survey",97,0,97,0,97,0,0,NA,2010-01-01,0.014865099452436,"Americas",0,0
+"60","PER",-3.733333,-73.25,2010-01-01,2011-01-01,"Mixed symptomatic and asymptomatic","Convenience survey",74,0.256756757,74,0.459459459,74,0.256756757,19,"All samples.",2010-07-02,0.00872406270354986,"Americas",19,34
+"61","BOL",-11.007338,-66.058249,2010-01-01,2012-01-01,"Symptomatic","Convenience survey",25,0.04,25,0.68,25,0,0,"All samples.",2011-01-01,0.00184151215944439,"Americas",1,17
+"62","BRA",-5,-63,2011-01-01,2011-01-01,"Symptomatic","Case Report",1,1,1,1,1,1,1,NA,2011-01-01,9.39522869884968e-05,"Americas",1,1
+"63","BRA",-1.998127,-54.930615,2011-01-01,2012-01-01,"Symptomatic","Convenience survey",59,0,59,0.508474576,59,0,0,"All samples.",2011-07-02,0.00152638950385153,"Americas",0,30
+"64","SUR",5.866667,-55.166667,2011-01-01,2011-01-01,"Symptomatic","Convenience survey",23,0.47826087,23,0.086956522,NA,NA,NA,"Discordant only.",2011-01-01,1e-05,"Americas",11,2
+"65","HND",15.672623,-85.832473,2011-01-01,2011-01-01,"Symptomatic","Convenience survey",10,0.4,10,1,NA,0.25,NA,"All samples.",2011-01-01,4.79450545753934e-06,"Americas",4,10
+"66","MMR",24.065612,97.672114,2011-01-01,2012-01-01,"Mixed symptomatic and asymptomatic","Convenience survey",97,0.041237113,4,0.75,97,0.041237113,4,"All samples.",2011-07-02,0.000966203340794891,"Asia",4,3
+"67","BRA",-7.628041,-72.676161,2010-01-01,2013-01-01,"Symptomatic","Therapeutic efficacy study",187,0.475935829,187,0.631016043,187,0.459893048,86,"All samples.",2011-07-03,0.0114233838394284,"Americas",89,118
+"68","COL",-1.5,-71.5,2011-01-01,2012-01-01,"Symptomatic","Convenience survey",11,0,11,0.272727273,11,0,0,"All samples.",2011-07-02,1e-05,"Americas",0,3
+"69","COL",6.216667,-75.566667,2011-01-01,2012-01-01,"Symptomatic","Convenience survey",22,0,22,0.954545455,22,0,0,"All samples.",2011-07-02,1e-05,"Americas",0,21
+"70","COL",2.45,-76.616667,2011-01-01,2012-01-01,"Symptomatic","Convenience survey",11,0,11,0.181818182,11,0,0,"All samples.",2011-07-02,1e-05,"Americas",0,2
+"71","COL",5.7,-76.666667,2011-01-01,2012-01-01,"Symptomatic","Convenience survey",28,0,28,0.285714286,28,0,0,"All samples.",2011-07-02,0.00101487641222775,"Americas",0,8
+"72","COL",2.566667,-72.633333,2011-01-01,2012-01-01,"Symptomatic","Convenience survey",9,0,9,0.888888889,9,0,0,"All samples.",2011-07-02,3.63327453669626e-05,"Americas",0,8
+"73","COL",1.16667,-77.266667,2011-01-01,2012-01-01,"Symptomatic","Convenience survey",30,0,30,0.3,30,0,0,"All samples.",2011-07-02,1e-05,"Americas",0,9
+"74","COL",3.883047,-77.019721,2011-01-01,2012-01-01,"Symptomatic","Convenience survey",1,0,1,0,1,0,0,"All samples.",2011-07-02,0.0219932906329632,"Americas",0,0
+"75","BRA",-7.628041,-72.676161,2012-01-01,2012-01-01,"Symptomatic","Convenience survey",79,0.316455696,79,0.379746835,79,0.265822785,21,"All samples.",2012-01-01,0.0212374478578568,"Americas",25,30
+"76","UGA",0.137854,31.894119,2012-01-01,2013-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",56,0.44643,56,0.69643,56,0.33929,19,NA,2012-07-02,0.202348247170448,"Africa",25,39
+"77","HND",15.672623,-85.832473,2012-01-01,2012-01-01,"Symptomatic","Convenience survey",11,0,11,0.818181818,NA,0.25,NA,"All samples.",2012-01-01,5.0780918172677e-06,"Americas",0,9
+"78","ECU",0.95,-79.666667,2012-01-01,2013-01-01,"Symptomatic","Convenience survey",32,0.03125,32,0.03125,32,0.03125,1,"All samples.",2012-07-02,2.92416899583259e-08,"Americas",1,1
+"79","BGD",23.684994,90.356331,2013-01-01,2013-01-01,"Symptomatic","Case Report",1,1,1,1,1,1,1,NA,2013-01-01,1e-05,"Asia",1,1
+"80","SWZ",-26.416667,31.75,2012-01-01,2014-01-01,"Symptomatic","Convenience survey",9,0,9,0.111111111,9,0,0,"Discordant only.",2013-01-01,0.000149564482853748,"Africa",0,1
+"81","GNQ",1.853318,9.779023,2013-01-01,2013-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",122,0.754098361,122,0.786885246,122,0.663934426,81,"Discordant only.",2013-01-01,0.383301794528961,"Africa",92,96
+"82","HTI",18.386273,-73.930925,2012-01-01,2014-01-01,"Symptomatic","Convenience survey",7,0,7,0,7,0,0,"Discordant only.",2013-01-01,0.00107101537287235,"Americas",0,0
+"83","MOZ",-24.966376,32.596025,2010-01-01,2016-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",69,0.014492754,69,0,69,0,0,"Discordant only.",2013-01-01,0.161528214812279,"Africa",1,0
+"84","NGA",7.377535,3.94704,2013-01-01,2014-01-01,"Symptomatic","Convenience survey",66,0.166666667,66,0.060606061,66,0.060606061,4,"Discordant only.",2013-07-02,0.138401180505753,"Africa",11,4
+"85","COD",-4.325,15.322222,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",92,0.217391304,20,0,20,0,0,"All samples.",2013-07-02,0.152582466602325,"Africa",20,0
+"86","COD",-6.662389,17.839583,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",67,0.134328358,9,0.111111111,9,0.111111111,1,"All samples.",2013-07-02,0.0933919027447701,"Africa",9,1
+"87","COD",-4.742285,18.467113,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",70,0.085714286,6,0,6,0,0,"All samples.",2013-07-02,0.110566534101963,"Africa",6,0
+"88","COD",-2.614333,18.947083,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",116,0.034482759,4,0,4,0,0,"All samples.",2013-07-02,0.508074104785919,"Africa",4,0
+"89","COD",-5.816667,13.483333,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",148,0.040540541,6,0,6,0,0,"All samples.",2013-07-02,0.135985270142555,"Africa",6,0
+"90","COD",0.209472,18.87425,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",57,0.052631579,3,0,3,0,0,"All samples.",2013-07-02,0.298555552959442,"Africa",3,0
+"91","COD",1.968111,21.409556,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",74,0.067567568,5,0,5,0,0,"All samples.",2013-07-02,0.1388880610466,"Africa",5,0
+"92","COD",3.764639,21.188028,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",143,0.034965035,5,0,5,0,0,"All samples.",2013-07-02,0.643001556396484,"Africa",5,0
+"93","COD",2.992389,19.405472,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",86,0.081395349,7,0,7,0,0,"All samples.",2013-07-02,0.203031852841377,"Africa",7,0
+"94","COD",-0.675083,21.855361,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",56,0.089285714,5,0,5,0,0,"All samples.",2013-07-02,0.423321157693863,"Africa",5,0
+"95","COD",-4.863306,21.121028,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",118,0.016949153,2,0,2,0,0,"All samples.",2013-07-02,0.281249970197678,"Africa",2,0
+"96","COD",-6.124,22.504139,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",155,0.019354839,3,0,3,0,0,"All samples.",2013-07-02,0.567599773406982,"Africa",3,0
+"97","COD",-6.057778,23.490639,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",106,0.028301887,3,0,3,0,0,"All samples.",2013-07-02,0.241800874471664,"Africa",3,0
+"98","COD",-6.133333,24.483333,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",221,0.022624434,5,0,5,0,0,"All samples.",2013-07-02,0.344447135925293,"Africa",5,0
+"99","COD",-3.541083,23.653361,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",68,0.088235294,6,0,6,0,0,"All samples.",2013-07-02,0.578055679798126,"Africa",6,0
+"100","COD",-10.58725,27.690972,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",81,0.037037037,3,0,3,0,0,"All samples.",2013-07-02,0.518400549888611,"Africa",3,0
+"101","COD",-8.262778,25.498278,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",99,0.03030303,3,0,3,0,0,"All samples.",2013-07-02,0.0840409025549889,"Africa",3,0
+"102","COD",-9.356944,23.035528,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",87,0.022988506,2,0,2,0,0,"All samples.",2013-07-02,0.689648866653442,"Africa",2,0
+"103","COD",-6.402417,28.051417,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",157,0.01910828,3,0,3,0,0,"All samples.",2013-07-02,0.493574351072311,"Africa",3,0
+"104","COD",-3.241861,26.096528,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",182,0.071428571,13,0,13,0,0,"All samples.",2013-07-02,0.371176719665527,"Africa",13,0
+"105","COD",-0.568278,28.784417,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",72,0.166666667,12,0,12,0,0,"All samples.",2013-07-02,0.0741146728396416,"Africa",12,0
+"106","COD",3.759167,25.145861,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",109,0.009174312,1,0,1,0,0,"All samples.",2013-07-02,0.514087021350861,"Africa",1,0
+"107","COD",1.739667,29.569611,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",122,0.073770492,9,0.333333333,9,0.333333333,3,"All samples.",2013-07-02,0.606992959976196,"Africa",9,3
+"108","COD",0.413111,25.267639,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",106,0.056603774,6,0,6,0,0,"All samples.",2013-07-02,0.577261447906494,"Africa",6,0
+"109","COD",-3.277972,28.195417,2013-01-01,2014-01-01,"Mixed symptomatic and asymptomatic","Demographic and Health Surveys (DHS)",73,0.109589041,8,0.125,8,0.125,1,"All samples.",2013-07-02,0.231427177786827,"Africa",8,1
+"110","ECU",1.05,-79.2,2013-01-01,2014-01-01,"Symptomatic","Convenience survey",34,0.058823529,34,0.205882353,34,0.029411765,1,"All samples.",2013-07-02,4.43516728410032e-05,"Americas",2,7
+"111","ERI",15.25,37.5,2013-01-01,2014-01-01,"Symptomatic","Convenience survey",135,0.088888889,135,0.414814815,135,0.081481481,11,"All samples.",2013-07-02,0.00293661723844707,"Africa",12,56
+"112","ERI",14.821123,38.940006,2013-01-01,2014-01-01,"Symptomatic","Convenience survey",9,0.222222222,9,0.666666667,9,0.222222222,2,"All samples.",2013-07-02,2.22459766519023e-05,"Africa",2,6
+"113","YEM",14.46,43.15,2014-01-01,2014-01-01,"Symptomatic","Convenience survey",189,0.047619048,1,0,1,0,0,"All samples.",2014-01-01,1e-05,"Asia",9,0
+"114","IND",21.461389,80.191389,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",120,0,120,0,120,0,0,NA,2014-01-01,0.0044476711191237,"Asia",0,0
+"115","IND",24.7097,73.227692,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",140,0,140,0,140,0,0,NA,2014-01-01,2.11047972697997e-05,"Asia",0,0
+"116","IND",22.834722,74.255556,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",87,0.114942529,87,0.08045977,87,0.08045977,7,NA,2014-01-01,0.000414848967920989,"Asia",10,7
+"117","IND",20.292762,73.262039,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",10,0,10,0,10,0,0,"All samples.",2014-01-01,4.81645838590339e-05,"Asia",0,0
+"118","IND",23.073302,91.647602,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",45,0,45,0,45,0,0,"All samples.",2014-01-01,0.0196861550211906,"Asia",0,0
+"119","IND",23.073302,91.647602,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",82,0.012195122,82,0,82,0,0,"All samples.",2014-01-01,0.0196861550211906,"Asia",1,0
+"120","AUS",-33.810637,150.969449,2010-01-01,2018-01-01,"Symptomatic","Convenience survey",210,0.09047619,210,0.023809524,210,0,0,"All samples.",2014-01-01,NA,"Oceania",19,5
+"121","PER",-3.733333,-73.25,2011-01-01,2018-01-01,"Symptomatic","Convenience survey",10,0.3,10,0.1,10,0,0,"All samples.",2014-07-02,0.154733628034592,"Americas",3,1
+"122","PER",-3.733333,-73.25,2011-01-01,2018-01-01,"Symptomatic","Convenience survey",10,0.9,10,0.9,10,0.9,9,"All samples.",2014-07-02,0.154733628034592,"Americas",9,9
+"123","PER",-3.733333,-73.25,2011-01-01,2018-01-01,"Symptomatic","Convenience survey",119,0.831932773,119,0.857142857,119,0.781512605,93,"All samples.",2014-07-02,0.154733628034592,"Americas",99,102
+"124","PER",-3.74888,-73.263756,2011-01-01,2018-01-01,"Symptomatic","Convenience survey",24,0.791666667,24,0.75,24,0.708333333,17,"All samples.",2014-07-02,0.196947023272514,"Americas",19,18
+"125","PER",-3.699667,-73.279417,2011-01-01,2018-01-01,"Symptomatic","Convenience survey",140,0.778571429,140,0.635714286,140,0.607142857,85,"All samples.",2014-07-02,0.0807911530137062,"Americas",109,89
+"126","PER",-3.733333,-73.25,2011-01-01,2018-01-01,"Symptomatic","Convenience survey",5,0.4,5,0.4,5,0.4,2,"All samples.",2014-07-02,0.154733628034592,"Americas",2,2
+"127","PER",-3.733333,-73.25,2011-01-01,2018-01-01,"Symptomatic","Convenience survey",13,0.692307692,13,0.769230769,13,0.692307692,9,"All samples.",2014-07-02,0.154733628034592,"Americas",9,10
+"128","PER",-3.733333,-73.25,2011-01-01,2018-01-01,"Symptomatic","Convenience survey",2,0.5,2,0.5,2,0.5,1,"All samples.",2014-07-02,0.154733628034592,"Americas",1,1
+"129","UGA",0.447857,33.202612,2014-01-01,2015-01-01,"Symptomatic","Cross-sectional prospective survey",416,0.016826923,416,0.004807692,416,0.004807692,2,"Discordant only.",2014-07-02,0.138588652014732,"Africa",7,2
+"130","IND",18.8083,82.7083,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",229,0.052401747,229,0.052401747,229,0.048034934,11,NA,2014-01-01,0.00776857556775212,"Asia",12,12
+"131","IND",19.166,83.416,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",38,0,38,0,38,0,0,NA,2014-01-01,0.0463365912437439,"Asia",0,0
+"132","IND",22.615114,84.495998,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",118,0.025423729,118,0.016949153,118,0.016949153,2,NA,2014-01-01,0.091101735830307,"Asia",3,2
+"133","IND",22.615114,84.495998,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",98,0.020408163,98,0.010204082,98,0,0,NA,2014-01-01,0.091101735830307,"Asia",2,1
+"134","IND",19.085392,82.009562,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",202,0,202,0,202,0,0,NA,2014-01-01,0.0129737453535199,"Asia",0,0
+"135","IND",23.38755,82.388578,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",12,0.25,12,0,12,0,0,NA,2014-01-01,0.000643952167592943,"Asia",3,0
+"136","IND",22.769666,74.592092,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",125,0,125,0,125,0,0,NA,2014-01-01,0.000721210381016135,"Asia",0,0
+"137","IND",23.072922,81.778702,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",101,0.01980198,101,0.01980198,101,0.01980198,2,NA,2014-01-01,0.0272259432822466,"Asia",2,2
+"138","IND",19.496873,80.276733,2014-01-01,2014-01-01,"Symptomatic","Cross-sectional prospective survey",114,0.026315789,114,0.026315789,114,0.026315789,3,NA,2014-01-01,0.0265885852277279,"Asia",3,3
+"139","IND",21.747202,85.582652,2013-01-01,2016-01-01,"Symptomatic","Convenience survey",97,0.092783505,97,0.06185567,97,0.030927835,3,"All samples.",2014-07-03,0.00269313459284604,"Asia",9,6
+"140","IND",20.048885,85.711033,2013-01-01,2016-01-01,"Symptomatic","Convenience survey",76,0.078947368,76,0.039473684,76,0.026315789,2,"All samples.",2014-07-03,0.00681908242404461,"Asia",6,3
+"141","IND",21.191065,84.875024,2013-01-01,2016-01-01,"Symptomatic","Convenience survey",163,0.098159509,163,0.085889571,163,0.067484663,11,"All samples.",2014-07-03,0.00926204118877649,"Asia",16,14
+"142","IND",19.185838,82.743496,2013-01-01,2016-01-01,"Symptomatic","Convenience survey",48,0.145833333,48,0.020833333,48,0.020833333,1,"All samples.",2014-07-03,0.0345224961638451,"Asia",7,1
+"143","ECU",1.256308,-78.82729,2013-01-01,2015-01-01,"Symptomatic","Convenience survey",20,0.15,20,0.55,20,0.15,3,"All samples.",2014-01-01,1.00206693787186e-06,"Americas",3,11
+"144","ECU",-0.083333,-76.883333,2013-01-01,2015-01-01,"Symptomatic","Convenience survey",1,1,1,1,1,1,1,"All samples.",2014-01-01,1.44016703416128e-05,"Americas",1,1
+"145","ECU",0.084722,-76.882778,2013-01-01,2015-01-01,"Symptomatic","Convenience survey",2,0,2,0.5,2,0,0,"All samples.",2014-01-01,8.27769399620593e-05,"Americas",0,1
+"146","ECU",-0.921111,-75.399167,2013-01-01,2015-01-01,"Symptomatic","Convenience survey",1,1,1,1,1,1,1,"All samples.",2014-01-01,8.78935534274206e-05,"Americas",1,1
+"147","ECU",-0.946118,-80.641167,2013-01-01,2015-01-01,"Symptomatic","Convenience survey",1,0,1,1,1,0,0,"All samples.",2014-01-01,2.37190107554852e-08,"Americas",0,1
+"148","SLE",8.484444,-13.234444,2015-01-01,2015-01-01,"Symptomatic","Convenience survey",13,0.153846154,13,0.076923077,13,0.153846154,2,"All samples.",2015-01-01,0.113048732280731,"Africa",2,1
+"149","ETH",12.33276,39.795684,2015-01-01,2015-01-01,"Mixed symptomatic and asymptomatic","Malaria Indicator Survey",15,0.15,15,0.933333333,15,0.4,6,"Discordant only.",2015-01-01,0.0209149625152349,"Africa",2,14
+"150","GHA",5.806884,-0.221539,2015-01-01,2015-01-01,"Mixed symptomatic and asymptomatic","Convenience survey",8,0.75,8,1,8,0.75,6,NA,2015-01-01,0.221435502171516,"Africa",6,8
+"151","GTM",14.297778,-90.786944,2015-01-01,2015-01-01,"Symptomatic","Convenience survey",21,0.142857143,21,0.904761905,21,0.142857143,3,"All samples.",2015-01-01,1.95479678950505e-05,"Americas",3,19
+"152","NIC",13.976097,-84.237903,2015-01-01,2015-01-01,"Symptomatic","Convenience survey",55,0.309090909,55,0.872727273,55,0.2,11,"All samples.",2015-01-01,1.61728348757606e-05,"Americas",17,48
+"153","ERI",15.495272,39.155871,2015-01-01,2016-01-01,"Symptomatic","Convenience survey",26,0.807692308,26,0.923076923,26,0.807692308,21,"All samples.",2015-07-02,0.0117178335785866,"Africa",21,24
+"154","ERI",15.6545,39.382336,2015-01-01,2016-01-01,"Symptomatic","Convenience survey",24,0.416666667,24,0.708333333,24,0.416666667,10,"All samples.",2015-07-02,0.000660795136354864,"Africa",10,17
+"155","ETH",8.526349,39.258329,2015-01-01,2015-01-01,"Symptomatic","Convenience survey",50,1,50,1,50,1,50,NA,2015-01-01,0.00437666988000274,"Africa",50,50
+"156","CIV",7.700536,-5.095664,2016-01-01,2016-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",344,0,344,0.005813953,344,0,0,"All samples above a certain parasite density.",2016-01-01,0.894436359405518,"Africa",0,2
+"157","BRA",-7.628041,-72.676161,2016-01-01,2017-01-01,"Symptomatic","Convenience survey",99,0.717171717,99,0.949494949,99,0.686868687,68,"All samples.",2016-07-02,0.0233480725437403,"Americas",71,94
+"158","ETH",7.673891,36.835793,2016-01-01,2016-01-01,"Mixed symptomatic and asymptomatic","Not available",47,0.021276596,47,0.765957447,47,0.021276596,1,"All samples.",2016-01-01,0.206756725907326,"Africa",1,36
+"159","IND",21.989065,82.249338,2016-01-01,2017-01-01,"Symptomatic","Convenience survey",4,0.75,4,0.75,4,0.75,3,"Discordant only.",2016-07-02,0.028843192383647,"Asia",3,3
+"160","IND",21.070035,77.920088,2015-01-01,2017-01-01,"Symptomatic","Convenience survey",240,0.004166667,240,0.1875,240,0,0,"All samples.",2016-01-02,8.3772329162457e-06,"Asia",1,45
+"161","KEN",0.433333,34.15,2016-01-01,2016-01-01,"Symptomatic","Convenience survey",80,0,80,0,80,0,0,NA,2016-01-01,0.380161017179489,"Africa",0,0
+"162","KEN",-0.099824,34.2747,2016-01-01,2017-01-01,"Symptomatic","Therapeutic efficacy study",7,0,7,0,7,0,0,"Discordant only.",2016-07-02,0.518124580383301,"Africa",0,0
+"163","BRA",-3.118923,-60.021518,2016-01-01,2017-01-01,"Symptomatic","Convenience survey",60,1,60,0.983333333,60,0.983333333,59,"All samples.",2016-07-02,7.05158090568148e-05,"Americas",60,59
+"164","COD",-4.198463,23.348251,2017-01-01,2018-01-01,"Symptomatic","Convenience survey",74,0.040540541,74,0.013513514,74,0,0,"Non-representative: Samples with lowest HRP2 concentrations compared to pLDH and pAldolase",2017-07-02,0.343607366085052,"Africa",3,1
+"165","ERI",15.745934,37.150853,2016-01-01,2019-01-01,"Symptomatic","Convenience survey",345,0.249275362,345,0.313043478,345,0.202898551,70,"All samples.",2017-07-02,0.0107005583122373,"Africa",86,108
+"166","TZA",-1.916667,31.3,2017-01-01,2017-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",816,0.06127451,816,0.00245098,816,NA,NA,"Discordant only.",2017-01-01,0.121656768023968,"Africa",50,2
+"167","ETH",12.064462,36.754128,2017-01-01,2018-01-01,"Symptomatic","Convenience survey",610,0.044262295,610,0.314754098,610,0.22295082,136,"Discordant only.",2017-07-02,0.00117177772335708,"Africa",27,192
+"168","ETH",6.033333,37.55,2017-01-01,2017-01-01,"Symptomatic","Therapeutic efficacy study",2,0,2,1,2,0,0,"Discordant only.",2017-01-01,0.0902139320969582,"Africa",0,2
+"169","ETH",11.333333,36.333333,2017-01-01,2017-01-01,"Symptomatic","Therapeutic efficacy study",19,0.263157895,19,0.263157895,19,0.157894737,3,"Discordant only.",2017-01-01,0.00565928686410189,"Africa",5,5
+"170","FRA",43.633243,3.844893,2017-01-01,2018-01-01,"Symptomatic","Convenience survey",3,0,3,0,3,0,0,NA,2017-07-02,NA,"Europe",0,0
+"171","GAB",-0.701546,10.240386,2017-01-01,2018-01-01,"Symptomatic","Cross-sectional prospective survey",95,0.021052632,95,0,95,0,0,"All samples.",2017-07-02,0.277710944414139,"Africa",2,0
+"172","HND",15.672623,-85.832473,2017-01-01,2017-01-01,"Symptomatic","Convenience survey",31,0.290322581,31,1,NA,0.25,NA,"All samples.",2017-01-01,1.198229028887e-06,"Americas",9,31
+"173","COD",-0.149273,23.74788,2017-01-01,2017-01-01,"Symptomatic","Convenience survey",855,0,855,0,855,0,0,NA,2017-01-01,0.502585768699646,"Africa",0,0
+"174","DEU",50.701482,7.100888,2017-01-01,2017-01-01,"Symptomatic","Case Report",1,1,1,1,1,1,1,"All samples.",2017-01-01,NA,"Europe",1,1
+"175","TZA",-6.381945,38.635217,2018-01-01,2019-01-01,"Symptomatic","Convenience survey",149,0.006711409,149,0.006711409,149,0,0,"All samples.",2018-07-02,0.119542717933655,"Africa",1,1
+"176","TZA",-4.133615,37.587876,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",122,0.016393443,122,0.5,122,0,0,"All samples.",2018-01-01,0.081507682800293,"Africa",2,61
+"177","UGA",1.235602,31.331449,2017-01-01,2019-01-01,"Symptomatic","Cross-sectional prospective survey",130,0.023076923,130,0.015384615,130,0.007692308,1,"Discordant only.",2018-01-01,0.186711877584457,"Africa",3,2
+"178","UGA",1.280075,32.38632,2017-01-01,2019-01-01,"Symptomatic","Cross-sectional prospective survey",300,0.066666667,300,0.063333333,300,0.033333333,10,"Discordant only.",2018-01-01,0.254150360822678,"Africa",20,19
+"179","RWA",-2.697222,29.008333,2018-01-01,2018-01-01,"Symptomatic","Therapeutic efficacy study",9,0,9,0.111111111,9,0,0,"Discordant only.",2018-01-01,0.0403424985706806,"Africa",0,1
+"180","RWA",-2.030692,30.164487,2018-01-01,2018-01-01,"Symptomatic","Therapeutic efficacy study",2,0,2,0,2,0,0,"Discordant only.",2018-01-01,0.0405582971870899,"Africa",0,0
+"181","RWA",-1.800785,30.50344,2018-01-01,2018-01-01,"Symptomatic","Therapeutic efficacy study",5,0,5,0,5,0,0,"Discordant only.",2018-01-01,0.0440011359751225,"Africa",0,0
+"182","UGA",1.973787,33.730802,2017-01-01,2019-01-01,"Symptomatic","Cross-sectional prospective survey",170,0.1,170,0.1,170,0.052941176,9,"Discordant only.",2018-01-01,0.417731106281281,"Africa",17,17
+"183","TZA",-1.7754,34.1532,2018-01-01,2018-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",699,0.00286123,699,0,699,0,0,"Discordant only.",2018-01-01,0.0922378748655319,"Africa",2,0
+"184","ETH",10.066667,34.516667,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",42,0.238095238,42,0.119047619,NA,NA,NA,"All samples.",2018-01-01,0.0498958416283131,"Africa",10,5
+"185","ETH",10.066667,34.516667,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",16,0.375,16,0.0625,NA,NA,NA,"All samples.",2018-01-01,0.0498958416283131,"Africa",6,1
+"186","GBR",51.528772,-0.052312,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",113,0.017699115,113,0.061946903,113,0.008849558,1,NA,2018-01-01,NA,"Europe",2,7
+"187","GNQ",3.5,8.7,2018-01-01,2018-01-01,"Mixed symptomatic and asymptomatic","Malaria Indicator Survey",36,0,36,0.111111111,36,0,0,"All samples above a certain parasite density.",2018-01-01,NA,"Africa",0,4
+"188","GHA",7.683333,-0.983333,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",79,0.392405063,79,0.405063291,79,0.17721519,14,"Discordant only.",2018-01-01,0.188835218548775,"Africa",31,32
+"189","KEN",-0.091702,34.767957,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",150,0,150,0,150,0,0,"All samples.",2018-01-01,0.179046824574471,"Africa",0,0
+"190","MDG",-18.785139,48.241249,2018-01-01,2018-01-01,"Symptomatic","Therapeutic efficacy study",11,0,11,0,11,0,0,"Discordant only.",2018-01-01,0.0517411679029465,"Africa",0,0
+"191","MDG",-21.231111,48.341944,2018-01-01,2018-01-01,"Symptomatic","Therapeutic efficacy study",6,0,6,0,6,0,0,"Discordant only.",2018-01-01,0.0715144127607346,"Africa",0,0
+"192","MDG",-21.231111,48.341944,2018-01-01,2018-01-01,"Symptomatic","Therapeutic efficacy study",1,0,1,0,1,0,0,"Discordant only.",2018-01-01,0.0715144127607346,"Africa",0,0
+"193","MDG",-23.35053,47.591412,2018-01-01,2018-01-01,"Symptomatic","Therapeutic efficacy study",3,0,3,0,3,0,0,"Discordant only.",2018-01-01,0.131234675645828,"Africa",0,0
+"194","MDG",-22.805286,47.820614,2018-01-01,2018-01-01,"Symptomatic","Therapeutic efficacy study",4,0.25,4,0,4,0,0,"Discordant only.",2018-01-01,0.108160756528378,"Africa",1,0
+"195","MOZ",-17.260174,35.552323,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",66,0,1861,0,1861,0,0,"Discordant only.",2018-01-01,0.235689088702202,"Africa",0,0
+"196","NGA",6.25781,6.759564,2018-01-01,2019-01-01,"Mixed symptomatic and asymptomatic","Not available",316,0.018987342,316,0.018987342,316,0.015822785,5,"All samples.",2018-07-02,0.232876434922218,"Africa",6,6
+"197","ETH",10.066667,34.516667,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",94,0.14893617,94,0.085106383,NA,NA,NA,"All samples.",2018-01-01,0.0498958416283131,"Africa",14,8
+"198","ETH",10.066667,34.516667,2018-01-01,2018-01-01,"Symptomatic","Convenience survey",66,0.136363636,66,0.090909091,NA,NA,NA,"All samples.",2018-01-01,0.0498958416283131,"Africa",9,6
+"199","COD",-4.325,15.322222,2019-01-01,2019-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",173,0.01734104,173,0.005780347,7,0,0,"All samples above a certain parasite density.",2019-01-01,0.103701040148735,"Africa",3,1
+"200","COD",-4.325,15.322222,2018-01-01,2021-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",1267,0,1267,0,1267,0,0,"All samples above a certain parasite density.",2019-07-03,0.103701040148735,"Africa",0,0
+"201","ETH",8.626187,39.616086,2017-01-01,2022-01-01,"Symptomatic","Convenience survey",233,0.30472103,233,0.725321888,233,0.261802575,61,"Discordant only.",2019-07-03,0.0021134908311069,"Africa",71,169
+"202","CMR",3.979912,11.898249,2019-01-01,2019-01-01,"Symptomatic","Convenience survey",9,0.444444444,9,0.444444444,9,0.333333333,3,"Discordant only.",2019-01-01,0.466289162635803,"Africa",4,4
+"203","BEN",6.499588,2.06971,2019-01-01,2019-01-01,"Mixed symptomatic and asymptomatic","Not available",120,0,120,0,120,0,0,"All samples.",2019-01-01,0.383803874254227,"Africa",0,0
+"204","BEN",10.62425,1.266088,2019-01-01,2019-01-01,"Symptomatic","Convenience survey",53,0,53,0,53,0,0,"All samples.",2019-01-01,0.409263551235199,"Africa",0,0
+"205","IND",22.572646,88.363895,2019-01-01,2020-01-01,"Symptomatic","Convenience survey",10,0.4,10,0.7,10,0.3,3,"Discordant only.",2019-07-02,8.44219175633043e-05,"Asia",4,7
+"206","SSD",8.417934,26.89562,2019-01-01,2019-01-01,"Symptomatic","Convenience survey",469,0.008528785,469,0.008528785,469,0.006396588,3,"All samples.",2019-01-01,0.220311760902405,"Africa",4,4
+"207","SSD",4.565,28.375,2019-01-01,2019-01-01,"Symptomatic","Convenience survey",518,0.156370656,518,0.200772201,518,0.075289575,39,"All samples.",2019-01-01,0.526969373226166,"Africa",81,104
+"208","KEN",-3.770254,39.769038,2019-01-01,2020-01-01,"Symptomatic","Convenience survey",179,0.162011173,179,0.089385475,179,0.011173184,2,"All samples.",2019-07-02,0.0612664297223091,"Africa",29,16
+"209","NGA",6.026121,6.914369,2019-01-01,2020-01-01,"Symptomatic","Convenience survey",165,0.006060606,165,0,165,0,0,"All samples.",2019-07-02,0.182881250977516,"Africa",1,0
+"210","PER",-3.809915,-75.061564,2019-01-01,2020-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",83,0.493975904,83,0.325301205,NA,NA,NA,"All samples.",2019-07-02,0.00373619212768972,"Americas",41,27
+"211","TZA",-10.273611,40.182778,2019-01-01,2019-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",602,0,602,0,602,0,0,"Discordant only.",2019-01-01,0.0742575153708458,"Africa",0,0
+"212","GHA",6.043891,0.413857,2019-01-01,2019-01-01,"Symptomatic","Convenience survey",50,0,50,0,50,0,0,NA,2019-01-01,0.179514706134796,"Africa",0,0
+"213","IND",11.916667,79.816667,2018-01-01,2020-01-01,"Symptomatic","Convenience survey",4,1,4,1,4,1,4,"Discordant only.",2019-01-01,2.4641226445965e-06,"Asia",4,4
+"214","LBR",6.313333,-10.801389,2019-01-01,2019-01-01,"Mixed symptomatic and asymptomatic","Convenience survey",3,0,3,0,3,0,0,"Discordant only.",2019-01-01,0.206273764371872,"Africa",0,0
+"215","DJI",11.588333,43.145,2019-01-01,2019-01-01,"Symptomatic","Convenience survey",74,0.864864865,74,0.905405405,74,0.864864865,64,NA,2019-01-01,0.024803664535284,"Africa",64,67
+"216","DJI",11.588333,43.145,2019-01-01,2020-01-01,"Symptomatic","Convenience survey",296,0.702702703,296,0.858108108,296,0.685810811,203,NA,2019-07-02,0.024803664535284,"Africa",208,254
+"217","ECU",0.793662,-79.009352,2019-01-01,2020-01-01,"Symptomatic","Convenience survey",41,0,41,0.536585366,39,0,0,"All samples.",2019-07-02,1.34757883643033e-05,"Americas",0,22
+"218","ERI",16.425698,37.797403,2019-01-01,2020-01-01,"Symptomatic","Convenience survey",107,0.271028037,107,0.579439252,107,0.205607477,22,"All samples.",2019-07-02,0.00941226817667484,"Africa",29,62
+"219","ERI",15.25,37.5,2019-01-01,2020-01-01,"Symptomatic","Convenience survey",512,0.064453125,512,0.37890625,512,0.052734375,27,"All samples.",2019-07-02,0.00340440636500716,"Africa",33,194
+"220","ERI",14.821123,38.940006,2019-01-01,2020-01-01,"Symptomatic","Convenience survey",96,0.052083333,96,0.4375,96,0.052083333,5,"All samples.",2019-07-02,0.000109592539956793,"Africa",5,42
+"221","CMR",4.460911,12.219642,2019-01-01,2021-01-01,"Symptomatic","Cross-sectional prospective survey",107,0.364485981,107,0.289719626,107,0.242990654,26,"Discordant only.",2020-01-02,0.348465174436569,"Africa",39,31
+"222","CMR",6.517399,14.286303,2019-01-01,2021-01-01,"Symptomatic","Cross-sectional prospective survey",9,0.111111111,9,0.111111111,9,0.111111111,1,"Discordant only.",2020-01-02,0.140509977936745,"Africa",1,1
+"223","VNM",13.408159,108.067802,2019-01-01,2021-01-01,"Symptomatic","Convenience survey",266,0,266,0,266,0,0,"All samples.",2020-01-02,0.000511162274051458,"Asia",0,0
+"224","BFA",12.43629,-2.036479,2020-01-01,2021-01-01,"Symptomatic","Convenience survey",67,0.029850746,67,0.014925373,67,0,0,"All samples.",2020-07-02,0.179575249552727,"Africa",2,1
+"225","BFA",12.683333,-2.183333,2020-01-01,2021-01-01,"Symptomatic","Convenience survey",46,0.239130435,46,0.108695652,46,0.043478261,2,"All samples.",2020-07-02,0.188270926475525,"Africa",11,5
+"226","BFA",12.582099,-2.033338,2020-01-01,2021-01-01,"Symptomatic","Convenience survey",36,0.111111111,36,0.111111111,36,0.027777778,1,"All samples.",2020-07-02,0.165644928812981,"Africa",4,4
+"227","BFA",12.516565,-2.184538,2020-01-01,2021-01-01,"Symptomatic","Convenience survey",51,0.078431373,51,0.019607843,51,0.019607843,1,"All samples.",2020-07-02,0.15584097802639,"Africa",4,1
+"228","TCD",9.218828,16.068257,2020-01-01,2021-01-01,"Symptomatic","Convenience survey",215,0.046511628,215,0.009302326,215,0.023255814,5,"All samples.",2020-07-02,0.0713356882333755,"Africa",10,2
+"229","TZA",-8.0109,31.4456,2020-01-01,2020-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",253,0.007905138,253,0,253,0,0,"Discordant only.",2020-01-01,0.0947962924838066,"Africa",2,0
+"230","GBR",53.146264,-1.294334,2019-01-01,2021-01-01,"Symptomatic","Convenience survey",4,0.5,4,0.5,4,0.5,2,"Discordant only.",2020-01-02,NA,"Europe",2,2
+"231","GHA",6.799413,-1.456954,2020-01-01,2020-01-01,"Symptomatic","Reactive case detection",223,0.004484305,223,0.01793722,170,0,0,"All samples.",2020-01-01,0.170766189694405,"Africa",1,4
+"232","IRL",53.494086,-7.789443,2020-01-01,2020-01-01,"Symptomatic","Convenience survey",1,1,1,1,1,1,1,"Discordant only.",2020-01-01,NA,"Europe",1,1
+"233","CMR",4.08778,9.197042,2020-01-01,2021-01-01,"Symptomatic","Convenience survey",16,0.3125,16,0.25,16,0.125,2,"Discordant only.",2020-07-02,0.260148346424103,"Africa",5,4
+"234","TGO",6.819372,1.347636,2021-01-01,2022-01-01,"Symptomatic","Convenience survey",138,0,138,0,138,0,0,"All samples.",2021-07-02,0.367529034614563,"Africa",0,0
+"235","ZAF",-29,31,2021-01-01,2022-01-01,"Symptomatic","Convenience survey",19,0.947368421,19,1,19,1,19,"Discordant only.",2021-07-02,1e-05,"Africa",18,19
+"236","BDI",-2.805971,29.19931,2021-01-01,2021-01-01,"Mixed symptomatic and asymptomatic","Mixed sampling methods",362,0,366,0.005464481,NA,NA,NA,"All samples.",2021-01-01,0.129180654883385,"Africa",0,2
+"237","TGO",6.656442,1.419312,2021-01-01,2022-01-01,"Symptomatic","Convenience survey",192,0.005208333,192,0,192,0,0,"All samples.",2021-07-02,0.325747817754745,"Africa",1,0
+"238","TGO",7.761111,1.191667,2021-01-01,2022-01-01,"Symptomatic","Convenience survey",165,0,165,0.006060606,165,0,0,"All samples.",2021-07-02,0.253569275140762,"Africa",0,1
+"239","TZA",-6.21442,35.753579,2021-01-01,2021-01-01,"Symptomatic","Convenience survey",140,0.064285714,140,0.042857143,140,0,0,"Discordant only.",2021-01-01,0.0530042760074139,"Africa",9,6
+"240","TZA",-5.016667,32.8,2021-01-01,2021-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",505,0.005940594,505,0,505,0,0,"Discordant only.",2021-01-01,0.06613639742136,"Africa",3,0
+"241","COG",-4.231122,15.195696,2021-01-01,2021-01-01,"Mixed symptomatic and asymptomatic","Not available",512,0,512,0,512,0,0,"All samples.",2021-01-01,0.257547050714493,"Africa",0,0
+"242","ETH",7.2666,36.25,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",18,0.5,18,0.5,18,0.333333333,6,"All samples.",2022-01-01,0.0202869400382042,"Africa",9,9
+"243","ETH",7.2525,35.876,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",29,0.172413793,29,0.275862069,29,0.103448276,3,"All samples.",2022-01-01,0.0369354672729969,"Africa",5,8
+"244","ETH",6.856743,35.333671,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",31,0.225806452,31,0.322580645,31,0.193548387,6,"All samples.",2022-01-01,0.118892133235931,"Africa",7,10
+"245","ETH",6.876169,35.520647,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",8,0.875,8,0.75,8,0.75,6,"All samples.",2022-01-01,0.0897181928157806,"Africa",7,6
+"246","ETH",6.3613,38.3006,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",17,0.058823529,17,0.294117647,17,0.058823529,1,"All samples.",2022-01-01,0.0562867000699043,"Africa",1,5
+"247","ETH",5.519604,36.733797,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",35,0.057142857,35,0.114285714,35,0,0,"All samples.",2022-01-01,0.0537801794707775,"Africa",2,4
+"248","ETH",5.5665,37.3437,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",32,0.09375,32,0.375,32,0.0625,2,"All samples.",2022-01-01,0.0141664110124111,"Africa",3,12
+"249","ETH",6.8561,38.8561,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",13,0.384615385,13,0.461538462,13,0.307692308,4,"All samples.",2022-01-01,1e-05,"Africa",5,6
+"250","GHA",6.799413,-1.456954,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",13,0,13,0,13,0,0,"Discordant only.",2022-01-01,0.170766189694405,"Africa",0,0
+"251","RWA",-1.800785,30.50344,2021-01-01,2023-01-01,"Symptomatic","Convenience survey",4,0,4,0,4,0,0,"Discordant only.",2022-01-01,0.0440011359751225,"Africa",0,0
+"252","UGA",3.21567,32.724469,2021-01-01,2023-01-01,"Symptomatic","Convenience survey",93,0,93,0,93,0,0,"Discordant only.",2022-01-01,0.484489440917969,"Africa",0,0
+"253","UGA",2.845228,34.010183,2021-01-01,2023-01-01,"Symptomatic","Convenience survey",93,0,93,0,93,0,0,"Discordant only.",2022-01-01,0.513012647628784,"Africa",0,0
+"254","UGA",3.010211,31.236843,2021-01-01,2023-01-01,"Symptomatic","Convenience survey",113,0,113,0,113,0,0,"Discordant only.",2022-01-01,0.201125487685204,"Africa",0,0
+"255","UGA",2.32296,33.018403,2021-01-01,2023-01-01,"Symptomatic","Convenience survey",117,0.008547009,117,0,117,0,0,"Discordant only.",2022-01-01,0.405033767223358,"Africa",1,0
+"256","BFA",10.640016,-4.758804,2022-01-01,2022-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",33,0.03030303,33,0,33,0,0,"All samples.",2022-01-01,0.0905461683869362,"Africa",1,0
+"257","BFA",10.316667,-3.166667,2022-01-01,2022-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",183,0.032786885,183,0,183,0,0,"All samples.",2022-01-01,0.359503209590912,"Africa",6,0
+"258","BFA",10.98,-4.91,2022-01-01,2022-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",35,0.114285714,35,0,35,0,0,"All samples.",2022-01-01,0.11943730711937,"Africa",4,0
+"259","ETH",3.884371,38.935847,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",35,0.685714286,35,0.257142857,35,0.114285714,4,"All samples.",2022-01-01,0.00963470712304115,"Africa",24,9
+"260","ETH",6.726878,37.56496,2022-01-01,2022-01-01,"Symptomatic","Convenience survey",31,0.161290323,31,0.225806452,31,0.032258065,1,"All samples.",2022-01-01,0.00889074802398682,"Africa",5,7
+"261","TZA",-5.088875,39.102323,2022-01-01,2022-01-01,"Mixed symptomatic and asymptomatic","Cross-sectional prospective survey",399,0.007518797,399,0,399,0,0,"Discordant only.",2022-01-01,0.051134567707777,"Africa",3,0
+"262","MOZ",-13.25,36.5,2023-01-01,2023-01-01,"Symptomatic","Convenience survey",404,0,404,0,404,0,0,"All samples.",2023-01-01,0.343477040529251,"Africa",0,0
+"263","MOZ",-15.25,39.5,2023-01-01,2023-01-01,"Symptomatic","Convenience survey",367,0.27,367,0,367,0,0,"All samples.",2023-01-01,0.320433586835861,"Africa",99,0
+"264","MOZ",-17,37,2023-01-01,2023-01-01,"Symptomatic","Convenience survey",422,0,422,0,422,0,0,"All samples.",2023-01-01,0.48438572883606,"Africa",0,0
+"265","MOZ",-25.392301,32.797165,2023-01-01,2023-01-01,"Symptomatic","Convenience survey",403,0,403,0,403,0,0,"All samples.",2023-01-01,0.0186069048941135,"Africa",0,0
+"266","MOZ",-19,34.75,2023-01-01,2023-01-01,"Symptomatic","Convenience survey",325,0,325,0,325,0,0,"All samples.",2023-01-01,0.330504417419434,"Africa",0,0
+"267","MOZ",-23,34.5,2023-01-01,2023-01-01,"Symptomatic","Convenience survey",503,0.2,503,0.39,503,0.2,101,"All samples.",2023-01-01,0.192797392606735,"Africa",101,196

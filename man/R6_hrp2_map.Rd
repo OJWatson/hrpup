@@ -12,6 +12,10 @@ A results map
 \item \href{#method-hrp2_map-new}{\code{R6_hrp2_map$new()}}
 \item \href{#method-hrp2_map-plot}{\code{R6_hrp2_map$plot()}}
 \item \href{#method-hrp2_map-set_map_data}{\code{R6_hrp2_map$set_map_data()}}
+\item \href{#method-hrp2_map-set_lakes}{\code{R6_hrp2_map$set_lakes()}}
+\item \href{#method-hrp2_map-set_disputed_areas}{\code{R6_hrp2_map$set_disputed_areas()}}
+\item \href{#method-hrp2_map-set_disputed_borders}{\code{R6_hrp2_map$set_disputed_borders()}}
+\item \href{#method-hrp2_map-set_limits}{\code{R6_hrp2_map$set_limits()}}
 \item \href{#method-hrp2_map-set_scenarios}{\code{R6_hrp2_map$set_scenarios()}}
 }
 }
@@ -21,7 +25,15 @@ A results map
 \subsection{Method \code{new()}}{
 Create a new hrp2 map result
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$new(map, map_data = NULL, scenarios = NULL, map_0 = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$new(
+  map,
+  map_data = NULL,
+  scenarios = NULL,
+  map_0 = NULL,
+  lakes = NULL,
+  disputed_areas = NULL,
+  disputed_borders = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -34,6 +46,12 @@ Create a new hrp2 map result
 \item{\code{scenarios}}{Scenarios data frame}
 
 \item{\code{map_0}}{Admin 0 map sf object}
+
+\item{\code{lakes}}{Lake sf object}
+
+\item{\code{disputed_areas}}{Disputed areas sf object}
+
+\item{\code{disputed_borders}}{Disputed borders sf object}
 }
 \if{html}{\out{</div>}}
 }
@@ -59,7 +77,11 @@ All scenario parameters must be one of "central", "worst", "best"
   rdt.nonadherence = "central",
   fitness = "central",
   rdt.det = "central",
-  print = FALSE,
+  print_bool = FALSE,
+  lakes_bool = TRUE,
+  disputed_areas_bool = TRUE,
+  disputed_borders_bool = TRUE,
+  scale_bar = NULL,
   risk = "innate",
   prev_plot = FALSE
 )}\if{html}{\out{</div>}}
@@ -82,7 +104,15 @@ All scenario parameters must be one of "central", "worst", "best"
 
 \item{\code{rdt.det}}{Chance of hrp2 deleted parasite yielding pos test scenario}
 
-\item{\code{print}}{Boolean for whether to print the plot as well as return it}
+\item{\code{print_bool}}{Boolean for whether to print the plot as well as return it}
+
+\item{\code{lakes_bool}}{Boolean for whether to add lakes (default = TRUE)}
+
+\item{\code{disputed_areas_bool}}{Boolean for whether to add disputed areas (default = TRUE)}
+
+\item{\code{disputed_borders_bool}}{Boolean for whether to add disputed borders (default = TRUE)}
+
+\item{\code{scale_bar}}{Position. Default = NULL, which is no scale bar}
 
 \item{\code{risk}}{What type of risk score to plot, either "innate" (default) or "prospective"}
 }
@@ -105,6 +135,74 @@ Set map data
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{map_data}}{Map data of selection coefficients for each scenario
+Set lakes}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-hrp2_map-set_lakes"></a>}}
+\if{latex}{\out{\hypertarget{method-hrp2_map-set_lakes}{}}}
+\subsection{Method \code{set_lakes()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$set_lakes(lakes)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{lakes}}{Map lake objects
+Set disputed areas}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-hrp2_map-set_disputed_areas"></a>}}
+\if{latex}{\out{\hypertarget{method-hrp2_map-set_disputed_areas}{}}}
+\subsection{Method \code{set_disputed_areas()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$set_disputed_areas(disputed_areas)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{lakes}}{Map disputed_areas objects
+Set disputed_borders}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-hrp2_map-set_disputed_borders"></a>}}
+\if{latex}{\out{\hypertarget{method-hrp2_map-set_disputed_borders}{}}}
+\subsection{Method \code{set_disputed_borders()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$set_disputed_borders(disputed_borders)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{disputed_borders}}{Map disputed_borders objects
+Set limits}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-hrp2_map-set_limits"></a>}}
+\if{latex}{\out{\hypertarget{method-hrp2_map-set_limits}{}}}
+\subsection{Method \code{set_limits()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_map$set_limits(limits)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{limits}}{x and y limits for each map_0 region
 Set map data}
 }
 \if{html}{\out{</div>}}
@@ -121,7 +219,10 @@ Set map data}
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{scenarios}}{Scenario data frame that matches map_data}
+\item{\code{scenarios}}{Scenario data frame that matches map_data
+Add a Custom Position Scale Bar to ggplot
+
+This function enables drawing a scale bar on a \code{ggplot} object and optionally adding an orientation arrow.}
 }
 \if{html}{\out{</div>}}
 }

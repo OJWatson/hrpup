@@ -1,4 +1,5 @@
 library(tidyverse)
+map <- readRDS(here::here("analysis/data_derived/admin1_sf.rds"))
 
 # ---------------------------------------------------- #
 # 1. Get access covariate dataset from MAP rasters ----
@@ -44,9 +45,6 @@ pop_total = sum(pop))
 
 }
 
-scenario_maps <- readRDS("analysis/data_derived/scenario_maps_full.rds")
-map <- scenario_maps$map
-
 iso3cs <- unique(map$iso)
 iso3cs <- iso3cs[iso3cs != "UMI"]
 iso3cs <- iso3cs[iso3cs != "MEX"]
@@ -58,6 +56,9 @@ for(i in seq_along(travel_list)) {
 }
 # Mexico did exist (error was misleading). add to end
 travel_list[[length(travel_list)+1]] <- travel_ft_map("MEX", rasters)
+
+# save just what we need later
+travel_list <- map(travel_list, function(x){x %>% sf::st_drop_geometry() %>% select(id_1, pop_total, matches("layer"))})
 saveRDS(travel_list, "analysis/data_derived/travel_list.rds")
 all_travel <- do.call(rbind, travel_list)
 
@@ -70,8 +71,6 @@ shp <- sf::read_sf("analysis/data_raw/data_dhs/shps/sdr_subnational_data.shp")
 
 # MAP world map
 covars <-  readRDS("analysis/data_derived/global_covariate_ranges.rds")
-#world_map <- malariaAtlas::getShp(ISO = na.omit(unique(covars$iso3c)), admin_level = c("admin1")) %>% sf::st_as_sf()
-world_map <- readRDS("analysis/data_derived/admin1_sf.rds")
 shp$iso3c <- countrycode::countrycode(shp$CNTRYNAMEE, origin = "country.name.en","iso3c")
 
 # start matching it to our MAP map
@@ -129,24 +128,10 @@ train_indices <- sample(nrow(full_df), nrow(full_df) * 0.75)
 train <- full_df[train_indices, ]
 test <- full_df[-train_indices, ]
 
-# model <- caret::train(x = train %>% na.omit %>% select(-ft, -iso3c, -id_1), y = train %>% na.omit %>% pull(ft),
-#                       method="brnn",
-#                       trControl = train_control, tuneGrid = expand.grid("neurons" =4))
-#
-# # check this looks okay
-# plot(test %>% na.omit %>% pull(ft),
-#      predict(model$finalModel, test %>% na.omit %>% select(-ft, -iso3c, -id_1)))
-
 library(xgboost)
 xgb_params <- list(objective = "reg:logistic",
                    eta = 0.05,
-                   max_depth = 12, subsample = 0.85, colsample_bytree = 0.85)#, # Use mean squared error as objective function
-                   # eta = best_params$eta, # Learning rate
-                   # max_depth = best_params$max_depth, # Maximum tree depth
-                   # min_child_weight = 1, # Minimum sum of instance weight needed in a child
-                   # subsample = best_params$subsample, # Subsample ratio of the training instances
-                   # colsample_bytree = best_params$colsample_bytree, # Subsample ratio of columns when constructing each tree
-                   # monotone_constraints = c(-1, 1, -1, -1, 1, -1)) # Impose monotonic constraints for known functional relationships
+                   max_depth = 12, subsample = 0.85, colsample_bytree = 0.85)
 
 # Train xgboost model with cross-validation
 xgb_cv <- xgb.cv(params = xgb_params,
@@ -361,6 +346,7 @@ new_spec_covars <- new_spec_covars %>%
   mutate(id_1 = as.integer(id_1)) %>%
   rename(rdt.nonadherence_mean = non_adherence) %>%
   rename(microscopy.use_mean = micro) %>%
+  # placeholders for fitness mean and rdt.det mean that will be etsimated in the next script
   mutate(fitness_mean = 0.9) %>%
   mutate(rdt.det_mean = 0.46)
 

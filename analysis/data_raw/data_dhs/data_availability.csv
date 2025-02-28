@@ -1,3 +1,50 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:284059fa3ab6dc8a23dcb239ce50f5a8dd3e2ad8d1b246a1e790d59a57b64dc6
-size 3090
+Country,DHScode,FIPScode,ISOcode,SurveyYear,SurveyType,MLFEVTCACS,MLFEVTCACT,MLFEVTCADS,MLFEVTCADV,MLFEVTCAML,MLFEVTCAMS,MLFEVTCBLD,MLFEVTCNUM,MLFEVTCUNW
+Afghanistan,AF,AF,,2015,DHS,-,Yes,-,Yes,Yes,-,Yes,Yes,Yes
+Albania,AL,AL,,2017,DHS,-,-,Yes,Yes,-,-,-,Yes,Yes
+Angola,AO,AO,,2015,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Burkina Faso,BF,UV,,2017,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Benin,BJ,BN,,2017,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Burundi,BU,BY,,2016,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Congo Democratic Republic,CD,CG,,2013,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes
+Congo,CG,CF,,2011,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes
+Cote d'Ivoire,CI,IV,,2012,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes
+Cameroon,CM,CM,,2018,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Ethiopia,ET,ET,,2016,DHS,-,Yes,-,Yes,Yes,-,-,Yes,Yes
+Gabon,GA,GB,,2012,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes
+Ghana,GH,GH,,2019,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Gambia,GM,GA,,2019,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Guinea,GN,GV,,2021,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Guyana,GY,GY,,2009,DHS,-,-,Yes,Yes,Yes,Yes,-,Yes,Yes
+Haiti,HT,HA,,2016,DHS,-,-,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+India,IA,IN,,2020,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Indonesia,ID,ID,,2007,DHS,-,-,-,Yes,Yes,-,-,Yes,Yes
+Jordan,JO,JO,,2017,DHS,-,-,Yes,Yes,-,-,-,Yes,Yes
+Kenya,KE,KE,,2020,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Cambodia,KH,CB,,2005,DHS,-,Yes,Yes,Yes,Yes,-,Yes,Yes,Yes
+Comoros,KM,CN,,2012,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes
+Liberia,LB,LI,,2019,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Madagascar,MD,MA,,2021,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Mali,ML,ML,,2021,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Myanmar,MM,BM,,2016,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes
+Mauritania,MR,MR,,2020,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Malawi,MW,MI,,2017,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Mozambique,MZ,MZ,,2018,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Nigeria,NG,NI,,2021,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Niger,NI,NG,,2021,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Namibia,NM,WA,,2013,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes
+Papua New Guinea,PG,PP,,2017,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Philippines,PH,RP,,2017,DHS,-,-,Yes,Yes,-,-,-,Yes,Yes
+Pakistan,PK,PK,,2017,DHS,-,Yes,Yes,Yes,Yes,-,-,Yes,Yes
+Rwanda,RW,RW,,2019,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Sierra Leone,SL,SL,,2019,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Senegal,SN,SG,,2020,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Sao Tome and Principe,ST,TP,,2008,DHS,Yes,Yes,Yes,Yes,Yes,Yes,-,Yes,Yes
+Eswatini,SZ,WZ,,2006,DHS,-,-,Yes,Yes,Yes,-,-,Yes,Yes
+Chad,TD,CD,,2014,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes
+Togo,TG,TO,,2017,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Tajikistan,TJ,TI,,2017,DHS,-,-,Yes,Yes,-,-,Yes,Yes,Yes
+Timor-Leste,TL,TT,,2016,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Tanzania,TZ,TZ,,2017,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Uganda,UG,UG,,2018,MIS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Zambia,ZM,ZA,,2018,DHS,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Zimbabwe,ZW,ZI,,2010,DHS,Yes,Yes,-,Yes,Yes,Yes,Yes,Yes,Yes

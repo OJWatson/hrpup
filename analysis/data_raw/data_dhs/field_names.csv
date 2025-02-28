@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:70de010a7590406c2502deffcf50e847d318e6a06f0a768dd235d66ebfa16294
-size 1917
+SDRID,Definition,Data Restriction,DHSID,Alias
+MLFEVTCACS,"Among children under age five with fever in the two weeks preceding the survey, the percentage who took a combination with artemisinin the same day",,ML_FEVT_C_ACS,Children with fever who took a combination with artemisinin the same day
+MLFEVTCACT,"Among children under age five with fever in the two weeks preceding the survey, the percentage who took a combination with artemisinin",,ML_FEVT_C_ACT,Children with fever who took a combination with artemisinin
+MLFEVTCADS,"Among children under age five with fever in the two weeks preceding the survey, the percentage for whom advice or treatment was sought the same or the next day",,ML_FEVT_C_ADS,Children with fever for whom advice or treatment was sought the same or the next day
+MLFEVTCADV,"Among children under age five with fever in the two weeks preceding the survey, the percentage for whom advice or treatment was sought",,ML_FEVT_C_ADV,Children with fever for whom advice or treatment was sought
+MLFEVTCAML,Among children under age five with fever in the two weeks preceding the survey the percentage who took antimalarial drugs,,ML_FEVT_C_AML,Children with fever who took antimalarial drugs
+MLFEVTCAMS,Among children under age five with fever in the two weeks preceding the survey the percentage who took antimalarial drugs the same or next day following the onset of fever,,ML_FEVT_C_AMS,Children with fever who took antimalarial drugs the same day or next day
+MLFEVTCBLD,"Among children under age five with fever in the two weeks preceding the survey, the percentage who had blood taken from a finger or heel for testing",,ML_FEVT_C_BLD,Children with fever who had blood taken from a finger or heel for testing
+MLFEVTCNUM,Number of children under age five with fever in the two weeks preceding the survey,,ML_FEVT_C_NUM,Number of children under age five with fever in the last two weeks

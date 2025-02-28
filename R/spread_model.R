@@ -104,10 +104,71 @@ R6_hrp2_spread <- R6::R6Class(
 
         # 5. Simulate Importation only if less than import gap before end
         if (float_leq(t_s[t], (t_end - import_gap))) {
-        del_pos_list[[t + as.integer(1/t_break)]] <- private$simulate_importation(
-          t = t, export_pos = export_pos,
-          import_freq = import_freq,
-          t_break = t_break, import_gap = import_gap
+          del_pos_list[[t + as.integer(1/t_break)]] <- private$simulate_importation(
+            t = t, export_pos = export_pos,
+            import_freq = import_freq,
+            t_break = t_break, import_gap = import_gap
+          )
+        }
+      }
+
+      # And return our simulation
+      return(purrr::list_rbind(private$res_list))
+
+    },
+
+    #' @description
+    #' Simulated spread and RDT rollout
+    #' @param import_freq What frequency does importation result in. Default = 0.01
+    #' @param export_freq At what frequency does exportation occur at. Default = 0.25
+    #' @param t_end What year does simulation end. Default = 40
+    #' @param t_break Gap between time breaks. Default = 1
+    #' @param import_gap Number of years for importation to occur over. Default = 1
+    #' @param switch_list List of switch rules
+    #'
+    simulate_spread_and_rdts = function(import_freq = 0.01,
+                                        export_freq = 0.25,
+                                        t_end = 40,
+                                        t_break = 1,
+                                        import_gap = 1,
+                                        switch_list = NULL) {
+
+      # set up our results object
+      private$set_res_list(t_end = t_end, t_break = t_break)
+
+      # Where are we looking for deletions first
+      next_pos <- which(names(private$res_list) %in% names(private$seeds))
+      del_pos <- private$find_deleted_regions(t = 1, pos = next_pos)
+
+      # Running vector of regions that have been simulated from
+      simulated <- c()
+
+      # Vector of times
+      t_s <- seq(0, t_end - t_break, t_break)
+      del_pos_list <- vector("list", length(t_s) + as.integer(1/t_break))
+      del_pos_list[[1]] <- del_pos
+
+      # Simulate spread process
+      for(t in seq_along(t_s)) {
+
+        # 1. Simulate Selection at deleted regions
+        private$simulate_selection_and_rdts(t = t, del_pos = del_pos_list[[t]], switch_list = switch_list)
+
+        # 2. Update which regions have been simulated
+        simulated <- c(simulated, del_pos_list[[t]])
+
+        # 3. Which regions are exporting after selections
+        export_pos <- private$find_deleted_regions(t = t, del_freq = export_freq, pos = simulated)
+
+        # 4. If a simulated region has exported then we remove it from simulated
+        simulated <- setdiff(simulated, export_pos)
+
+        # 5. Simulate Importation only if less than import gap before end
+        if (float_leq(t_s[t], (t_end - import_gap))) {
+          del_pos_list[[t + as.integer(1/t_break)]] <- private$simulate_importation(
+            t = t, export_pos = export_pos,
+            import_freq = import_freq,
+            t_break = t_break, import_gap = import_gap
           )
         }
       }
@@ -200,10 +261,51 @@ R6_hrp2_spread <- R6::R6Class(
           # and our update positions
           private$res_list[[i]]$freq[t_right_pos] <-
             private$hrp2_mod$predict_f2(
-            dat = list("s" = s),
-            f1 = private$res_list[[i]]$freq[t_right_pos[1]],
-            t = t_forward
+              dat = list("s" = s),
+              f1 = private$res_list[[i]]$freq[t_right_pos[1]],
+              t = t_forward
             )
+
+        }
+      }
+    },
+
+    # simulate selection and RDT change
+    simulate_selection_and_rdts = function(t, del_pos, switch_list){
+
+      if(length(del_pos) > 0) {
+
+        # Remaining t for this time step
+        t_right_pos <- which(private$res_list[[1]]$t_pos >= t)
+        t_right <- private$res_list[[1]]$t[t_right_pos]
+        t_forward <- t_right - t_right[1]
+
+        # loop over the regions that need updating
+        for(i in del_pos) {
+
+          # which region is it
+          s_pos <- match(
+            names(private$res_list)[i],
+            as.character(private$map_data$id_1)
+          )
+          iso <- private$map_data[s_pos,]$iso3c
+
+          # get that iso switch rules
+          slis <- switch_list$iso_switch[[iso]]
+
+          # get the setting dat
+          dat <- private$map_data[s_pos,]
+
+          # get the setting f1
+          f1 <- private$res_list[[i]]$freq[t_right_pos[1]]
+
+          # calculate the frequency given the switch list etc
+          freq <- private$simulate_f2_given_sl(slis = slis,
+                                       slts = switch_list$threshold_switch,
+                                       dat = dat, f1 = f1, tf = t_forward)
+
+          # and update the simulated freq
+          private$res_list[[i]]$freq[t_right_pos] <- freq
 
         }
       }
@@ -253,6 +355,344 @@ R6_hrp2_spread <- R6::R6Class(
       # return where we are simulating next time step
       return(next_del_pos)
 
+    },
+
+    # Simulate f2 over time given a switch list set of rules
+    simulate_f2_given_sl = function(slis, slts, dat, f1, tf) {
+
+      # create a copy of regions dat
+      datcp <- dat
+
+      # have we already past a switch point
+      if(any(tf[1] >= slis$t)) {
+        p1 <- max(which(tf[1] >= slis$t))
+        p1_micro <- slis$microscopy.use[p1]
+        datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*p1_micro)
+      }
+
+      # are we simulating in steps
+      if(nrow(slis) > 1) {
+
+        # grab the s
+        s <- private$hrp2_mod$predict_s(datcp)
+
+        # if the listed microscopy use is greater than 0.99 this is equivalent to no RDT pressure so set to 0 at least
+        # and then simulate this and return it as no slts will change this trajectory
+        if(datcp$microscopy.use >= 0.99) {
+          s <- min(s, 0)
+          freq <- private$hrp2_mod$predict_f2(
+            dat = list("s" = s),
+            f1 = f1,
+            t = tf
+          )
+          return(freq)
+        }
+
+        # also if the current time is greater than max slis$t then just simulate to
+        if(tf[1] >= max(slis$t)) {
+          freq <- private$hrp2_mod$predict_f2(
+            dat = list("s" = s),
+            f1 = f1,
+            t = tf
+          )
+          return(freq)
+        }
+
+        # simulate frequency for remaining time steps
+        freq <- private$hrp2_mod$predict_f2(
+          dat = list("s" = s),
+          f1 = f1,
+          t = tf
+        )
+
+        # does freq ever get above trigger and is the max micro greater than current
+        if(any(freq > slts$f_trig[1]) && (max(slts$microscopy.use) > datcp$microscopy.use)) {
+
+          # what time does it go past
+          past <- which(freq > slts$f_trig[1])[1]
+
+          # find out what time the change in RDTs occurs
+          tf_start <- (past+1)
+          new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[1] + 1))[1] # add one year for switch to occur
+          new_sim_start_time <- tf[new_sim_start]
+
+          # if this is ever the case it means that the switch happens just before the end of the sim so ignore
+          if(is.na(new_sim_start)) {return(freq)}
+
+          # is the time greater than any of the slis times if so then let's just assume they do their slis roll out
+          if(any(new_sim_start_time > slis$t)) {
+
+            # if current time is less than start of slis times
+            if(tf[1] < slis$t[1]) {
+              new_sim_start <- which(tf > slis$t[1])[1]
+
+              for(i in seq_along(slis$t)) {
+
+                # if this is ever the case it means that the switch happens just before the end of the sim so ignore
+                if(is.na(new_sim_start)) {return(freq)}
+
+                # update the microscopy use
+                datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slis$microscopy.use[i])
+                s <- private$hrp2_mod$predict_s(datcp)
+
+                # if it ever goes above the max then just sim this
+                if(datcp$microscopy.use >= 0.99) {
+                  s <- min(s, 0)
+                  freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                    dat = list("s" = s),
+                    f1 = freq[new_sim_start:length(freq)][1],
+                    t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+                  )
+                  return(freq)
+                }
+
+                freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                  dat = list("s" = s),
+                  f1 = freq[new_sim_start:length(freq)][1],
+                  t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+                )
+
+                # update the next time
+                if(i < length(slis$t)) {
+                  new_sim_start <- which(tf > slis$t[i+1])[1]
+                }
+              }
+
+              # if tf[1] is somewhere inside slid
+            } else {
+
+              # find what the next slis t is
+              p1 <- min(which(tf[1] < slis$t))
+              new_sim_start <- which(tf > slis$t[p1])[1]
+
+              for(i in p1:length(slis$t)) {
+
+                # if this is ever the case it means that the switch happens just before the end of the sim so ignore
+                if(is.na(new_sim_start)) {return(freq)}
+
+                # update the microscopy use
+                datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slis$microscopy.use[i])
+                s <- private$hrp2_mod$predict_s(datcp)
+
+                # if it ever goes above the max then just sim this
+                if(datcp$microscopy.use >= 0.99) {
+                  s <- min(s, 0)
+                  freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                    dat = list("s" = s),
+                    f1 = freq[new_sim_start:length(freq)][1],
+                    t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+                  )
+                  return(freq)
+                }
+
+                freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                  dat = list("s" = s),
+                  f1 = freq[new_sim_start:length(freq)][1],
+                  t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+                )
+
+                # update the next time
+                if(i < length(slis$t)) {
+                  new_sim_start <- which(tf > slis$t[i+1])[1]
+                }
+              }
+
+            }
+
+
+            # else we assume they go via slts
+          } else {
+
+            for(i in seq_along(slts$t_past)) {
+
+              # if this is ever the case it means that the switch happens just before the end of the sim so ignore
+              if(is.na(new_sim_start)) {return(freq)}
+
+              # update the microscopy use
+              datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slts$microscopy.use[i])
+              s <- private$hrp2_mod$predict_s(datcp)
+
+              # if it ever goes above the max then just sim this
+              if(datcp$microscopy.use >= 0.99) {
+                s <- min(s, 0)
+                freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                  dat = list("s" = s),
+                  f1 = freq[new_sim_start:length(freq)][1],
+                  t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+                )
+                return(freq)
+              }
+
+              freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                dat = list("s" = s),
+                f1 = freq[new_sim_start:length(freq)][1],
+                t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+              )
+
+              # update the next time
+              if(i < length(slts$t_past)) {
+                new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[i+1] + 1))[1] # add one year for switch to occur
+              }
+            }
+
+          }
+
+        } else {
+
+          # if current time is less than start of slis times
+          if(tf[1] < slis$t[1]) {
+            new_sim_start <- which(tf > slis$t[1])[1]
+
+            for(i in seq_along(slis$t)) {
+
+              # if this is ever the case it means that the switch happens just before the end of the sim so ignore
+              if(is.na(new_sim_start)) {return(freq)}
+
+              # update the microscopy use
+              datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slis$microscopy.use[i])
+              s <- private$hrp2_mod$predict_s(datcp)
+
+              # if it ever goes above the max then just sim this
+              if(datcp$microscopy.use >= 0.99) {
+                s <- min(s, 0)
+                freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                  dat = list("s" = s),
+                  f1 = freq[new_sim_start:length(freq)][1],
+                  t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+                )
+                return(freq)
+              }
+
+              freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                dat = list("s" = s),
+                f1 = freq[new_sim_start:length(freq)][1],
+                t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+              )
+
+              # update the next time
+              if(i < length(slis$t)) {
+                new_sim_start <- which(tf > slis$t[i+1])[1]
+              }
+            }
+
+            # if tf[1] is somewhere inside slid
+          } else {
+
+            # find what the next slis t is
+            p1 <- min(which(tf[1] < slis$t))
+            new_sim_start <- which(tf > slis$t[p1])[1]
+
+            for(i in p1:length(slis$t)) {
+
+              # if this is ever the case it means that the switch happens just before the end of the sim so ignore
+              if(is.na(new_sim_start)) {return(freq)}
+
+              # update the microscopy use
+              datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slis$microscopy.use[i])
+              s <- private$hrp2_mod$predict_s(datcp)
+
+              # if it ever goes above the max then just sim this
+              if(datcp$microscopy.use >= 0.99) {
+                s <- min(s, 0)
+                freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                  dat = list("s" = s),
+                  f1 = freq[new_sim_start:length(freq)][1],
+                  t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+                )
+                return(freq)
+              }
+
+              freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                dat = list("s" = s),
+                f1 = freq[new_sim_start:length(freq)][1],
+                t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+              )
+
+              # update the next time
+              if(i < length(slis$t)) {
+                new_sim_start <- which(tf > slis$t[i+1])[1]
+              }
+            }
+
+          }
+
+
+
+        }
+
+        # if no slis steps then simulate the remaining time
+      } else {
+
+        # if no slis steps then simulate the remaining time
+        s <- private$hrp2_mod$predict_s(datcp)
+
+        # if the listed microscopy use is greater than 0.99 this is equivalent to no RDT pressure so set to 0 at least
+        # and then simulate this and return it as no slts will change this trajectory
+        if(datcp$microscopy.use >= 0.99) {
+          s <- min(s, 0)
+          freq <- private$hrp2_mod$predict_f2(
+            dat = list("s" = s),
+            f1 = f1,
+            t = tf
+          )
+          return(freq)
+        }
+
+        # simulate frequency for remaining time steps
+        freq <- private$hrp2_mod$predict_f2(
+          dat = list("s" = s),
+          f1 = f1,
+          t = tf
+        )
+
+        # does freq ever get above trigger and is the max micro greater than current
+        if(any(freq > slts$f_trig[1]) && (max(slts$microscopy.use) > datcp$microscopy.use)) {
+
+          # what time does it go past
+          past <- which(freq > slts$f_trig[1])[1]
+
+          # find out what time the change in RDTs occurs
+          tf_start <- (past+1)
+          new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[1] + 1))[1] # add one year for switch to occur
+
+          for(i in seq_along(slts$t_past)) {
+
+            # if this is ever the case it means that the switch happens just before the end of the sim so ignore
+            if(is.na(new_sim_start)) {return(freq)}
+
+            # update the microscopy use
+            datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slts$microscopy.use[i])
+            s <- private$hrp2_mod$predict_s(datcp)
+
+            # if it ever goes above the max then just sim this
+            if(datcp$microscopy.use >= 0.99) {
+              s <- min(s, 0)
+              freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+                dat = list("s" = s),
+                f1 = freq[new_sim_start:length(freq)][1],
+                t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+              )
+              return(freq)
+            }
+
+            freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
+              dat = list("s" = s),
+              f1 = freq[new_sim_start:length(freq)][1],
+              t = tf[new_sim_start:length(freq)] - tf[new_sim_start:length(freq)][1]
+            )
+
+            # update the next time
+            if(i < length(slts$t_past)) {
+              new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[i+1] + 1))[1] # add one year for switch to occur
+            }
+          }
+
+        }
+
+      }
+
+      return(freq)
+
     }
 
   )
@@ -264,3 +704,5 @@ R6_hrp2_spread <- R6::R6Class(
 float_leq <- function(x, y, tolerance = 1e-9) {
   return(x < y | abs(x - y) <= tolerance)
 }
+
+
