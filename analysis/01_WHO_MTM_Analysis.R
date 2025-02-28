@@ -99,7 +99,7 @@ grouped <- final %>% group_by(ISO_ctry, continent) %>%
   filter(continent == "Africa") %>%
   mutate(country =  countrycode::countrycode(
     .data$ISO_ctry,"iso3c", "country.name",
-    custom_match = c("COD" = "Democractic Republic of the Congo")))
+    custom_match = c("COD" = "Democractic Republic \nof the Congo")))
 
 gg2 <- grouped %>%
   ggplot(aes(x = coocc,y=country, group = (as.factor(country)),
@@ -112,12 +112,12 @@ gg2 <- grouped %>%
                      values = as.character(vapply(rev(pals::polychrome()), pastellize, character(1), 0.95))) +
   scale_size_continuous(name = "Total *pfhrp2* deleted <br /> samples in  survey:<br>", range = c(0,1), breaks = c(10, 20, 50,100,300), limits = c(0,300)) +
   labs(x = "Percentage of *pfhrp2* deleted samples <br /> with *pfhrp3* gene deletions") +
-  labs(y = "WHO Threat Map Survey of *pfhrp2*/*3* deletions") +
+  labs(y = "Country") +
   theme_bw(base_family = "Helvetica", base_size = 12) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
   theme(axis.title.x = ggtext::element_markdown(size = 12),
         legend.title = ggtext::element_markdown(size = 12),
-        legend.text = ggtext::element_markdown(size = 9),
+        legend.text = element_text(size = 9),
         axis.title.y = ggtext::element_markdown(size = 12)) +
   guides(color = guide_legend(ncol = 1)) +
   scale_y_discrete(limits = rev(levels(factor(grouped$country))))
