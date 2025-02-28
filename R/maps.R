@@ -135,6 +135,27 @@ R6_hrp2_map <- R6::R6Class(
       gg_map_risk <- mapped %>%
         ggplot2::ggplot()
 
+      # get limits of relevant regions first if global
+      if(region == "global" && risk == "innate") {
+        # add the admin 1 mappings
+        gg_map_risk <- gg_map_risk +
+          ggplot2::geom_sf(data = mapped[!is.na(mapped[[var]]),],
+                           ggplot2::aes_string(fill = var), color = "#e6e6e6ff", show.legend = TRUE, lwd = 0.05) +
+          ggplot2::scale_fill_manual(name = title, drop = FALSE,
+                                     values = rev(c("#6eb3deff", "#84e1c2ff", "#f8b675ff", "#fa8284ff")),
+                                     labels = rev(c("No Data","Marginal", "Slight", "Moderate", "High")),
+                                     na.value = "#e6e6e6ff"
+          )
+
+        xlim <- layer_scales(gg_map_risk)$x$get_limits()
+        ylim <- layer_scales(gg_map_risk)$y$get_limits()
+      }
+
+      if(region == "global" && risk == "prospective") {
+        xlim <- c(-89.22461, 168.32507)
+        ylim <- c(-33.74390,  38.47211)
+      }
+
       # add the admin 0 mappings in and some simplifying themes
       gg_map_risk <- gg_map_risk +
         ggplot2::geom_sf(fill = "#e6e6e6ff", color = "#696969ff", show.legend = FALSE,
@@ -169,12 +190,6 @@ R6_hrp2_map <- R6::R6Class(
             ggplot2::scale_fill_manual(name="\nTransmission", labels="Unstable (<0.05% PfPR)", values="grey")
 
         }
-      }
-
-      # get limits of relevant regions first if global
-      if(region == "global") {
-        xlim <- layer_scales(gg_map_risk)$x$get_limits()
-        ylim <- layer_scales(gg_map_risk)$y$get_limits()
       }
 
       # add the admin 0 mappings in and some simplifying themes
