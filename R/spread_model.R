@@ -65,12 +65,20 @@ R6_hrp2_spread <- R6::R6Class(
     #' @param t_end What year does simulation end. Default = 40
     #' @param t_break Gap between time breaks. Default = 1
     #' @param import_gap Number of years for importation to occur over. Default = 1
+    #' @param unc What uncertainty for selection is being used from ensemble prediction.
+    #'   Default = "med", and options can also be "lci", "uci"
     #'
     simulate_spread = function(import_freq = 0.01,
                                export_freq = 0.25,
                                t_end = 40,
                                t_break = 1,
-                               import_gap = 1) {
+                               import_gap = 1,
+                               unc = "med") {
+
+      # arg check once here
+      if(!(unc %in% c("med", "lci", "uci"))) {
+        stop("unc is not one of med, lci, uci")
+      }
 
       # set up our results object
       private$set_res_list(t_end = t_end, t_break = t_break)
@@ -91,7 +99,7 @@ R6_hrp2_spread <- R6::R6Class(
       for(t in seq_along(t_s)) {
 
         # 1. Simulate Selection at deleted regions
-        private$simulate_selection(t = t, del_pos = del_pos_list[[t]])
+        private$simulate_selection(t = t, del_pos = del_pos_list[[t]], unc = unc)
 
         # 2. Update which regions have been simulated
         simulated <- c(simulated, del_pos_list[[t]])
@@ -125,13 +133,21 @@ R6_hrp2_spread <- R6::R6Class(
     #' @param t_break Gap between time breaks. Default = 1
     #' @param import_gap Number of years for importation to occur over. Default = 1
     #' @param switch_list List of switch rules
+    #' @param unc What uncertainty for selection is being used from ensemble prediction.
+    #'   Default = "med", and options can also be "lci", "uci"
     #'
     simulate_spread_and_rdts = function(import_freq = 0.01,
                                         export_freq = 0.25,
                                         t_end = 40,
                                         t_break = 1,
                                         import_gap = 1,
-                                        switch_list = NULL) {
+                                        switch_list = NULL,
+                                        unc = "med") {
+
+      # arg check once here
+      if(!(unc %in% c("med", "lci", "uci"))) {
+        stop("unc is not one of med, lci, uci")
+      }
 
       # set up our results object
       private$set_res_list(t_end = t_end, t_break = t_break)
@@ -152,7 +168,8 @@ R6_hrp2_spread <- R6::R6Class(
       for(t in seq_along(t_s)) {
 
         # 1. Simulate Selection at deleted regions
-        private$simulate_selection_and_rdts(t = t, del_pos = del_pos_list[[t]], switch_list = switch_list)
+        private$simulate_selection_and_rdts(t = t, del_pos = del_pos_list[[t]],
+                                            switch_list = switch_list, unc = unc)
 
         # 2. Update which regions have been simulated
         simulated <- c(simulated, del_pos_list[[t]])
@@ -239,7 +256,7 @@ R6_hrp2_spread <- R6::R6Class(
     },
 
     # simulate selection
-    simulate_selection = function(t, del_pos){
+    simulate_selection = function(t, del_pos, unc){
 
       if(length(del_pos) > 0) {
 
@@ -256,7 +273,12 @@ R6_hrp2_spread <- R6::R6Class(
             names(private$res_list)[i],
             as.character(private$map_data$id_1)
           )
-          s <- private$map_data$s[s_pos]
+
+          # grab the s
+          s <- switch(unc,
+                      med = private$map_data$s[s_pos],
+                      lci = private$map_data$smin[s_pos],
+                      uci = private$map_data$smax[s_pos])
 
           # and our update positions
           private$res_list[[i]]$freq[t_right_pos] <-
@@ -271,7 +293,7 @@ R6_hrp2_spread <- R6::R6Class(
     },
 
     # simulate selection and RDT change
-    simulate_selection_and_rdts = function(t, del_pos, switch_list){
+    simulate_selection_and_rdts = function(t, del_pos, switch_list, unc = "med"){
 
       if(length(del_pos) > 0) {
 
@@ -302,7 +324,8 @@ R6_hrp2_spread <- R6::R6Class(
           # calculate the frequency given the switch list etc
           freq <- private$simulate_f2_given_sl(slis = slis,
                                        slts = switch_list$threshold_switch,
-                                       dat = dat, f1 = f1, tf = t_forward)
+                                       dat = dat, f1 = f1, tf = t_forward,
+                                       unc = unc)
 
           # and update the simulated freq
           private$res_list[[i]]$freq[t_right_pos] <- freq
@@ -358,23 +381,30 @@ R6_hrp2_spread <- R6::R6Class(
     },
 
     # Simulate f2 over time given a switch list set of rules
-    simulate_f2_given_sl = function(slis, slts, dat, f1, tf) {
+    simulate_f2_given_sl = function(slis, slts, dat, f1, tf, unc) {
 
       # create a copy of regions dat
       datcp <- dat
+
+      # prediction args
+      mod_vars <- names(formals(private$hrp2_mod$predict))
 
       # have we already past a switch point
       if(any(tf[1] >= slis$t)) {
         p1 <- max(which(tf[1] >= slis$t))
         p1_micro <- slis$microscopy.use[p1]
         datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*p1_micro)
+        if(datcp$microscopy.use >= 0.99) {
+          datcp$microscopy.use <- 0.99
+        }
       }
 
       # are we simulating in steps
       if(nrow(slis) > 1) {
 
         # grab the s
-        s <- private$hrp2_mod$predict_s(datcp)
+        ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+        s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
 
         # if the listed microscopy use is greater than 0.99 this is equivalent to no RDT pressure so set to 0 at least
         # and then simulate this and return it as no slts will change this trajectory
@@ -433,7 +463,11 @@ R6_hrp2_spread <- R6::R6Class(
 
                 # update the microscopy use
                 datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slis$microscopy.use[i])
-                s <- private$hrp2_mod$predict_s(datcp)
+                if(datcp$microscopy.use >= 0.99) {
+                  datcp$microscopy.use <- 0.99
+                }
+                ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+                s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
 
                 # if it ever goes above the max then just sim this
                 if(datcp$microscopy.use >= 0.99) {
@@ -472,7 +506,11 @@ R6_hrp2_spread <- R6::R6Class(
 
                 # update the microscopy use
                 datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slis$microscopy.use[i])
-                s <- private$hrp2_mod$predict_s(datcp)
+                if(datcp$microscopy.use >= 0.99) {
+                  datcp$microscopy.use <- 0.99
+                }
+                ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+                s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
 
                 # if it ever goes above the max then just sim this
                 if(datcp$microscopy.use >= 0.99) {
@@ -510,7 +548,11 @@ R6_hrp2_spread <- R6::R6Class(
 
               # update the microscopy use
               datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slts$microscopy.use[i])
-              s <- private$hrp2_mod$predict_s(datcp)
+              if(datcp$microscopy.use >= 0.99) {
+                datcp$microscopy.use <- 0.99
+              }
+              ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+              s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
 
               # if it ever goes above the max then just sim this
               if(datcp$microscopy.use >= 0.99) {
@@ -550,7 +592,11 @@ R6_hrp2_spread <- R6::R6Class(
 
               # update the microscopy use
               datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slis$microscopy.use[i])
-              s <- private$hrp2_mod$predict_s(datcp)
+              if(datcp$microscopy.use >= 0.99) {
+                datcp$microscopy.use <- 0.99
+              }
+              ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+              s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
 
               # if it ever goes above the max then just sim this
               if(datcp$microscopy.use >= 0.99) {
@@ -589,7 +635,11 @@ R6_hrp2_spread <- R6::R6Class(
 
               # update the microscopy use
               datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slis$microscopy.use[i])
-              s <- private$hrp2_mod$predict_s(datcp)
+              if(datcp$microscopy.use >= 0.99) {
+                datcp$microscopy.use <- 0.99
+              }
+              ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+              s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
 
               # if it ever goes above the max then just sim this
               if(datcp$microscopy.use >= 0.99) {
@@ -624,7 +674,8 @@ R6_hrp2_spread <- R6::R6Class(
       } else {
 
         # if no slis steps then simulate the remaining time
-        s <- private$hrp2_mod$predict_s(datcp)
+        ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+        s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
 
         # if the listed microscopy use is greater than 0.99 this is equivalent to no RDT pressure so set to 0 at least
         # and then simulate this and return it as no slts will change this trajectory
@@ -662,7 +713,11 @@ R6_hrp2_spread <- R6::R6Class(
 
             # update the microscopy use
             datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slts$microscopy.use[i])
-            s <- private$hrp2_mod$predict_s(datcp)
+            if(datcp$microscopy.use >= 0.99) {
+              datcp$microscopy.use <- 0.99
+            }
+            ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+            s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
 
             # if it ever goes above the max then just sim this
             if(datcp$microscopy.use >= 0.99) {

@@ -13,7 +13,6 @@ sf::sf_use_s2(FALSE)
 # --------------------------------------------------------------------------#
 
 # Get the maps for simulating
-admin0 <- readRDS(here::here("analysis/data_derived/admin0_sf.rds"))
 admin1 <- readRDS(here::here("analysis/data_derived/admin1_sf.rds"))
 
 # and who for plotting

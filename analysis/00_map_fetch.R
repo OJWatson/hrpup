@@ -12,7 +12,8 @@ map_1 <- map_1 %>% select(iso, name_0, id_0, name_1, id_1,type_1, source, countr
 
 # make smaller for storage
 map_small <- rmapshaper::ms_simplify(map_1)
-saveRDS(map_1, "analysis/data_derived/admin1_sf.rds")
+saveRDS(map_small, "analysis/data_derived/admin1_sf.rds")
+map_1 <- readRDS("analysis/data_derived/admin1_sf.rds")
 
 # 2. MAP lakes separate ---------------
 isos <- unique(countrycode::codelist$iso3c[countrycode::codelist$continent == "Africa"])
@@ -55,7 +56,7 @@ new_map <- new_map %>%
   mutate(id_1 = replace(id_1, GUID == "{B0C05F5D-21ED-4248-9D1B-E9CD1405B784}",10315750))
 
 # and assign our names
-new_map$name_1 <- admi1$name_1[match(new_map$id_1, admi1$id_1)]
+new_map$name_1 <- map_1$name_1[match(new_map$id_1, map_1$id_1)]
 
 # fetch the disputed regions as well
 disputed_areas <- sf::read_sf(

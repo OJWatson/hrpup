@@ -4,7 +4,6 @@ devtools::load_all()
 # ---------------------------------------------------- #
 # 1. Get the world map and merge together with our covariate ranges
 # ---------------------------------------------------- #
-admin0 <- readRDS(here::here("analysis/data_derived/admin0_sf.rds"))
 admin1 <- readRDS(here::here("analysis/data_derived/admin1_sf.rds"))
 
 # Grab our covariate parameter ranges
@@ -15,7 +14,6 @@ selection_model <- readRDS("analysis/data_derived/ensemble_selection_model.rds")
 
 # MAP world map to
 world_map <- admin1 %>% filter(iso %in% na.omit(unique(covars$iso3c)))
-world_map0 <- admin0 %>% filter(iso %in% na.omit(unique(covars$iso3c)))
 
 # make scenarios for the map
 scenarios <- expand.grid(

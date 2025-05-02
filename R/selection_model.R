@@ -47,8 +47,8 @@ R6_hrp2_mod <- R6::R6Class(
       ret <- as.data.frame(dat)
 
       # predict s
-      ret$s <- self$predict_s(dat)
-      err <- self$predict_err(dat)
+      ret$s <- self$predict_s(ret)
+      err <- self$predict_err(ret)
       # We estimated error using only 5 stochastic realisations. If we had used
       # 100 realisations, bsaed on a simple model of normally distributed variance
       # it would be 5 times smaller. Consequently, divide by 5.
@@ -64,6 +64,38 @@ R6_hrp2_mod <- R6::R6Class(
       return(ret)
 
     },
+
+    #' @description
+    #' Predict median and 95% selection coefficients and threshold times given data frame
+    #' @param dat data frame with "Micro.2.10", "ft", "microscopy.use",
+    #'    "rdt.nonadherence", "fitness", "rdt.det"
+    #' @return Data.frame of selection coefficients and times from 1% to 5%
+    predict_dat = function(dat) {
+
+      # get args and turn into matrix
+      vars <- c("Micro.2.10", "ft", "microscopy.use", "rdt.nonadherence", "fitness", "rdt.det")
+      ret <- dat[, vars]
+      ret <- as.data.frame(dat)
+
+      # predict s
+      dat$s <- self$predict_s(ret)
+      err <- self$predict_err(ret)
+      # We estimated error using only 5 stochastic realisations. If we had used
+      # 100 realisations, bsaed on a simple model of normally distributed variance
+      # it would be 5 times smaller. Consequently, divide by 5.
+      dat$smin <- dat$s - 1.96*(err/5)
+      dat$smax <- dat$s + 1.96*(err/5)
+
+      # use to calculate times
+      dat$t <- (log(0.05 / (1 - 0.05)) - log(0.01 / (1 - 0.01))) / dat$s
+      dat$tmin <- (log(0.05 / (1 - 0.05)) - log(0.01 / (1 - 0.01))) / dat$smin
+      dat$tmax <- (log(0.05 / (1 - 0.05)) - log(0.01 / (1 - 0.01))) / dat$smax
+
+
+      return(dat)
+
+    },
+
 
     # Predict Ensemble s
     #' Predict selection coefficient for data frame of covariates

@@ -525,4 +525,4 @@ new_mod <- R6_hrp2_mod$new(models = selection_model$get_models(),
                            err_models = selection_model$get_error_models(),
                            model_weights = selection_model$get_model_weights(),
                            err_model_weights = selection_model$get_error_model_weights(),
-                           data = testna)
+                           data = selection_model$get_data())
