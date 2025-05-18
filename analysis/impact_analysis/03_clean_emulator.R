@@ -58,7 +58,7 @@ MalariaTimeSeriesWarmupDataset <- dataset(
                           mortality_05 = c(0, 0.01),
                           mortality_100 = c(0, 0.005)
                         ),
-                        input_cols = c('Micro.2.10', 'ft',
+                        input_cols = c('Micro.2.10', 'ft', 't',
                                        'microscopy.use', 'rdt.nonadherence',
                                        'fitness', 'rdt.det', 'freq'),
                         output_cols = c('micro_2_10', 'pcr', 'clinical_05', 'clinical',
