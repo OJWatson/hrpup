@@ -4,6 +4,8 @@ library(sf)
 full_df <- readRDS("analysis/impact_analysis/data-derived/who_sims.rds")
 inc_df <- readRDS("/home/oj/GoogleDrive/AcademicWork/Imperial/git/arms/analysis/data-derived/spread_mal_inc.rds")
 
+full_df <- full_df %>%
+  mutate(scenario = recode(scenario, "worst" = "Worst", "best" = "Best", "central" = "Central"))
 # ----------------------- #
 # 6. Make figures and tables for CHAI Report ---------
 # ----------------------- #

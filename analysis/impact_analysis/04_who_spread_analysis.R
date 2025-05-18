@@ -415,8 +415,13 @@ annual <- full_df %>%
   mutate(t = round(t, 1)) %>%
   filter(t %in% seq(0, 20, 1)) %>%
   filter(type %in% c("5% Threshold Strategy", "No RDT Switching"))
+
+annual_clean <- annual %>%
+  mutate(scenario = recode(scenario, "Worst" = "pessimistic", "Best" = "optimistic", "Central" = "central")) %>%
+  mutate(across(contains("_"), function(x){signif(x, 6)}))
+
 for(i in 0:5) {
-write.csv(annual %>% filter(delay %in% c(i, -1)),
+write.csv(annual_clean %>% filter(delay %in% c(i, -1)),
           paste0("analysis/impact_analysis/data-out/longitudinal_comparison_delay_", i, ".csv"),
           row.names = FALSE)
 }
