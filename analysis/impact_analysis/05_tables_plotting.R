@@ -2,10 +2,13 @@
 library(tidyverse)
 library(sf)
 full_df <- readRDS("analysis/impact_analysis/data-derived/who_sims.rds")
-inc_df <- readRDS("/home/oj/GoogleDrive/AcademicWork/Imperial/git/arms/analysis/data-derived/spread_mal_inc.rds")
+# file.copy("/home/oj/GoogleDrive/AcademicWork/Imperial/git/arms/analysis/data-derived/spread_mal_inc.rds", "analysis/impact_analysis/data-raw/spread_mal_inc.rds")
+inc_df <- readRDS("analysis/impact_analysis/data-raw/spread_mal_inc.rds")
 
 full_df <- full_df %>%
-  mutate(scenario = recode(scenario, "worst" = "Worst", "best" = "Best", "central" = "Central"))
+  mutate(scenario = recode(scenario, "worst" = "Worst", "best" = "Best", "central" = "Central")) %>%
+  mutate(t = round(t, 1)) %>%
+  filter(t %in% seq(0, 20, 1))
 # ----------------------- #
 # 6. Make figures and tables for CHAI Report ---------
 # ----------------------- #
@@ -316,3 +319,24 @@ mid
 initial
 mid
 complete
+
+
+# 8. example plot for one region (10314353, 10015081)
+
+selgg <- full_df %>% filter(id_1 == 10314353) %>% select(1:5, contains("med")) %>%
+  pivot_longer(contains("med")) %>%
+  filter(scenario == "Central") %>%
+  ggplot(aes(t, value, color = as.factor(delay))) +
+  geom_line() +
+  facet_grid(name~type, scales = "free_y") + theme_bw() +
+  ggtitle("Setting where selection is predicted")
+
+noselgg <- full_df %>% filter(id_1 == 10015081) %>% select(1:5, contains("med")) %>%
+  pivot_longer(contains("med")) %>%
+  filter(scenario == "Central") %>%
+  ggplot(aes(t, value, color = as.factor(delay))) +
+  geom_line() +
+  facet_grid(name~type, scales = "free_y") + theme_bw() +
+  ggtitle("Setting where selection is not predicted/very slow")
+
+cowplot::plot_grid(selgg, noselgg, ncol = 2)
