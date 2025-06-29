@@ -1,3 +1,7 @@
+## hrpup 0.4.0
+
+* Initial results of alternative RDT impact analysis 
+
 ## hrpup 0.3.0
 
 * Updates for final revision (updates to figures only)
