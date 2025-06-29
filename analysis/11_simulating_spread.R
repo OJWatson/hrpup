@@ -6,6 +6,7 @@ library(scam)
 library(furrr)
 library(future)
 library(wpp2017)
+devtools::load_all()
 sf::sf_use_s2(FALSE)
 
 # --------------------------------------------------------------------------#
@@ -258,7 +259,7 @@ gg_2 <- out %>% filter(t_pos == 11) %>% select(-t) %>%
   ylim(y_coords) +
   theme(panel.border = element_rect(color = "black", linewidth = 3, fill = NA)) +
   ggtitle("2024\n") +
-  ggplot2::geom_sf(data = gg_2$data %>% filter(iso %in% hoa_iso), fill = NA,
+  ggplot2::geom_sf(data = . %>% filter(iso %in% hoa_iso), fill = NA,
                    color = "#696969ff", show.legend = FALSE, lwd = 0.05, inherit.aes = FALSE)
 
 ## 4.c. Plot our successive spread -----------------------------------------------------
@@ -275,7 +276,7 @@ gg_3 <- out %>% filter(t_pos == 29) %>% select(-t) %>%
   ylim(y_coords) +
   theme(panel.border = element_rect(color = "black", linewidth = 3, fill = NA)) +
   ggtitle("2024\n") +
-  ggplot2::geom_sf(data = gg_2$data %>% filter(iso %in% hoa_iso), fill = NA,
+  ggplot2::geom_sf(data = . %>% filter(iso %in% hoa_iso), fill = NA,
                    color = "#696969ff", show.legend = FALSE, lwd = 0.05, inherit.aes = FALSE)
 
 ## 4.a-f. Bring all together -----------------------------------------------------

@@ -12,6 +12,7 @@
 #' @param plot_dir Plotting directory. Defaults to "analysis/plots"
 #' @param pdf_plot Logical for plotting pdf too. Default = TRUE
 #' @param font_family If specified, sets all font family. Default = NULL
+#' @param dpi DPI to use for raster graphics. Default = 600
 #' @importFrom grDevices dev.off pdf
 save_figs <- function(name,
                       fig,
@@ -19,7 +20,8 @@ save_figs <- function(name,
                       height = 6,
                       plot_dir = file.path(here::here(), "analysis/plots"),
                       pdf_plot = TRUE,
-                      font_family = "Helvetica") {
+                      font_family = "Helvetica",
+                      dpi = 600) {
 
   if(!is.null(font_family)) {
     fig <- fig + ggplot2::theme(text = ggplot2::element_text(family = font_family))
@@ -31,7 +33,8 @@ save_figs <- function(name,
   cowplot::save_plot(filename = fig_path(paste0(name,".png")),
                      plot = fig,
                      base_height = height,
-                     base_width = width)
+                     base_width = width,
+                     dpi = dpi)
 
   if(pdf_plot) {
   pdf(file = fig_path(paste0(name,".pdf")), width = width, height = height)

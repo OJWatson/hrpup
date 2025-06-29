@@ -67,7 +67,7 @@ save_figs("best_afr_risk", add_africa_scale(best_gg), width = 10, height = 8, pd
 # world_risk
 gg_map4 <- who_compliant_discrete_plot(create_risk(scenario_maps$map_data[[scenario]]),who_shps, region = "global",
                                           var = "t_bin", title = "HRP2 Concern",limits = TRUE, prev_plot = TRUE, prev_var = "Micro.2.10")
-save_figs("central_world_risk1", add_global_scale(gg_map4), width = 20, height = 6, pdf_plot = FALSE)
+save_figs("central_world_risk", add_global_scale(gg_map4), width = 20, height = 6, pdf_plot = FALSE)
 
 # combine so we don't have to make by hand:
 gg_map5 <- cowplot::plot_grid(
