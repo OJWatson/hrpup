@@ -83,7 +83,8 @@ Simulated spread
   export_freq = 0.25,
   t_end = 40,
   t_break = 1,
-  import_gap = 1
+  import_gap = 1,
+  unc = "med"
 )}\if{html}{\out{</div>}}
 }
 
@@ -99,6 +100,9 @@ Simulated spread
 \item{\code{t_break}}{Gap between time breaks. Default = 1}
 
 \item{\code{import_gap}}{Number of years for importation to occur over. Default = 1}
+
+\item{\code{unc}}{What uncertainty for selection is being used from ensemble prediction.
+Default = "med", and options can also be "lci", "uci"}
 }
 \if{html}{\out{</div>}}
 }
@@ -115,7 +119,8 @@ Simulated spread and RDT rollout
   t_end = 40,
   t_break = 1,
   import_gap = 1,
-  switch_list = NULL
+  switch_list = NULL,
+  unc = "med"
 )}\if{html}{\out{</div>}}
 }
 
@@ -133,6 +138,9 @@ Simulated spread and RDT rollout
 \item{\code{import_gap}}{Number of years for importation to occur over. Default = 1}
 
 \item{\code{switch_list}}{List of switch rules}
+
+\item{\code{unc}}{What uncertainty for selection is being used from ensemble prediction.
+Default = "med", and options can also be "lci", "uci"}
 }
 \if{html}{\out{</div>}}
 }

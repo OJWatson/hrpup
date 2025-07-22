@@ -43,7 +43,6 @@
 #' @import ggplot2
 #' @import ggspatial
 #' @importFrom dplyr filter
-#' @importFrom sf geom_sf
 #'
 #' @export
 who_compliant_discrete_plot = function(data,
@@ -273,8 +272,6 @@ who_compliant_discrete_plot = function(data,
 #' @import ggspatial
 #' @importFrom dplyr filter
 #' @importFrom ggnewscale new_scale_fill
-#' @importFrom viridis scale_fill_viridis_c
-#' @importFrom sf geom_sf
 #'
 #' @export
 who_compliant_continuous_plot = function(data,
@@ -558,7 +555,7 @@ scaleBar <- function(lon,
                              distanceLegend,
                              dist.units = "km") {
     # First rectangle
-    bottomRight <- maptools::gcDestination(
+    bottomRight <- gcDestination(
       lon = lon,
       lat = lat,
       bearing = 90,
@@ -567,7 +564,7 @@ scaleBar <- function(lon,
       model = "WGS84"
     )
 
-    topLeft <- maptools::gcDestination(
+    topLeft <- gcDestination(
       lon = lon,
       lat = lat,
       bearing = 0,
@@ -582,7 +579,7 @@ scaleBar <- function(lon,
     rectangle <- data.frame(rectangle, stringsAsFactors = FALSE)
 
     # Second rectangle t right of the first rectangle
-    bottomRight2 <- maptools::gcDestination(
+    bottomRight2 <- gcDestination(
       lon = lon,
       lat = lat,
       bearing = 90,
@@ -603,7 +600,7 @@ scaleBar <- function(lon,
     rectangle2 <- data.frame(rectangle2, stringsAsFactors = FALSE)
 
     # Now let's deal with the text
-    onTop <- maptools::gcDestination(
+    onTop <- gcDestination(
       lon = lon,
       lat = lat,
       bearing = 0,
@@ -630,7 +627,7 @@ scaleBar <- function(lon,
   res <- c()
   if (box) {
     # Add a background box for better visualization on top of a base map
-    topLeft <- maptools::gcDestination(
+    topLeft <- gcDestination(
       lon = lon,
       lat = lat,
       bearing = 0,
@@ -638,7 +635,7 @@ scaleBar <- function(lon,
       dist.units = dist.unit,
       model = "WGS84"
     )
-    bottomRight <- maptools::gcDestination(
+    bottomRight <- gcDestination(
       lon = lon,
       lat = lat,
       bearing = 90,
@@ -647,7 +644,7 @@ scaleBar <- function(lon,
       model = "WGS84"
     )
 
-    boxTopLeft <- maptools::gcDestination(
+    boxTopLeft <- gcDestination(
       lon = topLeft[1, "long"],
       lat = topLeft[1, "lat"],
       bearing = 315,
@@ -655,7 +652,7 @@ scaleBar <- function(lon,
       dist.units = dist.unit,
       model = "WGS84"
     )
-    boxTopRight <- maptools::gcDestination(
+    boxTopRight <- gcDestination(
       lon = bottomRight[1, "long"],
       lat = topLeft[1, "lat"],
       bearing = 45,
@@ -663,7 +660,7 @@ scaleBar <- function(lon,
       dist.units = dist.unit,
       model = "WGS84"
     )
-    boxBottomRight <- maptools::gcDestination(
+    boxBottomRight <- gcDestination(
       lon = bottomRight[1, "long"],
       lat = bottomRight[1, "lat"],
       bearing = 135,
@@ -671,7 +668,7 @@ scaleBar <- function(lon,
       dist.units = dist.unit,
       model = "WGS84"
     )
-    boxBottomLeft <- maptools::gcDestination(
+    boxBottomLeft <- gcDestination(
       lon = topLeft[1, "long"],
       lat = bottomRight[1, "lat"],
       bearing = 225,
@@ -739,8 +736,7 @@ scaleBar <- function(lon,
     x = laScaleBar$legend[, "long"],
     y = laScaleBar$legend[, "lat"],
     size = legend.size,
-    colour = legend.colour,
-    family = "Helvetica"
+    colour = legend.colour
   )
 
   res <- c(res, list(rectangle1, rectangle2, scaleBarLegend))
@@ -748,55 +744,179 @@ scaleBar <- function(lon,
   return(res)
 }
 
-add_afr_scale_bar <- function(plot, title) {
-  plot +
-    scaleBar(
-      lon = -24.5,
-      lat = -33,
-      distanceLon = 750,
-      distanceLat = 100,
-      distanceLegend = 200,
-      dist.unit = "km",
-      legend.size = 4
-    ) +
-    guides(fill = guide_colorbar(title = title, order = 1)) +
-    theme(
-      legend.text = element_text(size = 16, family = "Helvetica"),
-      legend.title = element_text(size = 18, family = "Helvetica"),
-      legend.background = element_rect(fill = "white", color = "white"),
-      legend.key.spacing.y = unit(0.25, "cm"),
-      legend.key.width = unit(0.75, "cm"),
-      legend.key.height = unit(0.5, "cm"),
-      # Increase vertical white space between keys
-      legend.key.spacing = unit(0.125, "cm"),
-      # General spacing for the entire legend,
-      legend.position = c(0.215, 0.35)
-    ) +
-    theme(text = element_text(family = "Helvetica"))
-}
 
-#' @noRd
-add_global_scale <- function(x) {
-  x + scaleBar(
-    lon = 80.5,
-    lat = -33,
-    distanceLon = 1000,
-    distanceLat = 100,
-    distanceLegend = 400,
-    dist.unit = "km",
-    legend.size = 3
-  )
-}
 
-#' @noRd
-add_africa_scale <- function(x) {
-  x + scaleBar(
-    lon = -22.5,
-    lat = -33,
-    distanceLon = 1000,
-    distanceLat = 100,
-    distanceLegend = 400,
-    dist.unit = "km",
-    legend.size = 4
+#' Find destination in geographical coordinates
+#'
+#' Find the destination in geographical coordinates at distance dist and for the given bearing from the starting point given by lon and lat.
+#'
+#' @param lon longitude (Eastings) in decimal degrees (either scalar or vector)
+#' @param lat latitude (Northings) in decimal degrees (either scalar or vector)
+#' @param bearing bearing from 0 to 360 degrees (either scalar or vector)
+#' @param dist distance travelled (scalar)
+#' @param dist.units units of distance "km" (kilometers), "nm" (nautical miles), "mi" (statute miles)
+#' @param model choice of ellipsoid model ("WGS84", "GRS80", "Airy", "International", "Clarke", "GRS67")
+#' @param Vincenty logical flag, default FALSE
+#'
+#' @details
+#' The bearing argument may be a vector when lon and lat are scalar, representing a single point.
+#'
+#' @return
+#' A matrix of decimal degree coordinates with Eastings in the first column and Northings in the second column.
+#'
+#' @author Sourced from maptools (archived) by Eric Archer and Roger Bivand
+#'
+#' @references
+#' \url{http://www.movable-type.co.uk/scripts/latlong.html#ellipsoid}
+#'
+#' The file earlier available at \url{http://williams.best.vwh.net/avform.htm}
+#'
+#' \url{http://www.movable-type.co.uk/scripts/latlong-vincenty.html#direct}
+#'
+#' Original reference \url{https://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf}:
+#'
+#' Vincenty, T. 1975. Direct and inverse solutions of geodesics on the ellipsoid with application of nested equations. Survey Review 22(176):88-93
+#'
+#' @seealso \code{\link{gzAzimuth}}
+#'
+#' @examples
+#' data(state)
+#' res <- gcDestination(state.center$x, state.center$y, 45, 250, "km")
+#' plot(state.center$x, state.center$y, asp = 1, pch = 16)
+#' arrows(state.center$x, state.center$y, res[, 1], res[, 2], length = 0.05)
+#'
+#' llist <- vector(mode = "list", length = length(state.center$x))
+#' for (i in seq(along = llist)) {
+#'   llist[[i]] <- gcDestination(
+#'     state.center$x[i],
+#'     state.center$y[i],
+#'     seq(0, 360, 5), 250, "km"
+#'   )
+#' }
+#' plot(state.center$x, state.center$y, asp = 1, pch = 3)
+#' nll <- lapply(llist, lines)
+#'
+gcDestination <- function(lon, lat, bearing, dist, dist.units = "km",
+                          model=NULL, Vincenty=FALSE) {
+  # lat, lon : lattitude and longitude in decimal degrees
+  # bearing : bearing from 0 to 360 degrees
+  # dist : distance travelled
+  # dist.units : units of distance "km" (kilometers), "nm" (nautical
+  # miles), "mi" (statute miles)
+  # model : choice of ellipsoid model ("WGS84", "GRS80", "Airy",
+  # "International", "Clarke", "GRS67")
+
+  if (!is.numeric(lon)) stop("lon not numeric")
+  if (!is.numeric(lat)) stop("lat not numeric")
+  if (!is.numeric(bearing)) stop("bearing not numeric")
+  if (!is.numeric(dist)) stop("dist not numeric")
+
+  if (length(lon) != length(lat)) stop("lon and lat differ in length")
+  if (length(bearing) > 1L && length(lon) > 1L) stop("length mismatch")
+  if (length(bearing) > 1L && length(dist) > 1L) stop("length mismatch")
+
+  as.radians <- function(degrees) degrees * pi / 180
+  as.degrees <- function(radians) radians * 180 / pi
+  as.bearing <- function(radians) (as.degrees(radians) + 360) %% 360
+
+  ellipsoid <- function(model = "WGS84") {
+    switch(model,
+           WGS84 = c(a = 6378137, b = 6356752.3142, f = 1 / 298.257223563),
+           GRS80 = c(a = 6378137, b = 6356752.3141, f = 1 / 298.257222101),
+           Airy = c(a = 6377563.396, b = 6356256.909, f = 1 / 299.3249646),
+           International = c(a = 6378888, b = 6356911.946, f = 1 / 297),
+           Clarke = c(a = 6378249.145, b = 6356514.86955, f = 1 / 293.465),
+           GRS67 = c(a = 6378160, b = 6356774.719, f = 1 / 298.25),
+           c(a = NA, b = NA, f = NA)
+    )}
+
+  dist <- switch(dist.units,
+                 km = dist,
+                 nm = dist * 1.852,
+                 mi = dist * 1.609344
   )
+  lat <- as.radians(lat)
+  lon <- as.radians(lon)
+  bearing <- as.radians(bearing)
+
+  if (is.null(model)) {
+    # Code adapted from JavaScript by Chris Veness
+    # (scripts@movable-type.co.uk) at
+    # http://www.movable-type.co.uk/scripts/latlong.html#ellipsoid
+    #   originally from Ed Williams' Aviation Formulary,
+    # http://williams.best.vwh.net/avform.htm
+    radius <- 6371
+    psi <- dist / radius
+    lat2 <- asin(sin(lat) * cos(psi) +  cos(lat) * sin(psi) * cos(bearing))
+    lon2 <- lon + atan2(sin(bearing) * sin(psi) * cos(lat), cos(psi) -
+                          sin(lat) * sin(lat2))
+    if (any(is.nan(lat2)) || any(is.nan(lon2))) warning("Out of range values")
+    return(cbind(long=as.degrees(lon2), lat=as.degrees(lat2)))
+  }
+
+  ellips <- ellipsoid(model)
+  if (is.na(ellips["a"])) stop("no such ellipsoid model")
+  if (Vincenty) {
+    # Code adapted from JavaScript by Chris Veness
+    # (scripts@movable-type.co.uk) at
+    # http://www.movable-type.co.uk/scripts/latlong-vincenty-direct.html
+    # Original reference (http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf):
+    #   Vincenty, T. 1975.  Direct and inverse solutions of geodesics on
+    # the ellipsoid with application of nested equations.
+    #      Survey Review 22(176):88-93
+    dist <- dist * 1000
+    sin.alpha1 <- sin(bearing)
+    cos.alpha1 <- cos(bearing)
+    tan.u1 <- (1 - ellips["f"]) * tan(lat)
+    cos.u1 <- 1 / sqrt(1 + (tan.u1 ^ 2))
+    sin.u1 <- tan.u1 * cos.u1
+    sigma1 <- atan2(tan.u1, cos.alpha1)
+    sin.alpha <- cos.u1 * sin.alpha1
+    cos.sq.alpha <- 1 - (sin.alpha ^ 2)
+    u.sq <- cos.sq.alpha * ((ellips["a"] ^ 2) - (ellips["b"] ^ 2)) /
+      (ellips["b"] ^ 2)
+    cap.A <- 1 + u.sq / 16384 * (4096 + u.sq * (-768 + u.sq * (320 -
+                                                                 175 * u.sq)))
+    cap.B <- u.sq / 1024 * (256 + u.sq * (-128 + u.sq * (74 - 47 * u.sq)))
+
+    sigma <- dist / (ellips["b"] * cap.A)
+    sigma.p <- 2 * pi
+    cos.2.sigma.m <- cos(2 * sigma1 + sigma)
+    while(any(abs(sigma - sigma.p) > 1e-12)) {
+      cos.2.sigma.m <- cos(2 * sigma1 + sigma)
+      sin.sigma <- sin(sigma)
+      cos.sigma <- cos(sigma)
+      delta.sigma <- cap.B * sin.sigma * (cos.2.sigma.m + cap.B / 4 *
+                                            (cos.sigma *
+                                               (-1 + 2 * cos.2.sigma.m ^ 2) - cap.B / 6 * cos.2.sigma.m *
+                                               (-3 + 4 * sin.sigma ^ 2) * (-3 + 4 * cos.2.sigma.m ^ 2)))
+      sigma.p <- sigma
+      sigma <- dist / (ellips["a"] * cap.A) + delta.sigma
+    }
+    tmp <- sin.u1 * sin.sigma - cos.u1 * cos.sigma * cos.alpha1
+    lat2 <- atan2(sin.u1 * cos.sigma + cos.u1 * sin.sigma * cos.alpha1,
+                  (1 - ellips["f"]) * sqrt(sin.alpha ^ 2 + tmp ^ 2))
+    lambda <- atan2(sin.sigma * sin.alpha1, cos.u1 * cos.sigma - sin.u1 *
+                      sin.sigma * cos.alpha1)
+    cap.C <- ellips["f"] / 16 * cos.sq.alpha * (4 + ellips["f"] *
+                                                  (ellips["f"] - 3 * cos.sq.alpha))
+    cap.L <- lambda - (1 - cap.C) * ellips["f"] * sin.alpha *
+      (sigma + cap.C * sin.sigma * (cos.2.sigma.m + cap.C * cos.sigma *
+                                      (-1 + 2 * cos.2.sigma.m ^ 2)))
+    lat2 <- as.degrees(lat2)
+    lon2 <- as.degrees(lon + cap.L)
+  } else {
+    # Code adapted from JavaScript by Larry Bogan (larry@go.ednet.ns.ca)
+    # at http://www.go.ednet.ns.ca/~larry/bsc/jslatlng.html
+    e <- 0.08181922
+    radius <- (ellips["a"] / 1000) * (1 - e^2) / ((1 - e^2 *
+                                                     sin(lat)^2)^1.5)
+    psi <- dist / radius
+    phi <- pi / 2 - lat
+    arc.cos <- cos(psi) * cos(phi) + sin(psi) * sin(phi) * cos(bearing)
+    lat2 <- as.degrees((pi / 2) - acos(arc.cos))
+    arc.sin <- sin(bearing) * sin(psi) / sin(phi)
+    lon2 <- as.degrees(lon + asin(arc.sin))
+  }
+  return(cbind(long=lon2, lat=lat2))
 }

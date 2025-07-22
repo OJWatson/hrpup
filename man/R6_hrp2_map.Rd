@@ -115,6 +115,8 @@ All scenario parameters must be one of "central", "worst", "best"
 \item{\code{scale_bar}}{Position. Default = NULL, which is no scale bar}
 
 \item{\code{risk}}{What type of risk score to plot, either "innate" (default) or "prospective"}
+
+\item{\code{prev_plot}}{Boolean for whether to overlay prevalence classification (default = FALSE)}
 }
 \if{html}{\out{</div>}}
 }
@@ -168,7 +170,7 @@ Set disputed areas}
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lakes}}{Map disputed_areas objects
+\item{\code{disputed_areas}}{Map disputed_areas objects
 Set disputed_borders}
 }
 \if{html}{\out{</div>}}
@@ -219,10 +221,7 @@ Set map data}
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{scenarios}}{Scenario data frame that matches map_data
-Add a Custom Position Scale Bar to ggplot
-
-This function enables drawing a scale bar on a \code{ggplot} object and optionally adding an orientation arrow.}
+\item{\code{scenarios}}{Scenario data frame that matches map_data}
 }
 \if{html}{\out{</div>}}
 }

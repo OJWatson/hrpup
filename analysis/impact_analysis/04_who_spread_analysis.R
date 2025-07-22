@@ -10,6 +10,7 @@ library(sf)
 library(wpp2017)
 library(torch)
 library(luz)
+library(quadprog)
 data("UNlocations")
 sf::sf_use_s2(FALSE)
 
@@ -33,7 +34,8 @@ sf::sf_use_s2(FALSE)
 predict_from_real_data <- function(trained_model, real_data,
                                    freq_l = list("freq_lci" = "lci",
                                                  "freq_med" = "med",
-                                                 "freq_uci" = "uci")) {
+                                                 "freq_uci" = "uci"),
+                                   old = FALSE) {
 
   # Pull normalisation parameters
   norm_ranges <- trained_model$extra$norm_ranges
@@ -41,8 +43,19 @@ predict_from_real_data <- function(trained_model, real_data,
   input_cols <- trained_model$extra$input_cols
   output_cols <- trained_model$extra$output_cols
 
+  is_monotonic_inc <- function(x) {
+    all(diff(x) > 0)
+  }
+  is_monotonic_dec <- function(x) {
+    all(diff(x) < 0)
+  }
+
   # Function to make predictions for one freq variant
   predict_one_freq <- function(freq_vector, suffix) {
+
+    # which s range are we using
+    s_var <- c("smin", "s", "smax")[match(suffix, c("lci", "med", "uci"))]
+    s <- real_data[[s_var]][1]
 
     input_data <- real_data %>%
       dplyr::mutate(freq = freq_vector) %>%
@@ -71,6 +84,56 @@ predict_from_real_data <- function(trained_model, real_data,
     preds <- trained_model$extra$renormalisation_fn(
       preds, norm_ranges[colnames(preds)]
     )
+
+    if(!old){
+      # no change in freq
+      if (all(freq_vector == 0)) {
+        new_preds <- preds %>% mutate(across(everything(), mean))
+        # no change in freq
+      } else if (all(diff(freq_vector)==0)) {
+        new_preds <- preds %>% mutate(across(everything(), mean))
+        # monotonic decrease
+      } else if (s <= 0 || is_monotonic_dec(freq_vector)) {
+        new_preds <- preds %>% mutate(across(
+          .cols = everything(),
+          ~ fit_neg_guided_spline(.x, freq_vector)
+        ))
+        # monotonic increase small
+      } else if (s < 0.1 && s >= 0 && is_monotonic_inc(freq_vector)) {
+        new_preds <- preds %>% mutate(across(
+          .cols = everything(),
+          ~ fit_pos_guided_spline(.x, freq_vector)
+        ))
+        # monotonic increase large so just fit the first 2 years
+      } else if (s >= 0.1 && is_monotonic_inc(freq_vector)) {
+        new_preds <- preds %>% mutate(across(everything(), ~ {
+          df <- data.frame(x = seq_along(.x), y = .x)
+          my <- max(df$y)
+          df$y <- df$y/my
+          fit <- scam(y ~ s(x, bs = "mpi"), data = df)
+          newy <- predict(fit, newdata = df)*my
+          oldy <- .x
+          oldy[1:24] <- (newy[1:24]/max(newy[1:24]))*oldy[24]
+          oldy
+        }))
+        # case where it is always decreasing  but not monotonic due to importation
+        # } else if (s < 0 && (max(freq_vector)<0.2)) {
+        #   new_preds <- preds %>% mutate(across(
+        #     .cols = everything(),
+        #     ~ fit_neg_guided_spline(.x, freq_vector, flexibility = 0.9)
+        #   ))
+        # } else if (s < 0.1 && s >= 0 && max(freq_vector) < 0.2) {
+        #   new_preds <- preds %>% mutate(across(
+        #     .cols = everything(),
+        #     ~ fit_guided_spline(.x, freq_vector, flexibility = 0.9)
+        #   ))
+      } else if (s >= 0) {
+        new_preds <- preds %>% apply_monotonic_spline(freq_vector, s)
+      } else {
+        stop("uncaught")
+      }
+      preds <- new_preds
+    }
     colnames(preds) <- paste0(colnames(preds), "_", suffix)
 
     preds
@@ -205,7 +268,7 @@ spread_model <- R6_hrp2_spread$new(afr_map, mod_obj, adj_mat = adj_mat)
 spread_model$set_seeds(setNames(seeds_adm1$prev, seeds_adm1$id_1))
 
 # function to run uncertainty ranges
-run_lci_med_uci_sim <- function(spread_model, md, delay = 0, RDT_switch = FALSE, t_break = 0.1, t_end = 20.074, f_trig = 0.05, emulator = NULL) {
+run_lci_med_uci_sim <- function(spread_model, md, delay = 0, RDT_switch = FALSE, t_break = 0.1, t_end = 20.074, f_trig = 0.05, emulator = NULL, interp = TRUE) {
 
   # bring together with threshold_switch info
   switch_list <- list("iso_switch" = switch_info,
@@ -252,8 +315,8 @@ run_lci_med_uci_sim <- function(spread_model, md, delay = 0, RDT_switch = FALSE,
     full <- left_join(out, md %>% select(-t), by = "id_1") %>%
       split(.$id_1) %>% lapply(head, emulator$extra$data$data_length)
 
-    preds <- lapply(full, function(x){
-      preds <- predict_from_real_data(emulator, x)
+    preds <- map(full, function(x){
+      preds <- predict_from_real_data(emulator, x, old = !interp)
       preds <- cbind(x %>% select(names(out)), preds)
     })
 
@@ -267,15 +330,15 @@ run_lci_med_uci_sim <- function(spread_model, md, delay = 0, RDT_switch = FALSE,
 
 # our delays to explore
 delays <- c(0, 1, 2, 3, 4, 5)
-f_trigs <- c(0.01, 0.03, 0.05)
+f_trigs <- c(0.05)
 param_grid <- expand.grid("delay" = delays, "f_trig" = f_trigs)
 
 # emulator
 # emulator <- NULL # dont use emulator
 # t_break <- 0.1
 emulator <- trained_model
-t_break <- emulator$extra$data$t_break
-t_end <- emulator$extra$data$t_end
+t_break <- round(emulator$extra$data$t_break, 4)
+t_end <- (emulator$extra$data$t_end + t_break)
 
 # Central
 central_row <- which(apply(scenario_maps$scenarios, 1, function(x){all(x == "central")}))
@@ -316,11 +379,14 @@ out_worst[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[wors
 # Here to make it comparable, let's assume that DJI, ERI and ETH all are at 100% non-hrp2 too
 comp_md_func <- function(md) {
   md %>% filter(id_1 %in% afr_map$id_1) %>%
+    mutate(microscopy.use_old = microscopy.use) %>%
     mutate(microscopy.use = replace(microscopy.use, iso3c %in% c("DJI", "ERI", "ETH"), 0.99)) %>%
     mod_obj$predict_dat(.) %>%
     mutate(s = if_else(iso3c %in% c("DJI", "ERI", "ETH"), pmin(s, 0), s)) %>%
     mutate(smin = if_else(iso3c %in% c("DJI", "ERI", "ETH"), pmin(smin, 0), smin)) %>%
-    mutate(smax = if_else(iso3c %in% c("DJI", "ERI", "ETH"), pmin(smax, 0), smax))
+    mutate(smax = if_else(iso3c %in% c("DJI", "ERI", "ETH"), pmin(smax, 0), smax)) %>%
+    mutate(microscopy.use = microscopy.use_old) %>%
+    select(-microscopy.use_old)
 }
 
 # Central
@@ -349,7 +415,7 @@ out_best <- do.call(rbind, out_best)
 full_df <- do.call(rbind, list(out_central, out_worst, out_best, out_central_cf, out_worst_cf, out_best_cf))
 
 # loop over each variable group and correctly order low, med, high etc
-for (var in c("freq", trained_model$extra$output_cols)[6:9]) {
+for (var in c("freq", trained_model$extra$output_cols)) {
   message(var)
   lci_col <- paste0(var, "_lci")
   med_col <- paste0(var, "_med")
@@ -372,7 +438,7 @@ full_df %>%
   left_join(afr_map %>% sf::st_drop_geometry()) %>%
   filter(delay <= 0) %>%
   group_by(year, iso, type, scenario) %>%
-  summarise(freq = mean(freq)) %>%
+  summarise(freq = mean(freq_med)) %>%
   filter(year < as.Date("2064-04-01")) %>%
   ggplot(aes(year, freq, color = scenario, linetype = type)) +
   geom_line() +
@@ -406,19 +472,37 @@ full_df %>% filter(id_1 == 10823084) %>% pivot_longer(starts_with(c("freq", trai
   geom_line() +
   facet_wrap(type~name, scales = "free", ncol = 9)
 
+saveRDS(full_df, "analysis/impact_analysis/data-derived/chai_sims.rds")
 
-saveRDS(full_df, "analysis/impact_analysis/data-derived/who_sims.rds")
-full_df <- readRDS("analysis/impact_analysis/data-derived/who_sims.rds")
+# -------------------------------------------------------------------------#
+# 6. Save for partners -----------------------
+# -------------------------------------------------------------------------#
 
+full_df <- readRDS("analysis/impact_analysis/data-derived/chai_sims.rds")
 dir.create("analysis/impact_analysis/data-out")
+closest_to_integer <- function(vec, integers = 0:20) {
+  sapply(integers, function(i) vec[which.min(abs(vec - i))])
+}
+
 annual <- full_df %>%
+  mutate(t = replace(t, t>20 & t < max(.data$t), max(.data$t))) %>%
+  filter(t %in% closest_to_integer(unique(t))) %>%
   mutate(t = round(t, 1)) %>%
-  filter(t %in% seq(0, 20, 1)) %>%
   filter(type %in% c("5% Threshold Strategy", "No RDT Switching"))
 
 annual_clean <- annual %>%
-  mutate(scenario = recode(scenario, "Worst" = "pessimistic", "Best" = "optimistic", "Central" = "central")) %>%
-  mutate(across(contains("_"), function(x){signif(x, 6)}))
+  mutate(across(matches("_[a-z]"), function(x){signif(x, 4)}))
+
+annual_clean <- annual_clean %>%
+  group_by(scenario, id_1) %>%
+  arrange(t) %>%
+  mutate(across(matches("_[a-z]"), ~ .x - (.x[t==0] - mean(.x[t ==0])))) %>%
+  arrange(iso, id_1, delay, scenario, type, t) %>%
+  ungroup()
+
+annual_clean <- annual_clean %>% left_join(afr_map %>% sf::st_drop_geometry() %>% select(iso, id_1, name_1)) %>%
+  relocate(name_1, .before = 1) %>%
+  relocate(iso, .before = 1)
 
 for(i in 0:5) {
 write.csv(annual_clean %>% filter(delay %in% c(i, -1)),

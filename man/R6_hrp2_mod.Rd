@@ -16,6 +16,7 @@ Model for predicting the selective coefficient for hrp2 deletions
 \itemize{
 \item \href{#method-hrp2_mod-new}{\code{R6_hrp2_mod$new()}}
 \item \href{#method-hrp2_mod-predict}{\code{R6_hrp2_mod$predict()}}
+\item \href{#method-hrp2_mod-predict_dat}{\code{R6_hrp2_mod$predict_dat()}}
 \item \href{#method-hrp2_mod-predict_s}{\code{R6_hrp2_mod$predict_s()}}
 \item \href{#method-hrp2_mod-predict_err}{\code{R6_hrp2_mod$predict_err()}}
 \item \href{#method-hrp2_mod-predict_t}{\code{R6_hrp2_mod$predict_t()}}
@@ -100,6 +101,27 @@ Predict median and 95\% selection coefficients and threshold times
 \item{\code{fitness}}{Relative fitness of hrp2 deleted parasite}
 
 \item{\code{rdt.det}}{Chance of hrp2 deleted parasite yielding positive test}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Data.frame of selection coefficients and times from 1\% to 5\%
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-hrp2_mod-predict_dat"></a>}}
+\if{latex}{\out{\hypertarget{method-hrp2_mod-predict_dat}{}}}
+\subsection{Method \code{predict_dat()}}{
+Predict median and 95\% selection coefficients and threshold times given data frame
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{R6_hrp2_mod$predict_dat(dat)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dat}}{data frame with "Micro.2.10", "ft", "microscopy.use",
+"rdt.nonadherence", "fitness", "rdt.det"}
 }
 \if{html}{\out{</div>}}
 }

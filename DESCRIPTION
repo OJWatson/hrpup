@@ -1,6 +1,6 @@
 Package: hrpup
 Title: HRP23 update to risk mapping
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: 
     c(person(given = "OJ",
              family = "Watson",
@@ -19,6 +19,8 @@ Imports:
     ggpattern,
     ggplot2,
     here,
+    dplyr, 
+    ggspatial,
     magrittr,
     R6,
     purrr,
@@ -26,8 +28,8 @@ Imports:
     hrp2malaRia,
     wpp2017,
     maps,
-    maptools,
-    grid
+    grid,
+    mgcv
 Remotes:
     OJWatson/hrp2malaRia
 Suggests:

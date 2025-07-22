@@ -1158,7 +1158,7 @@ plot_prediction(trained_model, loaders$test_dl, testna, index = srang_ind[3])
 plot_prediction(trained_model, loaders$test_dl, testna, index = srang_ind[4])
 plot_prediction(trained_model, loaders$test_dl, testna, index = srang_ind[5])
 
-pdf(file = "analysis/impact_analysis/emulator_fits.pdf", width = 12, height = 8)
+pdf(file = "analysis/impact_analysis/plots_emulator/emulator_fits.pdf", width = 12, height = 8)
 for(i in find_equally_spaced_positions(s, 100)){
   print(plot_prediction(trained_model, loaders$test_dl, testna, index = i))
 }
@@ -1180,4 +1180,4 @@ gg <- mets %>%
   ggplot2::facet_wrap(name ~ metric, scales = "free", ncol = 6) +
   ggplot2::theme_minimal()
 
-save_figs("emulator_metrics_EIR_ft", gg, width = 10, height = 14, plot_dir = "analysis/impact_analysis/plots_who")
+save_figs("emulator_metrics_EIR_ft", gg, width = 10, height = 14, plot_dir = "analysis/impact_analysis/plots_emulator")

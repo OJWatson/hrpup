@@ -11,7 +11,8 @@ save_figs(
   height = 6,
   plot_dir = file.path(here::here(), "analysis/plots"),
   pdf_plot = TRUE,
-  font_family = "Helvetica"
+  font_family = "Helvetica",
+  dpi = 600
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ save_figs(
 \item{pdf_plot}{Logical for plotting pdf too. Default = TRUE}
 
 \item{font_family}{If specified, sets all font family. Default = NULL}
+
+\item{dpi}{DPI to use for raster graphics. Default = 600}
 }
 \description{
 Save Figures
