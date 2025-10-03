@@ -16,7 +16,7 @@ All `.csv` files in this directory share a common structure with columns detaile
 - **`t`**: Simulated time in years from from t = 0 (2023) to t = 20 years. 
 - **`delay`**: Number of years delay between reaching the 5% threshold and switching to combined LDH/HRP2-based RDTs.
 - **`scenario`**: Different scenarios of the speed of HRP2 selection due to uncertainty in parameter estimates of risk factors of selection (e.g. malaria prevalence, treatment seeking rates etc).
-- **`type`**: Type of policy/intervention scenario (e.g., `"5% Threshold Strategy"` or `"No RDT Switching"`).
+- **`type`**: Type of policy/intervention scenario: `"5% Threshold Strategy"` or `"No RDT Switching"` or `"Switch Now"`. The `"5% Threshold Strategy"` models admin regions swapping to alternative RDTs when the 5% false-negative RDTs threshold is crossed with set delays. The `"No RDT Switching"` models a counterfactual in which countries continue to use current RDTs. The `"Switch Now"` models a scenario in which everywhere switched at t = 0.  
 
 ### Malaria Burden Metrics
 
@@ -38,3 +38,4 @@ Each malaria burden metric includes lower (lci), median (med), and upper (uci) e
 
 - In all the outputs above, the `scenario` identifier covers three scenarios. The **central** times provide the estimated times based on the central parameter estimate for each of the parameters that we explored and that are known to impact the speed of selection of ArtR (malaria prevalence, treatment seeking related parameters, diagnostic usage and adherence, cross-reactivity of HRP3, fitness costs). The **best** times assume the upper or lower estimate value for each parameter (depending on the direction of its effect on selection) such that the selection of ArtR will increase at its slowest. Conversely, the **worst** times assume the upper or lower value for each parameter (depending on the direction of its effect on selection) such that the selection of ArtR will increase at its fastest.
 - All numeric outputs have been rounded to 6 significant figures to reduce memory of the files exported.
+- Each output file has the `"No RDT Switching"` scenario (which has `delay` labelled as -1 and identified by `type`), the `"Switch Now"` scenario (`delay` labelled as 0 and identified by `type`) and the delay scenario in the `"5% Threshold Strategy"`.
