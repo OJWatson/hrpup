@@ -212,7 +212,7 @@ fit_pos_guided_spline <- function(vec, ref_shape){
   # correct for any freq 0 locations
   if(any(ref_shape == 0)) {
 
-    fitted_curve[which(ref_shape == 0)] <- tail(preds_smoothed[which(ref_shape == 0)],1)
+    fitted_curve[which(ref_shape == 0)] <- tail(fitted_curve[which(ref_shape == 0)],1)
 
     # and smooth the spline joint
     index <- seq_along(fitted_curve)

@@ -46,6 +46,18 @@ predict_from_real_data <- function(trained_model, real_data,
   is_monotonic_inc <- function(x) {
     all(diff(x) > 0)
   }
+  is_monotonic_inc_then_flat <- function(x) {
+    d <- diff(x)
+    if(all(d) >= 0) {
+      if(all(vapply(which(d==0), function(x){all(x > which(d > 0))}, logical(1)))) {
+        return(TRUE)
+      } else {
+        return(FALSE)
+      }
+    } else {
+      return(FALSE)
+    }
+  }
   is_monotonic_dec <- function(x) {
     all(diff(x) < 0)
   }
@@ -105,7 +117,7 @@ predict_from_real_data <- function(trained_model, real_data,
           ~ fit_pos_guided_spline(.x, freq_vector)
         ))
         # monotonic increase large so just fit the first 2 years
-      } else if (s >= 0.1 && is_monotonic_inc(freq_vector)) {
+      } else if (s >= 0.1 && (is_monotonic_inc(freq_vector) || is_monotonic_inc_then_flat(freq_vector))) {
         new_preds <- preds %>% mutate(across(everything(), ~ {
           df <- data.frame(x = seq_along(.x), y = .x)
           my <- max(df$y)
@@ -181,6 +193,16 @@ mean_afr_use <- non_hrp2_use %>% filter(iso3c %in% afr_map$iso) %>% pull(hrp2) %
 # Get the scenario maps
 scenario_maps <- readRDS("analysis/data_derived/scenario_maps_full.rds")
 
+# Just noticed mal prev for DJI is wrong way round...
+covars <- readRDS("analysis/data_derived/global_covariate_ranges.rds")
+for(i in seq_along(scenario_maps$map_data)) {
+
+  scenario_maps$map_data[[i]]$Micro.2.10[scenario_maps$map_data[[i]]$iso3c == "DJI"] <-
+    case_when(scenario_maps$scenarios$Micro.2.10[i] == "worst" ~ covars$Micro.2.10_mean[covars$iso3c == "DJI"]*0.99,
+              scenario_maps$scenarios$Micro.2.10[i] == "best" ~ covars$Micro.2.10_mean[covars$iso3c == "DJI"]*1.01,
+              scenario_maps$scenarios$Micro.2.10[i] == "central" ~ covars$Micro.2.10_mean[covars$iso3c == "DJI"])
+}
+
 # update the map data with our non_hrp2_data
 for(i in seq_along(scenario_maps$map_data)) {
   md <- scenario_maps$map_data[[i]]
@@ -251,7 +273,8 @@ for (key in c("DJI", "ERI", "ETH")) {
 }
 
 # others
-# set to some abritraty date in the future
+# set to some abritraty date in the future so the only switch rules being used are those
+# based on thresholds
 switch_time <- as.integer((as.Date("2927-01-01") - as.Date("2024-01-01")))/365
 for (key in setdiff(switch_iso3s, c("DJI", "ERI", "ETH"))) {
   switch_info[[key]] <- data.frame(t = switch_time + 0:5, microscopy.use = seq(0, 0.99, length.out = 7)[-1])
@@ -404,6 +427,32 @@ out_worst_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map
                                     t_break = t_break, emulator = emulator) %>%
   mutate(scenario = "Worst", type = "No RDT Switching", .after = "delay")
 
+# --------------------------------------------------------------------------#
+# 5. Run our simulation switching now -----------------------
+# --------------------------------------------------------------------------#
+
+# Central
+central_row <- which(apply(scenario_maps$scenarios, 1, function(x){all(x == "central")}))
+out_central_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[central_row]], RDT_switch = TRUE,
+                                          delay = 0, t_break = t_break, emulator = emulator,
+                                          f_trig = -1) %>%
+    mutate(scenario = "Central", type = "Switch Now", .after = "delay")
+
+# Best
+best_row <- which(apply(scenario_maps$scenarios, 1, function(row) all(row == "best")))
+out_best_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[best_row]], RDT_switch = TRUE,
+                                       delay = 0, t_break = t_break, emulator = emulator,
+                                       f_trig = -1) %>%
+  mutate(scenario = "Best", type = "Switch Now", .after = "delay")
+
+# Worst
+worst_row <- which(apply(scenario_maps$scenarios, 1, function(row) all(row == "worst")))
+out_worst_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[worst_row]], RDT_switch = TRUE,
+                                    delay = 0, t_break = t_break, emulator = emulator,
+                                    f_trig = -1) %>%
+  mutate(scenario = "Worst", type = "Switch Now", .after = "delay")
+
+
 # -------------------------------------------------------------------------#
 # 5. Combine and create plots -----------------------
 # -------------------------------------------------------------------------#
@@ -412,7 +461,9 @@ out_worst_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map
 out_central <- do.call(rbind, out_central)
 out_worst <- do.call(rbind, out_worst)
 out_best <- do.call(rbind, out_best)
-full_df <- do.call(rbind, list(out_central, out_worst, out_best, out_central_cf, out_worst_cf, out_best_cf))
+full_df <- do.call(rbind, list(out_central, out_worst, out_best,
+                               out_central_cf, out_worst_cf, out_best_cf,
+                               out_central_now, out_worst_now, out_best_now))
 
 # loop over each variable group and correctly order low, med, high etc
 for (var in c("freq", trained_model$extra$output_cols)) {
@@ -497,15 +548,17 @@ annual_clean <- annual_clean %>%
   group_by(scenario, id_1) %>%
   arrange(t) %>%
   mutate(across(matches("_[a-z]"), ~ .x - (.x[t==0] - mean(.x[t ==0])))) %>%
-  arrange(iso, id_1, delay, scenario, type, t) %>%
+  arrange(id_1, delay, scenario, type, t) %>%
   ungroup()
 
 annual_clean <- annual_clean %>% left_join(afr_map %>% sf::st_drop_geometry() %>% select(iso, id_1, name_1)) %>%
   relocate(name_1, .before = 1) %>%
-  relocate(iso, .before = 1)
+  relocate(iso, .before = 1) %>%
+  arrange(iso, id_1, delay, scenario, type, t) %>%
+  ungroup
 
 for(i in 0:5) {
-write.csv(annual_clean %>% filter(delay %in% c(i, -1)),
+write.csv(annual_clean %>% filter(((delay %in% c(i, -1)) & type != "Switch Now") | type == "Switch Now"),
           paste0("analysis/impact_analysis/data-out/longitudinal_comparison_delay_", i, ".csv"),
           row.names = FALSE)
 }

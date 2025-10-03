@@ -389,6 +389,32 @@ R6_hrp2_spread <- R6::R6Class(
       # prediction args
       mod_vars <- names(formals(private$hrp2_mod$predict))
 
+      # is threshold less than 0, i.e. switch now
+      if(slts$f_trig[1] <= 0) {
+
+        # update the microscopy use
+        datcp$microscopy.use <- datcp$microscopy.use + ((1-datcp$microscopy.use)*slts$microscopy.use[1])
+        if(datcp$microscopy.use >= 0.99) {
+          datcp$microscopy.use <- 0.99
+        }
+        ret <- do.call(private$hrp2_mod$predict, as.list(datcp[,mod_vars]))
+        s <- switch(unc, med = ret$s, lci = ret$smin, uci = ret$smax)
+
+        # if it ever goes above the max then just sim this
+        if(datcp$microscopy.use >= 0.99) {
+          s <- min(s, 0)
+          freq <- private$hrp2_mod$predict_f2(
+            dat = list("s" = s),
+            f1 = f1,
+            t = tf
+          )
+          return(freq)
+        }
+
+
+      }
+
+
       # have we already past a switch point
       if(any(tf[1] >= slis$t)) {
         p1 <- max(which(tf[1] >= slis$t))
@@ -443,7 +469,7 @@ R6_hrp2_spread <- R6::R6Class(
 
           # find out what time the change in RDTs occurs
           tf_start <- (past+1)
-          new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[1] + 1))[1] # add one year for switch to occur
+          new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[1]))[1] # switch immediately
           new_sim_start_time <- tf[new_sim_start]
 
           # if this is ever the case it means that the switch happens just before the end of the sim so ignore
@@ -573,7 +599,7 @@ R6_hrp2_spread <- R6::R6Class(
 
               # update the next time
               if(i < length(slts$t_past)) {
-                new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[i+1] + 1))[1] # add one year for switch to occur
+                new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[i+1]))[1] # switch immediately
               }
             }
 
@@ -704,7 +730,7 @@ R6_hrp2_spread <- R6::R6Class(
 
           # find out what time the change in RDTs occurs
           tf_start <- (past+1)
-          new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[1] + 1))[1] # add one year for switch to occur
+          new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[1]))[1] # switch immediately
 
           for(i in seq_along(slts$t_past)) {
 
@@ -738,7 +764,7 @@ R6_hrp2_spread <- R6::R6Class(
 
             # update the next time
             if(i < length(slts$t_past)) {
-              new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[i+1] + 1))[1] # add one year for switch to occur
+              new_sim_start <- which(tf > (tf[tf_start] + slts$t_past[i+1]))[1] #switch immediately
             }
           }
 

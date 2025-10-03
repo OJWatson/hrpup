@@ -1,7 +1,8 @@
 ## Spread Modelling
 library(tidyverse)
 library(sf)
-
+library(wpp2017)
+data("UNlocations")
 # read in data
 full_df_raw <- readRDS("analysis/impact_analysis/data-derived/chai_sims.rds")
 # file.copy("/home/oj/GoogleDrive/AcademicWork/Imperial/git/arms/analysis/data-derived/spread_mal_inc.rds", "analysis/impact_analysis/data-raw/spread_mal_inc.rds")
@@ -564,14 +565,33 @@ selgg <- full_df %>% filter(id_1 == 10314353) %>% select(1:5, contains("med")) %
   facet_grid(name~type, scales = "free_y") + theme_bw() +
   ggtitle("Setting where selection is predicted")
 
-full_df %>% filter(id_1 == 10314353) %>% select(1:5, matches("freq_med|micro_2_10_med")) %>%
+
+ids <- unique(full_df$id_1)
+pdf("analysis/impact_analysis/testing_plots.pdf", width = 10, height = 8)
+for(i in seq_along(ids)) {
+message(i)
+  gg <- full_df %>% filter(id_1 == ids[i]) %>% select(1:5, matches("freq_med|micro_2_10_med")) %>%
   pivot_longer(contains("med")) %>%
   filter(scenario == "Central") %>%
   ggplot(aes(t, value, color = as.factor(delay))) +
   geom_line() +
   facet_grid(name~type, scales = "free_y") + theme_bw() +
-  ggtitle("Setting where selection is predicted")+
+  ggtitle(ids[i]) +
   geom_hline(yintercept = 0.05)
+
+  print(gg)
+}
+dev.off()
+
+# Issues:
+
+
+# weird one in freq falling before threshold - 604492677
+# when the motnonic spline function is working on the decrease if there is very little freq decrease
+# and near to fixation, then decrease in micro etc is not enough - 10313039
+# immediate switch threshold weird - 10313109
+# weird non monotnic post trigger - 10314195
+
 
 noselgg <- full_df %>% filter(id_1 == 10015081) %>% select(1:5, contains("med")) %>%
   pivot_longer(contains("med")) %>%

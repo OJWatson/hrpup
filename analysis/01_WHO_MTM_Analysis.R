@@ -79,6 +79,7 @@ gg1 <- ggplot(final, aes(x = coocc,y=as.factor(id), xmin = coocc_low, xmax = coo
   theme_bw() +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
   theme(axis.title.x = ggtext::element_markdown(size = 10),
+        axis.text.x = ggtext::element_markdown(size = 10),
         legend.title = ggtext::element_markdown(size = 10))
 gg1
 save_figs("hrp2_3_independence", gg1, width = 8, height = 6)
@@ -181,11 +182,11 @@ gg_3_prev
 
 figure1 <- cowplot::plot_grid(gg2,
                               cowplot::plot_grid(gg_23_coocc, gg_3_prev, ncol = 1, labels = c("B", "C"), align = "v"),
-                              labels = c("A", ""), rel_widths = c(0.55,0.45),
+                              labels = c("A", ""), rel_widths = c(0.45,0.55),
                               ncol = 2
 )
 figure1
-save_figs("hrp2_3_multi_independence_africa", figure1, width = 12, height = 8)
+save_figs("hrp2_3_multi_independence_africa_alt", figure1, width = 12, height = 8)
 
 # -----------------------------------------------------#
 # 4. Statistics on findings --------
@@ -324,7 +325,7 @@ save_figs("hrp2_3_multi_independence", figure1, width = 18, height = 14)
 # --------------------------------------------------- #
 # 6. 2 x 2 table for cooccurrence -------
 # --------------------------------------------------- #
-two_by_two <- final %>% #filter(continent == "Africa") %>%
+two_by_two <- final %>% filter(continent == "Africa") %>%
   ungroup() %>%
   na.omit %>%
   mutate(dd = HRP2_HRP3_DELETIONS_POS_N,
@@ -348,4 +349,5 @@ p_two_d <- (two_by_two$dd+two_by_two$dp)
 p_three_d <- (two_by_two$dd+two_by_two$dp)
 D <- two_by_two$dd - (p_two_d*p_three_d)
 D_prime <- D/min(c(p_two_d*(1-p_two_d),(p_three_d)*(1-p_three_d)))
+D_prime <- D/min(c(p_two_d*(1-p_three_d),(p_three_d)*(1-p_two_d)))
 R2 <- (D^2)/(p_two_d*(1-p_two_d)*(p_three_d)*(1-p_three_d))
