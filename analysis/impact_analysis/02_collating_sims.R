@@ -172,26 +172,27 @@ for(i in seq_along(grep("true", list.files(file.path(here::here(), "analysis/dat
       micro_2_10 = S.Micro.210,
       pcr = S.PCR.All,
       clinical_05 = S.Incidence.05,
-      clinical = S.Incidence
+      clinical = S.Incidence,
+      EIR = S.dEIR
     ) %>%
       mutate(across(starts_with("clinical"), function(x){x*365}))
 
     # pivot to wider
     res <- df_out %>%
       mutate(severe_05 = predict(
-        models$model_5_severe, df_out %>% select(clinical) %>% mutate(EIR = dat$pl[[ii]]$EIR*365, ft = dat$pl[[ii]]$ft)
+        models$model_5_severe, df_out %>% select(clinical_05) %>% mutate(EIR = EIR*365, ft = dat$pl[[ii]]$ft)
         )) %>%
       mutate(severe = predict(
-        models$model_100_severe, df_out %>% select(clinical) %>% mutate(EIR = dat$pl[[ii]]$EIR*365, ft = dat$pl[[ii]]$ft)
+        models$model_100_severe, df_out %>% select(clinical) %>% mutate(EIR = EIR*365, ft = dat$pl[[ii]]$ft)
       )) %>%
       mutate(mortality_05 = predict(
-        models$model_5_mortality, df_out %>% select(clinical) %>% mutate(EIR = dat$pl[[ii]]$EIR*365, ft = dat$pl[[ii]]$ft)
+        models$model_5_mortality, df_out %>% select(clinical_05) %>% mutate(EIR = EIR*365, ft = dat$pl[[ii]]$ft)
       )) %>%
       mutate(mortality_100 = predict(
-        models$model_100_mortality, df_out %>% select(clinical) %>% mutate(EIR = dat$pl[[ii]]$EIR*365, ft = dat$pl[[ii]]$ft)
+        models$model_100_mortality, df_out %>% select(clinical) %>% mutate(EIR = EIR*365, ft = dat$pl[[ii]]$ft)
       ))
 
-    return(res)
+    return(res %>% rename(dEIR = EIR))
 
   })
 

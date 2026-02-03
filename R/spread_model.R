@@ -402,7 +402,7 @@ R6_hrp2_spread <- R6::R6Class(
 
         # if it ever goes above the max then just sim this
         if(datcp$microscopy.use >= 0.99) {
-          s <- min(s, 0)
+          s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
           freq <- private$hrp2_mod$predict_f2(
             dat = list("s" = s),
             f1 = f1,
@@ -435,7 +435,7 @@ R6_hrp2_spread <- R6::R6Class(
         # if the listed microscopy use is greater than 0.99 this is equivalent to no RDT pressure so set to 0 at least
         # and then simulate this and return it as no slts will change this trajectory
         if(datcp$microscopy.use >= 0.99) {
-          s <- min(s, 0)
+          s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
           freq <- private$hrp2_mod$predict_f2(
             dat = list("s" = s),
             f1 = f1,
@@ -497,7 +497,7 @@ R6_hrp2_spread <- R6::R6Class(
 
                 # if it ever goes above the max then just sim this
                 if(datcp$microscopy.use >= 0.99) {
-                  s <- min(s, 0)
+                  s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
                   freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
                     dat = list("s" = s),
                     f1 = freq[new_sim_start:length(freq)][1],
@@ -540,7 +540,7 @@ R6_hrp2_spread <- R6::R6Class(
 
                 # if it ever goes above the max then just sim this
                 if(datcp$microscopy.use >= 0.99) {
-                  s <- min(s, 0)
+                  s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
                   freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
                     dat = list("s" = s),
                     f1 = freq[new_sim_start:length(freq)][1],
@@ -582,7 +582,7 @@ R6_hrp2_spread <- R6::R6Class(
 
               # if it ever goes above the max then just sim this
               if(datcp$microscopy.use >= 0.99) {
-                s <- min(s, 0)
+                s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
                 freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
                   dat = list("s" = s),
                   f1 = freq[new_sim_start:length(freq)][1],
@@ -626,7 +626,7 @@ R6_hrp2_spread <- R6::R6Class(
 
               # if it ever goes above the max then just sim this
               if(datcp$microscopy.use >= 0.99) {
-                s <- min(s, 0)
+                s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
                 freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
                   dat = list("s" = s),
                   f1 = freq[new_sim_start:length(freq)][1],
@@ -669,7 +669,7 @@ R6_hrp2_spread <- R6::R6Class(
 
               # if it ever goes above the max then just sim this
               if(datcp$microscopy.use >= 0.99) {
-                s <- min(s, 0)
+                s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
                 freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
                   dat = list("s" = s),
                   f1 = freq[new_sim_start:length(freq)][1],
@@ -706,7 +706,7 @@ R6_hrp2_spread <- R6::R6Class(
         # if the listed microscopy use is greater than 0.99 this is equivalent to no RDT pressure so set to 0 at least
         # and then simulate this and return it as no slts will change this trajectory
         if(datcp$microscopy.use >= 0.99) {
-          s <- min(s, 0)
+          s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
           freq <- private$hrp2_mod$predict_f2(
             dat = list("s" = s),
             f1 = f1,
@@ -747,7 +747,7 @@ R6_hrp2_spread <- R6::R6Class(
 
             # if it ever goes above the max then just sim this
             if(datcp$microscopy.use >= 0.99) {
-              s <- min(s, 0)
+              s <- min(s, as.numeric(predict(private$hrp2_mod$get_fitness_model(), data.frame("fitness" = datcp$fitness))))
               freq[new_sim_start:length(freq)] <- private$hrp2_mod$predict_f2(
                 dat = list("s" = s),
                 f1 = freq[new_sim_start:length(freq)][1],

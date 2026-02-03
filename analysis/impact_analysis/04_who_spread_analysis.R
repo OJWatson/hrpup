@@ -89,7 +89,9 @@ predict_from_real_data <- function(trained_model, real_data,
     preds <- as.data.frame(as.array(preds))
 
     # Drop warmup steps
+    if(warmup > 0){
     preds <- preds[-seq_len(warmup), ]
+    }
 
     # Name and denormalise
     colnames(preds) <- output_cols
@@ -178,7 +180,7 @@ admin1 <- readRDS(here::here("analysis/data_derived/admin1_sf.rds"))
 mod_obj <- readRDS("analysis/data_derived/ensemble_selection_model.rds")
 
 # Get the emulator model object
-trained_model <- luz::luz_load("analysis/impact_analysis/data-derived/emulator_final.rds")
+trained_model <- luz::luz_load("analysis/impact_analysis/data-derived/emulator_final_2501.rds")
 trained_model$model$to(device = torch_device("cuda"))
 
 # subset to Africa as that is where we will do the prospective mapping
@@ -363,6 +365,8 @@ emulator <- trained_model
 t_break <- round(emulator$extra$data$t_break, 4)
 t_end <- (emulator$extra$data$t_end + t_break)
 
+interp <- FALSE
+
 # Central
 central_row <- which(apply(scenario_maps$scenarios, 1, function(x){all(x == "central")}))
 out_central <- list()
@@ -370,7 +374,7 @@ for(d in seq_along(param_grid$delay)) {
   type <- paste0(scales::percent(param_grid$f_trig[d]), " Threshold Strategy")
 out_central[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[central_row]], RDT_switch = TRUE,
                                         delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
-                                        f_trig = param_grid$f_trig[d]) %>%
+                                        f_trig = param_grid$f_trig[d], interp = interp) %>%
   mutate(scenario = "Central", type = type, .after = "delay")
 }
 # Best
@@ -380,7 +384,7 @@ for(d in seq_along(param_grid$delay)) {
   type <- paste0(scales::percent(param_grid$f_trig[d]), " Threshold Strategy")
 out_best[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[best_row]], RDT_switch = TRUE,
                                      delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
-                                     f_trig = param_grid$f_trig[d]) %>%
+                                     f_trig = param_grid$f_trig[d], interp = interp) %>%
   mutate(scenario = "Best", type = type, .after = "delay")
 }
 
@@ -391,7 +395,7 @@ for(d in seq_along(param_grid$delay)) {
   type <- paste0(scales::percent(param_grid$f_trig[d]), " Threshold Strategy")
 out_worst[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[worst_row]], RDT_switch = TRUE,
                                       delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
-                                      f_trig = param_grid$f_trig[d]) %>%
+                                      f_trig = param_grid$f_trig[d], interp = interp) %>%
   mutate(scenario = "Worst", type = type, .after = "delay")
 }
 
@@ -414,17 +418,17 @@ comp_md_func <- function(md) {
 
 # Central
 out_central_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map_data[[central_row]]),
-                                      t_break = t_break, emulator = emulator) %>%
+                                      t_break = t_break, emulator = emulator, interp = interp) %>%
   mutate(scenario = "Central", type = "No RDT Switching", .after = "delay")
 
 # Best
 out_best_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map_data[[best_row]]),
-                                   t_break = t_break, emulator = emulator) %>%
+                                   t_break = t_break, emulator = emulator, interp = interp) %>%
   mutate(scenario = "Best", type = "No RDT Switching", .after = "delay")
 
 # Worst
 out_worst_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map_data[[worst_row]]),
-                                    t_break = t_break, emulator = emulator) %>%
+                                    t_break = t_break, emulator = emulator, interp = interp) %>%
   mutate(scenario = "Worst", type = "No RDT Switching", .after = "delay")
 
 # --------------------------------------------------------------------------#
@@ -435,21 +439,21 @@ out_worst_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map
 central_row <- which(apply(scenario_maps$scenarios, 1, function(x){all(x == "central")}))
 out_central_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[central_row]], RDT_switch = TRUE,
                                           delay = 0, t_break = t_break, emulator = emulator,
-                                          f_trig = -1) %>%
+                                          f_trig = -1, interp = interp) %>%
     mutate(scenario = "Central", type = "Switch Now", .after = "delay")
 
 # Best
 best_row <- which(apply(scenario_maps$scenarios, 1, function(row) all(row == "best")))
 out_best_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[best_row]], RDT_switch = TRUE,
                                        delay = 0, t_break = t_break, emulator = emulator,
-                                       f_trig = -1) %>%
+                                       f_trig = -1, interp = interp) %>%
   mutate(scenario = "Best", type = "Switch Now", .after = "delay")
 
 # Worst
 worst_row <- which(apply(scenario_maps$scenarios, 1, function(row) all(row == "worst")))
 out_worst_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[worst_row]], RDT_switch = TRUE,
                                     delay = 0, t_break = t_break, emulator = emulator,
-                                    f_trig = -1) %>%
+                                    f_trig = -1, interp = interp) %>%
   mutate(scenario = "Worst", type = "Switch Now", .after = "delay")
 
 
@@ -523,7 +527,8 @@ full_df %>% filter(id_1 == 10823084) %>% pivot_longer(starts_with(c("freq", trai
   geom_line() +
   facet_wrap(type~name, scales = "free", ncol = 9)
 
-saveRDS(full_df, "analysis/impact_analysis/data-derived/chai_sims.rds")
+saveRDS(full_df, "analysis/impact_analysis/data-derived/chai_sims_newest_2501.rds")
+saveRDS(full_df, "analysis/impact_analysis/data-derived/chai_sims_new_interp.rds")
 
 # -------------------------------------------------------------------------#
 # 6. Save for partners -----------------------
@@ -539,7 +544,7 @@ annual <- full_df %>%
   mutate(t = replace(t, t>20 & t < max(.data$t), max(.data$t))) %>%
   filter(t %in% closest_to_integer(unique(t))) %>%
   mutate(t = round(t, 1)) %>%
-  filter(type %in% c("5% Threshold Strategy", "No RDT Switching"))
+  filter(type %in% c("5% Threshold Strategy", "No RDT Switching", "Switch Now"))
 
 annual_clean <- annual %>%
   mutate(across(matches("_[a-z]"), function(x){signif(x, 4)}))

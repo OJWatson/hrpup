@@ -526,3 +526,33 @@ new_mod <- R6_hrp2_mod$new(models = selection_model$get_models(),
                            model_weights = selection_model$get_model_weights(),
                            err_model_weights = selection_model$get_error_model_weights(),
                            data = selection_model$get_data())
+
+##### new step to predict s when RDTs not being used, so only fitness driven
+
+# 1) build the summary dataframe for fitness model creation
+df <- testna %>%
+  filter(t == testna$t[1], EIR == max(testna %>% pull(EIR) %>% unique())) %>%
+  group_by(fitness, microscopy.use) %>%
+  summarise(s = mean(s), .groups = "drop")
+
+# 2) add extrapolated point at microscopy.use = 1 for each fitness
+df_plus <- df %>%
+  group_by(fitness) %>%
+  nest() %>%
+  mutate(
+    model = map(data, ~ lm(s ~ microscopy.use, data = .x)),
+    s_at_1 = map_dbl(model, ~ predict(.x, newdata = data.frame(microscopy.use = 1)))
+  ) %>%
+  transmute(fitness, microscopy.use = 1, s = s_at_1) %>%
+  bind_rows(df) %>%
+  arrange(fitness, microscopy.use)
+
+# 3) fit lm for s ~ fitness using ONLY microscopy.use == 1
+#    and force s = 0 when fitness = 1 by centring fitness at 1 and removing intercept
+fit_fitness <- df_plus %>%
+  filter(microscopy.use == 1) %>%
+  lm(s ~ 0 + I(fitness - 1), data = .)
+
+# add to model
+new_mod$add_fitness_model(fit_fitness)
+saveRDS(new_mod, file.path(here::here("analysis/data_derived/ensemble_selection_model.rds")))

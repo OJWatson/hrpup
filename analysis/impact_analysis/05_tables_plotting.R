@@ -111,6 +111,24 @@ fig2 <- fig2 +
 save_figs("priority_comparisons", fig2, width = 10, height = 9, plot_dir = "analysis/impact_analysis/plots_chai")
 
 ### fig3 all together plot ----
+
+full_df %>%
+  filter(delay <= 0) %>%
+  left_join(
+    inc_df %>%
+      select(iso, id_1, year, scenario,starts_with("inc")) %>%
+      mutate(scenario = tolower(scenario),
+             year = as.integer(year)) %>%
+      filter(scenario == "central") %>%
+      filter(year >= 2023 & year <= 2060) %>%
+      select(-scenario, -inc_low, -inc_high)
+  ) %>%
+  group_by(year, iso, type, scenario) %>%
+  na.omit %>%
+  summarise(freq = weighted.mean(freq_med, inc_med, na.rm = TRUE,)) %>%
+  mutate(scenario = stringr::str_to_title(scenario))
+
+
 fig3 <- full_df %>%
   filter(delay <= 0) %>%
   left_join(
@@ -481,9 +499,59 @@ fig14 <-  full_df %>%
 fig14
 save_figs("micro_delay_impact_priorities", fig14, width = 11, height = 9,  plot_dir = "analysis/impact_analysis/plots_chai")
 
+# ----------------------- #
+# 4. Make malaria case figures and tables for CHAI Report ---------
+# ----------------------- #
+
+# overall
+pre_df2 <- full_df %>%
+  filter(delay <= 0) %>%
+  left_join(
+    inc_df %>%
+      select(iso, id_1, year, scenario, starts_with("pop"), inc_med) %>%
+      mutate(scenario = tolower(scenario),
+             year = as.integer(year)) %>%
+      filter(scenario == "central") %>%
+      filter(year >= 2023 & year <= 2060) %>%
+      select(-scenario)
+  ) %>%
+  na.omit %>%
+  mutate(scenario = stringr::str_to_title(scenario))
+
+iso_plotting_df2 <- pre_df2 %>%
+  group_by(year, iso, type, scenario) %>%
+  summarise(inc_mod = sum(clinical_med*pop_total),
+            death_mod = sum(mortality_100_med*pop_total),
+            inc_rep = sum(inc_med),
+            pop = sum(pop_total)) %>%
+  mutate(i = substr(iso, 1, 3))
+
+all_plotting_df2 <- pre_df2 %>%
+  group_by(year, type, scenario) %>%
+  summarise(micro_2_10 = mean(micro_2_10_med, na.rm = TRUE))
+
+### fig8 all country plot -----
+
+fig8 <- iso_plotting_df2 %>%
+  ggplot(aes(year, micro_2_10, color = scenario, linetype = type)) +
+  geom_line(lwd = 1) +
+  lemon::facet_rep_wrap(~iso, scales = "free_y", ncol = 5) +
+  theme_minimal(base_family = "Helvetica", base_size = 14) +
+  theme(axis.line = element_line()) +
+  scale_color_manual(values = rev(c(MetBrewer::met.brewer("Egypt", 1), "black", MetBrewer::met.brewer("Egypt", 2)[2])),
+                     name = "HRP2 Selection Scenario:",
+                     labels = c("Best", "Central", "Worst")) +
+  scale_linetype(name = "RDT Scenario:") +
+  theme(legend.position = "top", plot.background = element_rect(fill = "white")) +
+  ylab("Malaria Microscopy Prevalence 2-10 (%)\n") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
+  scale_x_continuous(breaks = c(2023, 2030, 2040, 2050, 2060), name = "\nYear")
+fig8
+
+
 
 # -------------------------------------------------------------------------#
-# 3. Example scenario plots for RDT changes -----------------------
+# 4. Example scenario plots for RDT changes -----------------------
 # -------------------------------------------------------------------------#
 
 
@@ -566,34 +634,8 @@ selgg <- full_df %>% filter(id_1 == 10314353) %>% select(1:5, contains("med")) %
   ggtitle("Setting where selection is predicted")
 
 
-ids <- unique(full_df$id_1)
-pdf("analysis/impact_analysis/testing_plots.pdf", width = 10, height = 8)
-for(i in seq_along(ids)) {
-message(i)
-  gg <- full_df %>% filter(id_1 == ids[i]) %>% select(1:5, matches("freq_med|micro_2_10_med")) %>%
-  pivot_longer(contains("med")) %>%
-  filter(scenario == "Central") %>%
-  ggplot(aes(t, value, color = as.factor(delay))) +
-  geom_line() +
-  facet_grid(name~type, scales = "free_y") + theme_bw() +
-  ggtitle(ids[i]) +
-  geom_hline(yintercept = 0.05)
 
-  print(gg)
-}
-dev.off()
-
-# Issues:
-
-
-# weird one in freq falling before threshold - 604492677
-# when the motnonic spline function is working on the decrease if there is very little freq decrease
-# and near to fixation, then decrease in micro etc is not enough - 10313039
-# immediate switch threshold weird - 10313109
-# weird non monotnic post trigger - 10314195
-
-
-noselgg <- full_df %>% filter(id_1 == 10015081) %>% select(1:5, contains("med")) %>%
+noselgg <- full_df %>% filter(id_1 == 604492677) %>% select(1:5, contains("med")) %>%
   pivot_longer(contains("med")) %>%
   filter(scenario == "Central") %>%
   ggplot(aes(t, value, color = as.factor(delay))) +
@@ -612,3 +654,87 @@ huh[[289]] %>% filter(id_1 == 10314353 & delay == 4 & type == "1% Threshold Stra
   geom_line() +
   facet_grid(name~type, scales = "free_y") + theme_bw() +
   ggtitle("Setting where selection is not predicted/very slow")
+
+# --------------------------
+
+# issues 1:
+
+ids <- unique(full_df$id_1)
+pdf("analysis/impact_analysis/testing_plots.pdf", width = 10, height = 8)
+for(i in seq_along(ids)) {
+  message(i)
+  gg <- full_df %>% filter(id_1 == ids[i]) %>% select(1:5, matches("freq_med|micro_2_10_med")) %>%
+    pivot_longer(contains("med")) %>%
+    filter(scenario == "Central") %>%
+    ggplot(aes(t, value, color = as.factor(delay))) +
+    geom_line() +
+    facet_grid(name~type, scales = "free_y") + theme_bw() +
+    ggtitle(ids[i]) +
+    geom_hline(yintercept = 0.05)
+
+  print(gg)
+}
+dev.off()
+
+# Issues:
+
+
+# weird one in freq falling before threshold - 604492677
+# when the motnonic spline function is working on the decrease if there is very little freq decrease
+# and near to fixation, then decrease in micro etc is not enough - 10313039
+# immediate switch threshold weird - 10313109
+# weird non monotnic post trigger - 10314195
+
+# Issues 2:
+
+huh <- rbind(read.csv("analysis/impact_analysis/data-out/longitudinal_comparison_delay_0.csv"),
+             read.csv("analysis/impact_analysis/data-out/longitudinal_comparison_delay_1.csv"),
+             read.csv("analysis/impact_analysis/data-out/longitudinal_comparison_delay_2.csv"),
+             read.csv("analysis/impact_analysis/data-out/longitudinal_comparison_delay_3.csv"),
+             read.csv("analysis/impact_analysis/data-out/longitudinal_comparison_delay_4.csv"),
+             read.csv("analysis/impact_analysis/data-out/longitudinal_comparison_delay_5.csv"))
+
+
+ids <- unique(huh$id_1)
+pdf("analysis/impact_analysis/testing_plotsupdate.pdf", width = 10, height = 8)
+for(i in seq_along(ids)) {
+  message(i)
+  gg <- huh %>% filter(id_1 == ids[i]) %>% select(1:7, matches("freq_med|micro_2_10_med|clinical_med|clinical_05_med|mortality_100_med")) %>%
+    pivot_longer(contains("med")) %>%
+    filter(scenario == "Central") %>%
+    ggplot(aes(t, value, color = as.factor(delay))) +
+    geom_line() +
+    facet_grid(name~type, scales = "free_y") + theme_bw() +
+    ggtitle(ids[i], "central")
+    #geom_hline(yintercept = 0.05)
+
+  print(gg)
+
+  gg <- huh %>% filter(id_1 == ids[i]) %>% select(1:7, matches("freq_med|micro_2_10_med|clinical_med|clinical_05_med|mortality_100_med")) %>%
+    pivot_longer(contains("med")) %>%
+    filter(scenario == "Worst") %>%
+    ggplot(aes(t, value, color = as.factor(delay))) +
+    geom_line() +
+    facet_grid(name~type, scales = "free_y") + theme_bw() +
+    ggtitle(ids[i], "worst")
+
+  print(gg)
+
+  gg <- huh %>% filter(id_1 == ids[i]) %>% select(1:7, matches("freq_med|micro_2_10_med|clinical_med|clinical_05_med|mortality_100_med")) %>%
+    pivot_longer(contains("med")) %>%
+    filter(scenario == "Best") %>%
+    ggplot(aes(t, value, color = as.factor(delay))) +
+    geom_line() +
+    facet_grid(name~type, scales = "free_y") + theme_bw() +
+    ggtitle(ids[i], "best")
+
+  print(gg)
+}
+dev.off()
+
+
+# weird one in freq falling before threshold - 604492677
+# when the motnonic spline function is working on the decrease if there is very little freq decrease
+# and near to fixation, then decrease in micro etc is not enough - 10313039
+# immediate switch threshold weird - 10313109
+# weird non monotnic post trigger - 10314195

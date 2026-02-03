@@ -16,18 +16,21 @@ R6_hrp2_mod <- R6::R6Class(
     #' @param model_weights Model for predicting selection coefficient weights
     #' @param err_model_weights Model for predicting selection error weights
     #' @param data Data used originally for model training
+    #' @param fitness_model Model used to predict selection loss due to fitness
     #' @return A new `hrp2_mod` object.
     initialize = function(models = list(),
                           err_models  = list(),
                           model_weights = list(),
                           err_model_weights = list(),
-                          data = data.frame()) {
+                          data = data.frame(),
+                          fitness_model = NULL) {
 
       private$models <- models
       private$err_models <- err_models
       private$model_weights <- model_weights
       private$err_model_weights <- err_model_weights
       private$data <- data
+      private$fitness_model <- fitness_model
 
     },
 
@@ -196,6 +199,12 @@ R6_hrp2_mod <- R6::R6Class(
       private$err_model_weights[[model_name]] <- weight
     },
 
+    #' Add fitness_model
+    #' @param fitness_model Fitness lm
+    add_fitness_model = function(fitness_model) {
+      private$fitness_model <- fitness_model
+    },
+
     # GETTERS
 
     #' Get all selection prediction models
@@ -218,6 +227,10 @@ R6_hrp2_mod <- R6::R6Class(
     #' @return Training data
     get_data = function() private$data,
 
+    #' Get fitness_model
+    #' @return Fitness lm
+    get_fitness_model = function() private$fitness_model,
+
     # SETTERS
 
     #' Set all selection prediction models
@@ -238,7 +251,11 @@ R6_hrp2_mod <- R6::R6Class(
 
     #' Set data the models were trained on
     #' @param data Training data for models
-    set_data = function(data) { private$data <- data }
+    set_data = function(data) { private$data <- data },
+
+    #' Set fitness_model
+    #' @param fitness_model fitness lm
+    set_fitness_model = function(fitness_model) { private$fitness_model <- fitness_model }
 
   ),
 
@@ -248,6 +265,7 @@ R6_hrp2_mod <- R6::R6Class(
     model_weights = NULL,
     err_model_weights = NULL,
     data = NULL,
+    fitness_model = NULL,
 
     # Predict Generic
     predict_internal = function(dat, models, weights) {
