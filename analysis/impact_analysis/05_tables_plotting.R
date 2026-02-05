@@ -4,7 +4,7 @@ library(sf)
 library(wpp2017)
 data("UNlocations")
 # read in data
-full_df_raw <- readRDS("analysis/impact_analysis/data-derived/chai_sims.rds")
+full_df_raw <- readRDS("analysis/impact_analysis/data-derived/chai_sims_2201_cleaned_interp.rds")
 # file.copy("/home/oj/GoogleDrive/AcademicWork/Imperial/git/arms/analysis/data-derived/spread_mal_inc.rds", "analysis/impact_analysis/data-raw/spread_mal_inc.rds")
 inc_df <- readRDS("analysis/impact_analysis/data-raw/spread_mal_inc.rds")
 
@@ -68,7 +68,7 @@ inc_df <- inc_df %>%
 
 # overall
 plotting_df <- full_df %>%
-  filter(delay <= 0) %>%
+  filter((delay <= 0 & type == "5% Threshold Strategy") | delay > 99) %>%
   left_join(
     inc_df %>%
       select(iso, id_1, year, scenario,starts_with("inc")) %>%
@@ -113,7 +113,7 @@ save_figs("priority_comparisons", fig2, width = 10, height = 9, plot_dir = "anal
 ### fig3 all together plot ----
 
 full_df %>%
-  filter(delay <= 0) %>%
+  filter((delay <= 0 & type == "5% Threshold Strategy") | delay > 99) %>%
   left_join(
     inc_df %>%
       select(iso, id_1, year, scenario,starts_with("inc")) %>%
@@ -130,7 +130,7 @@ full_df %>%
 
 
 fig3 <- full_df %>%
-  filter(delay <= 0) %>%
+  filter((delay <= 0 & type == "5% Threshold Strategy") | delay > 99) %>%
   left_join(
     inc_df %>%
       select(iso, id_1, year, scenario,starts_with("inc")) %>%
@@ -162,7 +162,7 @@ save_figs("africa_comparisons", fig3, width = 8, height = 6, plot_dir = "analysi
 ### fig4 all together difference ----
 
 fig4 <- full_df %>%
-  filter(delay <= 0) %>%
+  filter((delay <= 0 & type == "5% Threshold Strategy") | delay > 99) %>%
   left_join(
     inc_df %>%
       select(iso, id_1, year, scenario,starts_with("inc")) %>%
@@ -200,7 +200,7 @@ save_figs("africa_impact", fig4, width = 8, height = 6, plot_dir = "analysis/imp
 ### fig5 priority country 2029 and 2035impact ----
 
 fig5 <- full_df %>%
-  filter(delay <= 0) %>%
+  filter((delay <= 0 & type == "5% Threshold Strategy") | delay > 99) %>%
   left_join(
     inc_df %>%
       select(iso, id_1, year, scenario,starts_with("inc")) %>%
@@ -244,7 +244,7 @@ fig6 <- full_df %>%
       filter(year >= 2023) %>%
       select(-scenario, -inc_low, -inc_high)
   ) %>%
-  mutate(delay = replace(delay, which(delay >=0), delay[which(delay >= 0)] + 1)) %>%
+  mutate(delay = replace(delay, which(delay >99), "No RDT Switching")) %>%
   group_by(year, iso, type, scenario, delay) %>%
   na.omit %>%
   summarise(freq = weighted.mean(freq_med, inc_med, na.rm = TRUE)) %>%
@@ -278,7 +278,7 @@ fig7 <- full_df %>%
       filter(year >= 2023) %>%
       select(-scenario, -inc_low, -inc_high)
   ) %>%
-  mutate(delay = replace(delay, which(delay >=0), delay[which(delay >= 0)] + 1)) %>%
+  mutate(delay = replace(delay, which(delay >99), "No RDT Switching")) %>%
   group_by(year, type, iso, delay) %>%
   na.omit %>%
   summarise(freq = weighted.mean(freq_med, inc_med, na.rm = TRUE)) %>%
@@ -296,7 +296,7 @@ fig7 <- full_df %>%
   lemon::facet_rep_wrap(~iso, scales = "free_y", ncol = 3)  +
   theme_minimal(base_family = "Helvetica", base_size = 14) +
   theme(axis.line = element_line()) +
-  scale_color_manual(values = MetBrewer::met.brewer("Hiroshige", n = 10)[c(5:10)],
+  scale_color_manual(values = MetBrewer::met.brewer("Hiroshige", n = 10)[c(1,5:10)],
                      name = "Years to \nswitch RDT:") +
   theme(legend.position = "right", plot.background = element_rect(fill = "white")) +
   ylab("Annual Averted False Neagative Rates (%) \n(Averted = No RDT Switching - 5% Threshold)\n") +
@@ -311,7 +311,7 @@ save_figs("delay_impact_priorities", fig7, width = 11, height = 9,  plot_dir = "
 
 # overall
 pre_df2 <- full_df %>%
-  filter(delay <= 0) %>%
+  filter((delay <= 0 & type == "5% Threshold Strategy") | delay > 99) %>%
   left_join(
     inc_df %>%
       select(iso, id_1, year, scenario, starts_with("pop")) %>%
@@ -438,7 +438,7 @@ fig13 <- full_df %>%
   ) %>%
   na.omit %>%
   mutate(scenario = stringr::str_to_title(scenario))  %>%
-  mutate(delay = replace(delay, which(delay >=0), delay[which(delay >= 0)] + 1)) %>%
+  mutate(delay = replace(delay, which(delay >=99), "No RDT Switching")) %>%
   group_by(year, iso, type, scenario, delay) %>%
   na.omit %>%
   summarise(micro_2_10 = weighted.mean(micro_2_10_med, pop_total, na.rm = TRUE)) %>%
@@ -472,7 +472,7 @@ fig14 <-  full_df %>%
   ) %>%
   na.omit %>%
   mutate(scenario = stringr::str_to_title(scenario))  %>%
-  mutate(delay = replace(delay, which(delay >=0), delay[which(delay >= 0)] + 1)) %>%
+  mutate(delay = replace(delay, which(delay >99), "No RDT Switching")) %>%
   group_by(year, iso, type, scenario, delay) %>%
   na.omit %>%
   summarise(micro_2_10 = signif(weighted.mean(micro_2_10_med, pop_total, na.rm = TRUE),4)) %>%
@@ -490,7 +490,7 @@ fig14 <-  full_df %>%
   lemon::facet_rep_wrap(~iso, scales = "free_y", ncol = 3)  +
   theme_minimal(base_family = "Helvetica", base_size = 14) +
   theme(axis.line = element_line()) +
-  scale_color_manual(values = MetBrewer::met.brewer("Hiroshige", n = 10)[c(5:10)],
+  scale_color_manual(values = MetBrewer::met.brewer("Hiroshige", n = 10)[c(1, 5:10)],
                      name = "Years to \nswitch RDT:") +
   theme(legend.position = "right", plot.background = element_rect(fill = "white")) +
   ylab("Annual Averted Difference in \nMalaria Microscopy Prevalence 2-10 (%) \n(Averted = No RDT Switching - 5% Threshold)\n") +
@@ -502,52 +502,6 @@ save_figs("micro_delay_impact_priorities", fig14, width = 11, height = 9,  plot_
 # ----------------------- #
 # 4. Make malaria case figures and tables for CHAI Report ---------
 # ----------------------- #
-
-# overall
-pre_df2 <- full_df %>%
-  filter(delay <= 0) %>%
-  left_join(
-    inc_df %>%
-      select(iso, id_1, year, scenario, starts_with("pop"), inc_med) %>%
-      mutate(scenario = tolower(scenario),
-             year = as.integer(year)) %>%
-      filter(scenario == "central") %>%
-      filter(year >= 2023 & year <= 2060) %>%
-      select(-scenario)
-  ) %>%
-  na.omit %>%
-  mutate(scenario = stringr::str_to_title(scenario))
-
-iso_plotting_df2 <- pre_df2 %>%
-  group_by(year, iso, type, scenario) %>%
-  summarise(inc_mod = sum(clinical_med*pop_total),
-            death_mod = sum(mortality_100_med*pop_total),
-            inc_rep = sum(inc_med),
-            pop = sum(pop_total)) %>%
-  mutate(i = substr(iso, 1, 3))
-
-all_plotting_df2 <- pre_df2 %>%
-  group_by(year, type, scenario) %>%
-  summarise(micro_2_10 = mean(micro_2_10_med, na.rm = TRUE))
-
-### fig8 all country plot -----
-
-fig8 <- iso_plotting_df2 %>%
-  ggplot(aes(year, micro_2_10, color = scenario, linetype = type)) +
-  geom_line(lwd = 1) +
-  lemon::facet_rep_wrap(~iso, scales = "free_y", ncol = 5) +
-  theme_minimal(base_family = "Helvetica", base_size = 14) +
-  theme(axis.line = element_line()) +
-  scale_color_manual(values = rev(c(MetBrewer::met.brewer("Egypt", 1), "black", MetBrewer::met.brewer("Egypt", 2)[2])),
-                     name = "HRP2 Selection Scenario:",
-                     labels = c("Best", "Central", "Worst")) +
-  scale_linetype(name = "RDT Scenario:") +
-  theme(legend.position = "top", plot.background = element_rect(fill = "white")) +
-  ylab("Malaria Microscopy Prevalence 2-10 (%)\n") +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 0.1)) +
-  scale_x_continuous(breaks = c(2023, 2030, 2040, 2050, 2060), name = "\nYear")
-fig8
-
 
 
 # -------------------------------------------------------------------------#

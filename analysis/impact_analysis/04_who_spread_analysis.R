@@ -90,7 +90,7 @@ predict_from_real_data <- function(trained_model, real_data,
 
     # Drop warmup steps
     if(warmup > 0){
-    preds <- preds[-seq_len(warmup), ]
+      preds <- preds[-seq_len(warmup), ]
     }
 
     # Name and denormalise
@@ -156,7 +156,7 @@ predict_from_real_data <- function(trained_model, real_data,
   # Run for each freq variant
   preds <- lapply(seq_along(freq_l), function(x){
     predict_one_freq(real_data[[names(freq_l)[x]]], freq_l[[x]])
-    })
+  })
   final_preds <- do.call(cbind, preds)
 
   # Order correctly
@@ -180,7 +180,7 @@ admin1 <- readRDS(here::here("analysis/data_derived/admin1_sf.rds"))
 mod_obj <- readRDS("analysis/data_derived/ensemble_selection_model.rds")
 
 # Get the emulator model object
-trained_model <- luz::luz_load("analysis/impact_analysis/data-derived/emulator_final_2501.rds")
+trained_model <- luz::luz_load("analysis/impact_analysis/data-derived/emulator_final_2201.rds")
 trained_model$model$to(device = torch_device("cuda"))
 
 # subset to Africa as that is where we will do the prospective mapping
@@ -218,10 +218,11 @@ for(i in seq_along(scenario_maps$map_data)) {
   # what proportion of these are getting a non hrp2 and add that to the current micro
   # to now get total not getting an HRP2 RDT for diagnosis
   new_micro <- curr_micro + ((curr_non_micro) * (1-md$hrp2))
-  # assume there is still always 1% of the other diagnostic option
+  # assume there is still always 1% of the other diagnostic option for tracking
   new_micro <- pmax(pmin(new_micro, 0.99), 0.01)
 
   md$microscopy.use <- new_micro
+  md$microscopy.use[which(md$iso3c %in% c("DJI", "ERI", "ETH"))] <- 0.99
   md <- md %>% select(-hrp2)
   pred <- mod_obj$predict(Micro.2.10 = md$Micro.2.10,
                           ft = md$ft,
@@ -365,27 +366,27 @@ emulator <- trained_model
 t_break <- round(emulator$extra$data$t_break, 4)
 t_end <- (emulator$extra$data$t_end + t_break)
 
-interp <- FALSE
+interp <- TRUE
 
 # Central
 central_row <- which(apply(scenario_maps$scenarios, 1, function(x){all(x == "central")}))
 out_central <- list()
 for(d in seq_along(param_grid$delay)) {
   type <- paste0(scales::percent(param_grid$f_trig[d]), " Threshold Strategy")
-out_central[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[central_row]], RDT_switch = TRUE,
-                                        delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
-                                        f_trig = param_grid$f_trig[d], interp = interp) %>%
-  mutate(scenario = "Central", type = type, .after = "delay")
+  out_central[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[central_row]], RDT_switch = TRUE,
+                                          delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
+                                          f_trig = param_grid$f_trig[d], interp = interp) %>%
+    mutate(scenario = "Central", type = type, .after = "delay")
 }
 # Best
 best_row <- which(apply(scenario_maps$scenarios, 1, function(row) all(row == "best")))
 out_best <- list()
 for(d in seq_along(param_grid$delay)) {
   type <- paste0(scales::percent(param_grid$f_trig[d]), " Threshold Strategy")
-out_best[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[best_row]], RDT_switch = TRUE,
-                                     delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
-                                     f_trig = param_grid$f_trig[d], interp = interp) %>%
-  mutate(scenario = "Best", type = type, .after = "delay")
+  out_best[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[best_row]], RDT_switch = TRUE,
+                                       delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
+                                       f_trig = param_grid$f_trig[d], interp = interp) %>%
+    mutate(scenario = "Best", type = type, .after = "delay")
 }
 
 # Worst
@@ -393,10 +394,10 @@ worst_row <- which(apply(scenario_maps$scenarios, 1, function(row) all(row == "w
 out_worst <- list()
 for(d in seq_along(param_grid$delay)) {
   type <- paste0(scales::percent(param_grid$f_trig[d]), " Threshold Strategy")
-out_worst[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[worst_row]], RDT_switch = TRUE,
-                                      delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
-                                      f_trig = param_grid$f_trig[d], interp = interp) %>%
-  mutate(scenario = "Worst", type = type, .after = "delay")
+  out_worst[[d]] <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[worst_row]], RDT_switch = TRUE,
+                                        delay = param_grid$delay[d], t_break = t_break, emulator = emulator,
+                                        f_trig = param_grid$f_trig[d], interp = interp) %>%
+    mutate(scenario = "Worst", type = type, .after = "delay")
 }
 
 # --------------------------------------------------------------------------#
@@ -417,18 +418,24 @@ comp_md_func <- function(md) {
 }
 
 # Central
-out_central_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map_data[[central_row]]),
-                                      t_break = t_break, emulator = emulator, interp = interp) %>%
+out_central_cf <- run_lci_med_uci_sim(spread_model, (scenario_maps$map_data[[central_row]]),
+                                      t_break = t_break, emulator = emulator, interp = interp,
+                                      RDT_switch = TRUE,
+                                      delay = 100, f_trig = 1) %>%
   mutate(scenario = "Central", type = "No RDT Switching", .after = "delay")
 
 # Best
-out_best_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map_data[[best_row]]),
-                                   t_break = t_break, emulator = emulator, interp = interp) %>%
+out_best_cf <- run_lci_med_uci_sim(spread_model, (scenario_maps$map_data[[best_row]]),
+                                   t_break = t_break, emulator = emulator, interp = interp,
+                                   RDT_switch = TRUE,
+                                   delay = 100, f_trig = 1) %>%
   mutate(scenario = "Best", type = "No RDT Switching", .after = "delay")
 
 # Worst
-out_worst_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map_data[[worst_row]]),
-                                    t_break = t_break, emulator = emulator, interp = interp) %>%
+out_worst_cf <- run_lci_med_uci_sim(spread_model, (scenario_maps$map_data[[worst_row]]),
+                                    t_break = t_break, emulator = emulator, interp = interp,
+                                    RDT_switch = TRUE,
+                                    delay = 100, f_trig = 1) %>%
   mutate(scenario = "Worst", type = "No RDT Switching", .after = "delay")
 
 # --------------------------------------------------------------------------#
@@ -438,22 +445,22 @@ out_worst_cf <- run_lci_med_uci_sim(spread_model, comp_md_func(scenario_maps$map
 # Central
 central_row <- which(apply(scenario_maps$scenarios, 1, function(x){all(x == "central")}))
 out_central_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[central_row]], RDT_switch = TRUE,
-                                          delay = 0, t_break = t_break, emulator = emulator,
-                                          f_trig = -1, interp = interp) %>%
-    mutate(scenario = "Central", type = "Switch Now", .after = "delay")
+                                       delay = 0, t_break = t_break, emulator = emulator,
+                                       f_trig = -1, interp = interp) %>%
+  mutate(scenario = "Central", type = "Switch Now", .after = "delay")
 
 # Best
 best_row <- which(apply(scenario_maps$scenarios, 1, function(row) all(row == "best")))
 out_best_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[best_row]], RDT_switch = TRUE,
-                                       delay = 0, t_break = t_break, emulator = emulator,
-                                       f_trig = -1, interp = interp) %>%
+                                    delay = 0, t_break = t_break, emulator = emulator,
+                                    f_trig = -1, interp = interp) %>%
   mutate(scenario = "Best", type = "Switch Now", .after = "delay")
 
 # Worst
 worst_row <- which(apply(scenario_maps$scenarios, 1, function(row) all(row == "worst")))
 out_worst_now <- run_lci_med_uci_sim(spread_model, scenario_maps$map_data[[worst_row]], RDT_switch = TRUE,
-                                    delay = 0, t_break = t_break, emulator = emulator,
-                                    f_trig = -1, interp = interp) %>%
+                                     delay = 0, t_break = t_break, emulator = emulator,
+                                     f_trig = -1, interp = interp) %>%
   mutate(scenario = "Worst", type = "Switch Now", .after = "delay")
 
 
@@ -491,7 +498,7 @@ for (var in c("freq", trained_model$extra$output_cols)) {
 full_df %>%
   mutate(year = lubridate::dyears(t) + as.Date("2023-04-01")) %>%
   left_join(afr_map %>% sf::st_drop_geometry()) %>%
-  filter(delay <= 0) %>%
+  filter(delay <= 0 | delay > 99) %>%
   group_by(year, iso, type, scenario) %>%
   summarise(freq = mean(freq_med)) %>%
   filter(year < as.Date("2064-04-01")) %>%
@@ -504,7 +511,7 @@ full_df %>%
   mutate(year = lubridate::dyears(t) + as.Date("2023-04-01")) %>%
   left_join(afr_map %>% sf::st_drop_geometry()) %>%
   filter(year < as.Date("2064-04-01")) %>%
-  filter(iso == "TZA", scenario == "Worst") %>%
+  filter(iso == "RWA", scenario == "Worst") %>%
   ggplot(aes(year, freq_med, color = as.factor(delay), linetype = type)) +
   geom_line() +
   facet_wrap(~name_1, scales = "free_y")
@@ -519,26 +526,58 @@ full_df %>%
   geom_line() +
   facet_wrap(~type)
 
-full_df %>% filter(id_1 == 10823084) %>% pivot_longer(starts_with(c("freq", trained_model$extra$output_cols))) %>%
+full_df %>% filter(id_1 == 10313185) %>% pivot_longer(starts_with(c("freq", trained_model$extra$output_cols))) %>%
   tidyr::separate(name, into = c("name", "stat"), sep = "_(?=[^_]+$)") %>% pivot_wider(names_from = stat, values_from = value) %>%
-  filter(scenario == "Worst") %>%
+  filter(scenario == "Best") %>%
   ggplot(aes(t, med, ymin = lci, ymax = uci, color = as.factor(delay), fill = as.factor(delay))) +
   geom_ribbon(alpha=0.4) +
   geom_line() +
   facet_wrap(type~name, scales = "free", ncol = 9)
 
-saveRDS(full_df, "analysis/impact_analysis/data-derived/chai_sims_newest_2501.rds")
-saveRDS(full_df, "analysis/impact_analysis/data-derived/chai_sims_new_interp.rds")
+#saveRDS(full_df, "analysis/impact_analysis/data-derived/chai_sims_2201.rds")
+saveRDS(full_df, "analysis/impact_analysis/data-derived/chai_sims_2201_interp.rds")
 
 # -------------------------------------------------------------------------#
 # 6. Save for partners -----------------------
 # -------------------------------------------------------------------------#
 
-full_df <- readRDS("analysis/impact_analysis/data-derived/chai_sims.rds")
+full_df <- readRDS("analysis/impact_analysis/data-derived/chai_sims_2201_cleaned_interp.rds")
+
+full_df <- left_join(full_df,
+                     afr_map %>% select(iso, id_1, iso, name_0) %>% sf::st_drop_geometry())
+
+# WMR Scalars
+d <- read.csv("analysis/impact_analysis/data-raw/wmr_cases_2024.csv")
+d2 <- read.csv("analysis/impact_analysis/data-raw/wmr_deaths_2024.csv")
+
+wmr_comp <- left_join(full_df %>% filter(t == 0, scenario == "Central", type == "Switch Now"), inc_df %>% filter(t == 0, scenario == "Central", year== 2020)) %>%
+  mutate(m2=mortality_100_med*pop_total, c2 = clinical_med*pop_total) %>%
+  group_by(iso) %>%
+  summarise(m2 = sum(m2, na.rm = TRUE), c2 = sum(c2, na.rm = TRUE), clinical_med = weighted.mean(clinical_med, pop_total)) %>%
+  left_join(d2 %>% filter(Period > 2000) %>% mutate(iso = SpatialDimValueCode) %>% group_by(iso) %>%
+              summarise(wmrm = mean(FactValueNumeric,na.rm=TRUE),
+                        wmrm_l = mean(FactValueNumericLow,na.rm=TRUE),
+                        wmrm_h = mean(FactValueNumericHigh,na.rm=TRUE))) %>%
+  left_join(d %>% filter(Period > 2000) %>% mutate(iso = SpatialDimValueCode) %>% group_by(iso) %>%
+              summarise(wmrc = mean(FactValueNumeric,na.rm=TRUE),
+                        wmrc_l = mean(FactValueNumericLow,na.rm=TRUE),
+                        wmrc_h = mean(FactValueNumericHigh,na.rm=TRUE)))
+
+wmr_comp %>% ggplot(aes(m2, wmrm, ymin = wmrm_l, ymax = wmrm_h)) + geom_pointrange()
+wmr_comp %>% ggplot(aes(c2, wmrc, ymin = wmrc_l, ymax = wmrc_h)) + geom_pointrange()
+
+wmr_comp %>% mutate(m_rat = wmrm/m2, c_rat = wmrc/c2) %>%
+  pivot_longer(m_rat:c_rat) %>%
+  ggplot() +
+  geom_histogram(aes(x = value, fill = name))
+
+# save outputs
 dir.create("analysis/impact_analysis/data-out")
 closest_to_integer <- function(vec, integers = 0:20) {
   sapply(integers, function(i) vec[which.min(abs(vec - i))])
 }
+
+# without scaling -----------------
 
 annual <- full_df %>%
   mutate(t = replace(t, t>20 & t < max(.data$t), max(.data$t))) %>%
@@ -547,23 +586,55 @@ annual <- full_df %>%
   filter(type %in% c("5% Threshold Strategy", "No RDT Switching", "Switch Now"))
 
 annual_clean <- annual %>%
-  mutate(across(matches("_[a-z]"), function(x){signif(x, 4)}))
+  mutate(across(matches("_[a-z]"), function(x){signif(x, 6)}))
 
 annual_clean <- annual_clean %>%
   group_by(scenario, id_1) %>%
-  arrange(t) %>%
-  mutate(across(matches("_[a-z]"), ~ .x - (.x[t==0] - mean(.x[t ==0])))) %>%
+  # arrange(t) %>%
+  # mutate(across(matches("_[a-z]"), ~ .x - (.x[t==0] - mean(.x[t ==0])))) %>%
   arrange(id_1, delay, scenario, type, t) %>%
   ungroup()
 
 annual_clean <- annual_clean %>% left_join(afr_map %>% sf::st_drop_geometry() %>% select(iso, id_1, name_1)) %>%
-  relocate(name_1, .before = 1) %>%
+  relocate(name_1, .after = 1) %>%
+  relocate(name_0, .before = 1) %>%
   relocate(iso, .before = 1) %>%
   arrange(iso, id_1, delay, scenario, type, t) %>%
   ungroup
 
 for(i in 0:5) {
-write.csv(annual_clean %>% filter(((delay %in% c(i, -1)) & type != "Switch Now") | type == "Switch Now"),
-          paste0("analysis/impact_analysis/data-out/longitudinal_comparison_delay_", i, ".csv"),
-          row.names = FALSE)
+  write.csv(annual_clean %>% filter(((delay %in% c(i, 100)) & type != "Switch Now") | type == "Switch Now"),
+            paste0("analysis/impact_analysis/data-out/longitudinal_comparison_delay_", i, ".csv"),
+            row.names = FALSE)
+}
+
+
+# with scaling ----------------
+
+annual_clean_scaled <- annual_clean %>%
+  left_join(wmr_comp %>% mutate(m_rat = wmrm/m2, c_rat = wmrc/c2)) %>%
+  mutate(clinical_05_lci = clinical_05_lci * c_rat,
+         clinical_05_med = clinical_05_med * c_rat,
+         clinical_05_uci = clinical_05_uci * c_rat,
+         clinical_lci = clinical_lci * c_rat,
+         clinical_med = clinical_med * c_rat,
+         clinical_uci = clinical_uci * c_rat,
+         severe_05_lci = severe_05_lci * m_rat,
+         severe_05_med = severe_05_med * m_rat,
+         severe_05_uci = severe_05_uci * m_rat,
+         severe_lci = severe_lci * m_rat,
+         severe_med = severe_med * m_rat,
+         severe_uci = severe_uci * m_rat,
+         mortality_05_lci = mortality_05_lci * m_rat,
+         mortality_05_med = mortality_05_med * m_rat,
+         mortality_05_uci = mortality_05_uci * m_rat,
+         mortality_100_lci = mortality_100_lci * m_rat,
+         mortality_100_med = mortality_100_med * m_rat,
+         mortality_100_uci = mortality_100_uci * m_rat) %>%
+  select(iso:mortality_100_uci)
+
+for(i in 0:5) {
+  write.csv(annual_clean %>% filter(((delay %in% c(i, 100)) & type != "Switch Now") | type == "Switch Now"),
+            paste0("analysis/impact_analysis/data-out/longitudinal_wmrscaled_comparison_delay_", i, ".csv"),
+            row.names = FALSE)
 }

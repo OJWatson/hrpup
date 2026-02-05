@@ -65,7 +65,7 @@ MalariaTimeSeriesWarmupDataset <- dataset(
                                         'severe_05', 'severe', 'mortality_05', 'mortality_100'),
                         group_cols = c('EIR', 'Micro.2.10', 'ft', 'microscopy.use',
                                        'rdt.nonadherence', 'fitness', 'rdt.det', 'rep')
-                        ){
+  ){
 
     # Data and warmup
     self$df <- df
@@ -109,19 +109,15 @@ MalariaTimeSeriesWarmupDataset <- dataset(
       dplyr::group_by(dplyr::across(dplyr::all_of(self$group_cols))) %>%
       dplyr::group_split()
 
-    # Warmup creation function
+    # --- CHANGED: Warmup creation function ---
     self$warm_up_fn <- function(group, cols, warmup){
 
       # Mean from the first real time point
       w_mean <- as.numeric(group[1, cols])
 
-      # Standard deviation from the first 12 time steps (or fewer if needed)
-      n_for_stats <- min(12, nrow(group))
-      stats_block <- group[1:n_for_stats, cols]
-      w_sd <- apply(stats_block, 2, sd)
-
-      # Ensure SD is non-zero and non-NA (for safe sampling)
-      w_sd[is.na(w_sd) | w_sd == 0] <- 1e-6
+      # FIX: Use minimal fixed noise instead of calculating SD from the trend.
+      # This prevents "slope" from being interpreted as "variance" and confusing the initial state.
+      w_sd <- rep(1e-6, length(cols))
 
       # Simulate warm-up inputs with N(mean, sd)
       warmup_rows <- matrix(
@@ -131,7 +127,7 @@ MalariaTimeSeriesWarmupDataset <- dataset(
         nrow = warmup, byrow = FALSE, dimnames = list(NULL,c(cols))
       )
 
-      # Clamp to [0, 1] range (to match normalised inputs)
+      # Clamp to [0, 1] range
       warmup_rows <- pmin(pmax(warmup_rows, 0), 1)
 
       # Convert real sequence to matrices
@@ -140,7 +136,6 @@ MalariaTimeSeriesWarmupDataset <- dataset(
       # Concatenate warm-up and real inputs
       combined <- rbind(warmup_rows, real)
       return(combined)
-
     }
 
   },
@@ -267,69 +262,70 @@ GRU_model <- function(input_size = 7,
 }
 
 
-#' Custom Loss Function for Final Timesteps with Optional Bias Scaling
+#' Trend-Matching Loss: MSE + Strided Derivative
 #'
-#' Computes a custom loss that combines Mean Squared Error (MSE) over the final timesteps
-#' of the sequence with a bias penalty on the mean prediction error per feature.
-#' This is useful in forecasting tasks where a warm-up period is excluded from loss calculation,
-#' and systematic bias in predictions should be penalised once the model is sufficiently accurate.
-#'
-#' @param pred A torch tensor of predicted values with shape \code{[batch_size, time_steps, features]}.
-#' @param target A torch tensor of target values with the same shape as \code{pred}.
-#' @param lambda_bias A numeric scalar controlling the maximum weight of the bias penalty term (default: 0.1).
-#' @param min_mse_for_lambda A numeric threshold: bias penalty is only applied when MSE is below this value. If 0, no scaling is applied (default: 0).
-#' @param final_steps An integer specifying how many timesteps at the end of the sequence to include in the loss (default: 241).
-#'
-#' @return A scalar tensor representing the combined loss value.
-#'
-#' @details
-#' The total loss is computed as:
-#' \deqn{
-#'   \text{MSE}(Y, \hat{Y}) + \lambda \cdot \text{Bias}(Y, \hat{Y})
-#' }
-#' where:
-#' \itemize{
-#'   \item MSE is computed over the last \code{final_steps} timesteps.
-#'   \item Bias is defined as the mean absolute value of the average prediction error per feature.
-#' }
-#' If \code{min_mse_for_lambda > 0}, the contribution of \code{lambda_bias} is scaled using a sigmoid function
-#' that increases as MSE drops below the threshold.
+#' Uses a "strided" derivative to penalize errors in the general trend while
+#' ignoring high-frequency noise. This forces the model to capture dynamics
+#' (like settling or drops) without overfitting to random wiggles.
 #'
 #' @export
 custom_loss_final <- function(pred,
                               target,
-                              lambda_bias = 0.1,
+                              lambda_bias = 0.05,
+                              lambda_trend = 5.0,  # Penalty for missing the trend
+                              trend_stride = 5,    # Look at change over 5 timesteps (smooths noise)
                               min_mse_for_lambda = 0,
                               final_steps = 241,
                               micro_2_10_scale = 0) {
+
   total_timesteps <- pred$size(2)
 
   # Slice final timesteps
   pred_final <- pred[, (total_timesteps - final_steps + 1):total_timesteps, ]
   target_final <- target[, (total_timesteps - final_steps + 1):total_timesteps, ]
 
-  # Compute MSE loss
+  # 1. Standard MSE loss (Position error)
   mse_loss <- nnf_mse_loss(pred_final, target_final, reduction = "mean")
 
-  # Compute absolute bias
+  # 2. Bias penalty (Level error)
   error <- pred_final - target_final
-  mean_error_per_feature <- torch_mean(error, dim = c(1, 2))
-  abs_bias_per_feature <- torch_abs(mean_error_per_feature)
-  bias_loss <- torch_mean(abs_bias_per_feature)
+  bias_loss <- torch_mean(torch_abs(torch_mean(error, dim = c(1, 2))))
 
-  # Apply bias penalty based on MSE
+  # 3. TREND CALCULATION (Strided Difference)
+  # Instead of t vs t+1 (noisy), we compare t vs t+stride.
+  # This captures the "macroscopic" movement (settling, rising, falling).
+  n_t <- final_steps
+
+  # Slice: values at time t+stride
+  p_future <- pred_final[, (1 + trend_stride):n_t, ]
+  t_future <- target_final[, (1 + trend_stride):n_t, ]
+
+  # Slice: values at time t
+  p_past <- pred_final[, 1:(n_t - trend_stride), ]
+  t_past <- target_final[, 1:(n_t - trend_stride), ]
+
+  # Calculate the change (Delta) over the stride
+  pred_trend <- p_future - p_past
+  target_trend <- t_future - t_past
+
+  # 4. Trend MSE
+  # We multiply by 10 to ensure this loss component is large enough to be felt
+  # relative to the raw small numbers (0.002, etc.)
+  trend_loss <- nnf_mse_loss(pred_trend * 10, target_trend * 10, reduction = "mean")
+
+  # Combine Losses
   if (min_mse_for_lambda > 0) {
-    # Sigmoid ramp-up as MSE drops below threshold
-    scale <- torch_sigmoid(10 * (min_mse_for_lambda - mse_loss))  # sharper transition
-    total_loss <- mse_loss + scale * lambda_bias * bias_loss
+    scale <- torch_sigmoid(10 * (min_mse_for_lambda - mse_loss))
+    total_loss <- mse_loss + (scale * lambda_bias * bias_loss)
   } else {
-    # Use full bias penalty immediately
-    total_loss <- mse_loss + lambda_bias * bias_loss
+    total_loss <- mse_loss + (lambda_bias * bias_loss)
   }
 
-  # apply additional penalty for not getting micro_2_10 right:
+  # Add Trend constraint
+  total_loss <- total_loss + (lambda_trend * trend_loss)
+
   if (micro_2_10_scale > 0) {
-    total_loss <- total_loss + (micro_2_10_scale * nnf_mse_loss(pred_final[,1:5,1], target_final[,1:5,1], reduction = "mean"))  # focus on V1
+    total_loss <- total_loss + (micro_2_10_scale * nnf_mse_loss(pred_final[,1:5,1], target_final[,1:5,1], reduction = "mean"))
   }
 
   return(total_loss)
@@ -356,31 +352,31 @@ custom_loss_final <- function(pred,
 custom_metric_final_mse <- function() {
 
   return(luz::luz_metric(
-  abbrev = "Final_MSE",
+    abbrev = "Final_MSE",
 
-  initialize = function(final_steps) {
-    self$final_steps <- final_steps
-  },
+    initialize = function(final_steps) {
+      self$final_steps <- final_steps
+    },
 
-  update = function(pred, target) {
-    total_timesteps <- pred$size(2)
+    update = function(pred, target) {
+      total_timesteps <- pred$size(2)
 
-    # Extract final timesteps
-    pred_final <- pred[, (total_timesteps - self$final_steps + 1):total_timesteps, ]
-    target_final <- target[, (total_timesteps - self$final_steps + 1):total_timesteps, ]
+      # Extract final timesteps
+      pred_final <- pred[, (total_timesteps - self$final_steps + 1):total_timesteps, ]
+      target_final <- target[, (total_timesteps - self$final_steps + 1):total_timesteps, ]
 
-    # Compute MSE for current batch
-    mse_batch <- nnf_mse_loss(pred_final, target_final, reduction = "mean")$item()
+      # Compute MSE for current batch
+      mse_batch <- nnf_mse_loss(pred_final, target_final, reduction = "mean")$item()
 
-    # Accumulate
-    self$sum_mse <- (self$sum_mse %||% 0) + mse_batch
-    self$n_batches <- (self$n_batches %||% 0) + 1
-  },
+      # Accumulate
+      self$sum_mse <- (self$sum_mse %||% 0) + mse_batch
+      self$n_batches <- (self$n_batches %||% 0) + 1
+    },
 
-  compute = function() {
-    self$sum_mse / self$n_batches
-  }
-))
+    compute = function() {
+      self$sum_mse / self$n_batches
+    }
+  ))
 
 }
 
@@ -407,34 +403,34 @@ custom_metric_final_mse <- function() {
 custom_metric_final_bias <- function(){
 
   return(luz::luz_metric(
-  abbrev = "Final_Bias",
+    abbrev = "Final_Bias",
 
-  initialize = function(final_steps) {
-    self$final_steps <- final_steps
-  },
+    initialize = function(final_steps) {
+      self$final_steps <- final_steps
+    },
 
-  update = function(pred, target) {
-    total_timesteps <- pred$size(2)
+    update = function(pred, target) {
+      total_timesteps <- pred$size(2)
 
-    # Extract final timesteps
-    pred_final <- pred[, (total_timesteps - self$final_steps + 1):total_timesteps, ]
-    target_final <- target[, (total_timesteps - self$final_steps + 1):total_timesteps, ]
+      # Extract final timesteps
+      pred_final <- pred[, (total_timesteps - self$final_steps + 1):total_timesteps, ]
+      target_final <- target[, (total_timesteps - self$final_steps + 1):total_timesteps, ]
 
-    # Compute bias: mean error per feature across batch and time
-    error <- pred_final - target_final
-    mean_error_per_feature <- torch_mean(error, dim = c(1, 2))
-    abs_bias_per_feature <- torch_abs(mean_error_per_feature)
-    bias_loss <- torch_mean(abs_bias_per_feature)$item()
+      # Compute bias: mean error per feature across batch and time
+      error <- pred_final - target_final
+      mean_error_per_feature <- torch_mean(error, dim = c(1, 2))
+      abs_bias_per_feature <- torch_abs(mean_error_per_feature)
+      bias_loss <- torch_mean(abs_bias_per_feature)$item()
 
-    # Accumulate
-    self$sum_bias <- (self$sum_bias %||% 0) + bias_loss
-    self$n_batches <- (self$n_batches %||% 0) + 1
-  },
+      # Accumulate
+      self$sum_bias <- (self$sum_bias %||% 0) + bias_loss
+      self$n_batches <- (self$n_batches %||% 0) + 1
+    },
 
-  compute = function() {
-    self$sum_bias / self$n_batches
-  }
-))
+    compute = function() {
+      self$sum_bias / self$n_batches
+    }
+  ))
 
 }
 
@@ -692,18 +688,18 @@ prepare_malaria_dataloaders <- function(df,
   # Create ids if needed
   if(!is.null(train_ids) & !is.null(valid_ids) & !is.null(test_ids)) {} else {
 
-  total_len <- length(ds)
-  all_ids <- 1:total_len
+    total_len <- length(ds)
+    all_ids <- 1:total_len
 
-  # Sample training IDs
-  train_ids <- sample(all_ids, size = floor(train_prop * total_len))
+    # Sample training IDs
+    train_ids <- sample(all_ids, size = floor(train_prop * total_len))
 
-  # Sample validation IDs from remaining
-  remaining_ids <- setdiff(all_ids, train_ids)
-  valid_ids <- sample(remaining_ids, size = floor(valid_prop * total_len))
+    # Sample validation IDs from remaining
+    remaining_ids <- setdiff(all_ids, train_ids)
+    valid_ids <- sample(remaining_ids, size = floor(valid_prop * total_len))
 
-  # Remaining goes to test
-  test_ids <- setdiff(remaining_ids, valid_ids)
+    # Remaining goes to test
+    test_ids <- setdiff(remaining_ids, valid_ids)
 
   }
 
@@ -952,7 +948,7 @@ testna <- readRDS(data_path)
 testna <- testna %>% dplyr::filter(!is.na(s))
 
 # Set parameters
-warmup <- 50
+warmup <- 75
 batch_size <- 32
 
 # Create dataloaders and split info using the helper
@@ -970,19 +966,22 @@ torch::cuda_is_available()
 # Determine final_steps based on the sequence length of one group
 final_steps <- nrow(loaders$test_dl$dataset$dataset$groups[[1]])
 
-# Define custom loss function with no bias penalty
+# Define custom loss function
+# Define Trend-Matching Loss
 loss_fn <- function(pred, target) {
   custom_loss_final(
     pred = pred,
     target = target,
-    lambda_bias = 0, # can't seem to get the bias to move it better than just MSE
-    min_mse_for_lambda = 1.5e-4,
+    lambda_bias = 0.01,
+    lambda_trend = 0.01,       # Strong penalty for wrong trends
+    trend_stride = 4,          # 5-step window smooths out the "wiggles"
+    min_mse_for_lambda = 0,
     final_steps = final_steps,
-    micro_2_10_scale = 2
+    micro_2_10_scale = 1
   )
 }
 
-# Train the model using luz
+# Train
 trained_model <- train_malaria_model(
   model = GRU_model(),
   train_dl = loaders$train_dl,
@@ -997,10 +996,9 @@ trained_model <- train_malaria_model(
   num_layers = 3,
   epochs = 100,
   max_lr = 0.02,
-  patience = 10,
-  weight_decay = 0, # similarly seems to be difficult to get to work
-  dropout_prob = 0.1,
-  model_name = "malaria_gru_luz_mmse",
+  patience = 15,
+  dropout_prob = 0.05,
+  model_name = "malaria_gru_trend",
   verbose = TRUE
 )
 
@@ -1037,7 +1035,7 @@ save_model <- function(file, trained_model, train_ds, loaders, t_break, t_end, d
 t_break <- mean(diff(unique(testna$t)))
 t_end <- max(testna$t)
 data_length <- length(unique(testna$t))
-save_model("analysis/impact_analysis/data-derived/emulator_final.rds",
+save_model("analysis/impact_analysis/data-derived/emulator_final_2501.rds",
            trained_model, loaders$train_ds, loaders, t_break, t_end, data_length, data_path)
 
 # Define custom loss function with bias penalty
@@ -1078,7 +1076,7 @@ save_model("analysis/impact_analysis/data-derived/emulator_final.rds",
 #------------ Resuming or loading earlier state if needed ----------------------------
 
 checkpoint_path <- file.path("analysis/impact_analysis/trained_models", "malaria_gru_luz_mmse", "epoch-10-valid_loss-0.000.pt")
-checkpoint_path <- file.path("analysis/impact_analysis/trained_models", "malaria_gru_luz_mmse_continued")
+checkpoint_path <- file.path("analysis/impact_analysis/trained_models", "malaria_gru_trend", "epoch-19-valid_loss-0.007.pt")
 model_definition <- GRU_model() %>%
   setup(
     loss = loss_fn,
@@ -1113,7 +1111,7 @@ model_resumed <- model_definition %>%
         call_on = "on_batch_end"
       ),
       luz_callback_model_checkpoint(
-        path = file.path("analysis/impact_analysis/trained_models", "malaria_gru_luz_continued"),
+        path = file.path("analysis/impact_analysis/trained_models", "malaria_gru_trend"),
         monitor = "valid_loss",
         save_best_only = FALSE
       )
@@ -1124,8 +1122,16 @@ model_resumed <- model_definition %>%
 
 #------------ Test Set Plotting  ----------------------------
 
-trained_model <- luz::luz_load("analysis/impact_analysis/data-derived/emulator_final.rds")
+trained_model <- luz::luz_load("analysis/impact_analysis/data-derived/emulator_final_2201.rds")
 trained_model$model$to(device = torch_device("cuda"))
+
+loaders <- prepare_malaria_dataloaders(
+  df = testna,
+  warmup = warmup,
+  batch_size = batch_size,train_ids = trained_model$extra$data$train_ids,valid_ids = trained_model$extra$data$valid_ids,test_ids = trained_model$extra$data$test_ids,
+  train_prop = 0.8,
+  valid_prop = 0.1
+)
 
 # have a look at a span of plots
 find_equally_spaced_positions <- function(vec, x) {
@@ -1158,8 +1164,8 @@ plot_prediction(trained_model, loaders$test_dl, testna, index = srang_ind[3])
 plot_prediction(trained_model, loaders$test_dl, testna, index = srang_ind[4])
 plot_prediction(trained_model, loaders$test_dl, testna, index = srang_ind[5])
 
-pdf(file = "analysis/impact_analysis/plots_emulator/emulator_fits.pdf", width = 12, height = 8)
-for(i in find_equally_spaced_positions(s, 100)){
+pdf(file = "analysis/impact_analysis/plots_emulator/emulator_fits_newest2201.pdf", width = 12, height = 8)
+for(i in find_equally_spaced_positions(s, 50)){
   print(plot_prediction(trained_model, loaders$test_dl, testna, index = i))
 }
 dev.off()
